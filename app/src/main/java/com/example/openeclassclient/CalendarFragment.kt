@@ -1,0 +1,41 @@
+package com.example.openeclassclient
+
+import android.content.Context
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import com.example.openeclassclient.network.eClassApi
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
+class CalendarFragment : Fragment() {
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_calendar, container, false)
+
+        val CalendarTextView = view.findViewById<TextView>(R.id.calendarTextView)
+        val token = activity?.getPreferences(Context.MODE_PRIVATE)?.getString("token",null)
+
+        eClassApi.JsonApi.getCalendar("PHPSESSID=" + token).enqueue(object :
+            Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                CalendarTextView.text = "Failure: " + t.message
+            }
+
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                CalendarTextView.text = response.body()
+            }
+
+        })
+
+        return view
+    }
+
+}

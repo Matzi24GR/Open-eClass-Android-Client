@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Announcements"
+        android:id="@+id/announcementFragment"/>
+    <item android:title="Courses"
+        android:id="@+id/courseListFragment"/>
+    <item android:title="Calendar"
+        android:id="@+id/calendarFragment" />
+</menu>
