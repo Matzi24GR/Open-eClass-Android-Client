@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.example.openeclassclient.network.AnnouncementResponse
 import com.example.openeclassclient.network.eClassApi
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
@@ -25,14 +26,14 @@ class AnnouncementFragment : Fragment() {
         val announcementTextView = view.findViewById<TextView>(R.id.announcementTextView)
         val token = activity?.getPreferences(Context.MODE_PRIVATE)?.getString("token",null)
 
-        eClassApi.JsonApi.getAnnouncements("PHPSESSID=" + token).enqueue(object :
-            Callback<String> {
-            override fun onFailure(call: Call<String>, t: Throwable) {
+        eClassApi.JsonApi.getAnnouncements("PHPSESSID=" + token).enqueue(
+            object: Callback<AnnouncementResponse> {
+            override fun onFailure(call: Call<AnnouncementResponse>, t: Throwable) {
                 announcementTextView.text = "Failure: " + t.message
             }
 
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                announcementTextView.text = response.body()
+            override fun onResponse(call: Call<AnnouncementResponse>, response: Response<AnnouncementResponse>) {
+                announcementTextView.text = response.body()!!.aaData[9][1]
             }
 
         })

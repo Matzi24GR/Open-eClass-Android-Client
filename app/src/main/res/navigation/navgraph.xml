@@ -5,6 +5,12 @@
     android:id="@+id/navgraph"
     app:startDestination="@id/courseListFragment">
 
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.example.openeclassclient.MainActivity"
+        android:label="activity_main"
+        tools:layout="@layout/activity_main" />
+
     <fragment
         android:id="@+id/announcementFragment"
         android:name="com.example.openeclassclient.AnnouncementFragment"
@@ -20,4 +26,9 @@
         android:name="com.example.openeclassclient.CalendarFragment"
         android:label="fragment_calendar"
         tools:layout="@layout/fragment_calendar" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.openeclassclient.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
 </navigation>

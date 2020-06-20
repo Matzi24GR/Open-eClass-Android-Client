@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.example.openeclassclient.network.CalendarResponse
 import com.example.openeclassclient.network.eClassApi
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,17 +24,17 @@ class CalendarFragment : Fragment() {
         val CalendarTextView = view.findViewById<TextView>(R.id.calendarTextView)
         val token = activity?.getPreferences(Context.MODE_PRIVATE)?.getString("token",null)
 
-        eClassApi.JsonApi.getCalendar("PHPSESSID=" + token).enqueue(object :
-            Callback<String> {
-            override fun onFailure(call: Call<String>, t: Throwable) {
+        eClassApi.JsonApi.getCalendar("PHPSESSID=" + token).enqueue(
+            object: Callback<CalendarResponse> {
+            override fun onFailure(call: Call<CalendarResponse>, t: Throwable) {
                 CalendarTextView.text = "Failure: " + t.message
             }
 
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                CalendarTextView.text = response.body()
+            override fun onResponse(call: Call<CalendarResponse>, response: Response<CalendarResponse>) {
+                CalendarTextView.text = response.body().toString()
             }
 
-        })
+            })
 
         return view
     }

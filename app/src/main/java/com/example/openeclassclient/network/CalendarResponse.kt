@@ -3,9 +3,10 @@ package com.example.openeclassclient.network
 import com.squareup.moshi.Json
 
 
-data class CalendarItem(
-    val success: Boolean,
-    val result: List<Result>
+data class CalendarResponse(
+    val success: Int,
+    val result: List<Result>,
+    val cid: String?
 )
 
 data class Result(
@@ -21,6 +22,6 @@ data class Result(
     val event_type: String,
     val course: String,
     val start_hour: String,
+    val end_hour : String,
     val url: String
-
 )
