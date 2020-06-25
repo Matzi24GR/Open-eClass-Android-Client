@@ -1,37 +1,30 @@
 package com.example.openeclassclient
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.openeclassclient.network.eClassApi
+import kotlinx.android.synthetic.main.fragment_login.view.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 //TODO Add Search
 
 data class Server(var name: String, var url: String)
 
-class ServerListAdapter(val itemClick: (Server) -> Unit): RecyclerView.Adapter<ServerListAdapter.ViewHolder>() {
+class ServerListAdapter(val ServerData: Array<Server>,val itemClick: (Server) -> Unit): RecyclerView.Adapter<ServerListAdapter.ViewHolder>() {
 
-    //TODO add more servers to list
-
-    val data = arrayOf(
-        Server("Demo Open Eclass", "demo.openeclass.org"),
-        Server("Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης", "eclass.auth.gr"),
-        Server("Δημοκρίτειο Πανεπιστήμιο Θράκης", "eclass.duth.gr"),
-        Server("Εθνικό και Καποδιστριακό Πανεπιστήμιο Αθηνών", "eclass.uoa.gr"),
-        Server("Πανεπιστήμιο Δυτικής Αττικής", "eclass.teiath.gr"),
-        Server("Πανεπιστήμιο Μακεδονίας","openeclass.uom.gr"),
-        Server("Πανεπιστήμιο Πατρών", "eclass.upatras.gr"),
-        Server("Σχολικό Δίκτυο", "eclass.sch.gr"),
-        Server("Χαροκόπειο Πανεπιστήμιο", "eclass.hua.gr")
-    )
-
-    override fun getItemCount() = data.size
+    override fun getItemCount() = ServerData.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = data[position]
+        val item = ServerData[position]
         holder.bind(item, itemClick)
     }
 
@@ -47,6 +40,14 @@ class ServerListAdapter(val itemClick: (Server) -> Unit): RecyclerView.Adapter<S
             nameTextView.text = server.name
             urlTextView.text = server.url
             itemView.setOnClickListener{itemClick(server)}
+            eClassApi.MobileApi.getToken("","")
+                .enqueue(object : Callback<String> {
+                    override fun onFailure(call: Call<String>, t: Throwable) {}
+                    override fun onResponse(call: Call<String>, response: Response<String>) {
+                        if (response.body() == "FAILED") urlTextView.text = "✓ "+server.url
+                        else urlTextView.text = "✗ "+server.url
+                    }
+                })
         }
 
         companion object {

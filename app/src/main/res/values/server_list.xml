@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string-array name="server_list">
+    <item>Demo Open Eclass||demo.openeclass.org</item>
+    <item>Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης||eclass.auth.gr</item>
+    <item>ΔΙ.ΠΑ.Ε. - Πανεπιστημιούπολη Καβάλας||eclass.teiemt.gr</item>
+    <item>Δημοκρίτειο Πανεπιστήμιο Θράκης||eclass.duth.gr</item>
+    <item>Εθνικό και Καποδιστριακό Πανεπιστήμιο Αθηνών||eclass.uoa.gr</item>
+    <item>Ελληνικό Μεσογειακό Πανεπιστήμιο||eclass.hmu.gr</item>
+    <item>Πανελλήνιο Σχολικό Δίκτυο||eclass.sch.gr</item>
+    <item>Πανεπιστήμιο Δυτικής Αττικής||eclass.uniwa.gr</item>
+    <item>Πανεπιστήμιο Θεσσαλίας||eclass.uth.gr</item>
+    <item>Πανεπιστήμιο Μακεδονίας||openeclass.uom.gr</item>
+    <item>Πανεπιστήμιο Πατρών||eclass.upatras.gr</item>
+    <item>Πανεπιστήμιο Πειραιώς||eclass.unipi.gr</item>
+    <item>Χαροκόπειο Πανεπιστήμιο||eclass.hua.gr</item>
+</string-array>
+</resources>

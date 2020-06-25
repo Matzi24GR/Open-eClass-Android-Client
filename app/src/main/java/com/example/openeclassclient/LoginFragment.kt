@@ -26,6 +26,7 @@ import retrofit2.Response
 class LoginFragment : Fragment() {
 
     //TODO Prevent user going back to previous screens
+    //TODO hide bottom sheet on back button press
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +41,14 @@ class LoginFragment : Fragment() {
 
         val bottomSheetBehavior = BottomSheetBehavior.from(view.bottom_sheet)
 
-        val adapter = ServerListAdapter(){
+        val data = resources.getStringArray(R.array.server_list)
+        val serverArray = Array(data.size) {
+            i ->
+            val str = data[i].split("||")
+            Server(str[0],str[1])
+        }
+
+        val adapter = ServerListAdapter(serverArray){
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
             interceptor.setHost(it.url)
             requireActivity().getSharedPreferences("login", Context.MODE_PRIVATE).edit().putString("url",it.url).apply()
