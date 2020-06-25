@@ -6,18 +6,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.TextView
-import android.widget.Toast
+import androidx.appcompat.widget.SearchView
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.openeclassclient.network.eClassApi
 import com.example.openeclassclient.network.interceptor
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_login.view.*
+import kotlinx.android.synthetic.main.fragment_login.view.recycler_view
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,40 +41,58 @@ class LoginFragment : Fragment() {
         val bottomSheetBehavior = BottomSheetBehavior.from(view.bottom_sheet)
 
         val data = resources.getStringArray(R.array.server_list)
-        val serverArray = Array(data.size) {
-            i ->
+        val serverArray = arrayListOf<Server>()
+        for (i in data.indices) {
             val str = data[i].split("||")
-            Server(str[0],str[1])
+            serverArray.add(Server(str[0],str[1]))
         }
-
+        var selectedServer: Server = Server("","")
         val adapter = ServerListAdapter(serverArray){
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-            interceptor.setHost(it.url)
-            requireActivity().getSharedPreferences("login", Context.MODE_PRIVATE).edit().putString("url",it.url).apply()
+            selectedServer = it
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            interceptor.setHost(selectedServer.url)
+            view.server_button.text = it.url
+            requireActivity().getSharedPreferences("login", Context.MODE_PRIVATE).edit().putString("url",selectedServer.url).apply()
         }
         view.recycler_view.adapter = adapter
         view.recycler_view.layoutManager = LinearLayoutManager(this.context)
-
         var token: String? = null
 
-        view.button.setOnClickListener() {
+        view.server_button.setOnClickListener() {
+            recycler_view.adapter?.notifyDataSetChanged()
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        }
 
+        view.login_button.setOnClickListener() {
             val username = view.user_text.text.toString()
             val password = view.pass_text.text.toString()
             Log.i("loginFragment","button pressed")
+            interceptor.setHost(selectedServer.url)
             eClassApi.MobileApi.getToken(username, password)
                 .enqueue(object : Callback<String> {
                     override fun onFailure(call: Call<String>, t: Throwable) {}
                     override fun onResponse(call: Call<String>, response: Response<String>) {
-                        token = response.body().toString()
+                        val token = response.body().toString()
                         Log.i("loginFragment",response.body())
-                        view.button.text = token
+                        view.server_button.text = token
                         activity!!.getPreferences(Context.MODE_PRIVATE).edit().putBoolean("hasLoggedIn", true).apply()
                         activity!!.getPreferences(Context.MODE_PRIVATE).edit().putString("token",token).apply()
                         findNavController().navigate(R.id.mainActivity)
                     }
                 })
         }
+
+        view.searchview.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapter.filter.filter(newText)
+                return false
+            }
+
+        })
 
     }
 }

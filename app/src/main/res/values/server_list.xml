@@ -2,7 +2,7 @@
 <resources>
 <string-array name="server_list">
     <item>Demo Open Eclass||demo.openeclass.org</item>
-    <item>Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης||eclass.auth.gr</item>
+    <item>Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης||opencourses.auth.gr</item>
     <item>ΔΙ.ΠΑ.Ε. - Πανεπιστημιούπολη Καβάλας||eclass.teiemt.gr</item>
     <item>Δημοκρίτειο Πανεπιστήμιο Θράκης||eclass.duth.gr</item>
     <item>Εθνικό και Καποδιστριακό Πανεπιστήμιο Αθηνών||eclass.uoa.gr</item>
