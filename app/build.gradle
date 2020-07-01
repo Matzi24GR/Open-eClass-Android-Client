@@ -4,13 +4,18 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
 android {
     compileOptions {
         sourceCompatibility "1.8"
         targetCompatibility "1.8"
     }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
     compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.example.openeclassclient"
         minSdkVersion 21
@@ -25,6 +30,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -38,15 +46,19 @@ dependencies {
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    kapt "com.android.databinding:compiler:3.1.4"
+
+    //Timber Logging Library
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 
     //Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.8.1'
-    implementation 'com.squareup.retrofit2:converter-scalars:2.8.1'
-    implementation "com.squareup.retrofit2:converter-moshi:2.8.1"
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
 
     //Moshi
-    implementation "com.squareup.moshi:moshi:1.9.2"
-    implementation 'com.squareup.moshi:moshi-kotlin:1.9.2'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.2.2'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.2.2'
+    implementation 'com.squareup.moshi:moshi:1.9.3'
+    implementation 'com.squareup.moshi:moshi-kotlin:1.9.3'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.0'
 }

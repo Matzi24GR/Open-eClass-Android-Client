@@ -7,17 +7,25 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.databinding.DataBindingUtil
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
-import com.example.openeclassclient.network.HostSelectionInterceptor
+import com.example.openeclassclient.databinding.ActivityMainBinding
 import com.example.openeclassclient.network.interceptor
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var appBarConfiguration: AppBarConfiguration
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         val url = getSharedPreferences("login", Context.MODE_PRIVATE).getString("url","localhost")
         interceptor.setHost(url!!)
@@ -26,15 +34,21 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.fragment)
 
         // Setting Navigation Controller with the BottomNavigationView
-        val bottomNavView = findViewById<BottomNavigationView>(R.id.bttm_nav)
-        bottomNavView.setupWithNavController(navController)
+        binding.bottomNav.setupWithNavController(navController)
+
+        drawerLayout = binding.drawerLayout
+        appBarConfiguration = AppBarConfiguration(bottom_nav.menu, drawerLayout)
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
+        NavigationUI.setupWithNavController(binding.navView, navController)
+
+
 
         val hasLoggedIn: Boolean = getPreferences(Context.MODE_PRIVATE).getBoolean("hasLoggedIn", false)
 
         if ( !hasLoggedIn ) {
-            bottomNavView.visibility = View.GONE
+            binding.bottomNav.visibility = View.GONE
             supportActionBar!!.hide()
-            navController.navigate(R.id.loginFragment)
+            navController.navigate(R.id.tologinFragment)
         }
 
     }
@@ -46,12 +60,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.logOutButton -> {
                 getPreferences(Context.MODE_PRIVATE).edit().putBoolean("hasLoggedIn", false).apply()
                 findNavController(R.id.fragment).navigate(R.id.mainActivity)
+                true
             }
+            else -> super.onOptionsItemSelected(item)
         }
-        return true
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = this.findNavController(R.id.fragment)
+        return NavigationUI.navigateUp(navController, appBarConfiguration)
     }
 }

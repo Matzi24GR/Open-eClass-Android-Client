@@ -21,17 +21,16 @@ class CalendarFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_calendar, container, false)
 
-        val CalendarTextView = view.findViewById<TextView>(R.id.calendarTextView)
         val token = activity?.getPreferences(Context.MODE_PRIVATE)?.getString("token",null)
 
         eClassApi.JsonApi.getCalendar("PHPSESSID=" + token).enqueue(
             object: Callback<CalendarResponse> {
             override fun onFailure(call: Call<CalendarResponse>, t: Throwable) {
-                CalendarTextView.text = "Failure: " + t.message
+                //CalendarTextView.text = "Failure: " + t.message
             }
 
             override fun onResponse(call: Call<CalendarResponse>, response: Response<CalendarResponse>) {
-                CalendarTextView.text = response.body().toString()
+                //CalendarTextView.text = response.body().toString()
             }
 
             })

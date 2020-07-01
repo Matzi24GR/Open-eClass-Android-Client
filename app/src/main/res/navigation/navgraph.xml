@@ -14,21 +14,36 @@
     <fragment
         android:id="@+id/announcementFragment"
         android:name="com.example.openeclassclient.AnnouncementFragment"
-        android:label="fragment_announcement"
         tools:layout="@layout/fragment_announcement" />
     <fragment
         android:id="@+id/courseListFragment"
         android:name="com.example.openeclassclient.CourseListFragment"
-        android:label="fragment_course_list"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_course_list" />
     <fragment
         android:id="@+id/calendarFragment"
         android:name="com.example.openeclassclient.CalendarFragment"
-        android:label="fragment_calendar"
         tools:layout="@layout/fragment_calendar" />
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.openeclassclient.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_MainActivity"
+            app:destination="@id/mainActivity"
+            app:popUpTo="@id/navgraph"
+            app:popUpToInclusive="true"
+            app:exitAnim="@anim/slidedown" />
+    </fragment>
+    <action
+        android:id="@+id/tologinFragment"
+        app:destination="@id/loginFragment"
+        app:popUpTo="@+id/navgraph"
+        app:popUpToInclusive="true"/>
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.example.openeclassclient.AboutFragment"
+        android:label="About"
+        tools:layout="@layout/fragment_about" />
 </navigation>

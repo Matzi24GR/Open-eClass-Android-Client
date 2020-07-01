@@ -59,11 +59,11 @@ class ServerListAdapter(val ServerData: ArrayList<Server>,val itemClick: (Server
                 .enqueue(object : Callback<String> {
                     override fun onFailure(call: Call<String>, t: Throwable) {}
                     override fun onResponse(call: Call<String>, response: Response<String>) {
-                        if (response.body() == "FAILED") {
-                            urlTextView.text = "✓ "+server.url
-                        } else {
-                            urlTextView.text = "✗ "+server.url
-                        }
+                            when(response.body()){
+                                "FAILED"-> urlTextView.text = "✓ "+server.url
+                                "NOTENABLED"-> urlTextView.text = "✗ " +server.url +" (Απενεργοποιημένο)"
+                                else -> urlTextView.text = "✗ "+server.url
+                            }
                     }
                 })
         }
