@@ -1,20 +1,14 @@
 package com.example.openeclassclient
 
-import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
-import android.widget.Toast
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.example.openeclassclient.network.HostSelectionInterceptor
 import com.example.openeclassclient.network.eClassApi
 import com.example.openeclassclient.network.interceptor
-import kotlinx.android.synthetic.main.fragment_login.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,20 +19,20 @@ import kotlin.collections.ArrayList
 
 data class Server(var name: String, var url: String)
 
-class ServerListAdapter(val ServerData: ArrayList<Server>,val itemClick: (Server) -> Unit): RecyclerView.Adapter<ServerListAdapter.ViewHolder>(), Filterable {
+class ServerListAdapter(val ServerData: ArrayList<Server>, private val itemClick: (Server) -> Unit): RecyclerView.Adapter<ServerListAdapter.ViewHolder>(), Filterable {
 
-    var ServerFilterList = ArrayList<Server>()
+    var serverFilterList = ArrayList<Server>()
 
     init {
-        ServerFilterList = ServerData
+        serverFilterList = ServerData
     }
 
     override fun getItemCount(): Int {
-        return ServerFilterList.size
+        return serverFilterList.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = ServerFilterList[position]
+        val item = serverFilterList[position]
         holder.bind(item, itemClick)
     }
 
@@ -47,8 +41,8 @@ class ServerListAdapter(val ServerData: ArrayList<Server>,val itemClick: (Server
     }
 
     class ViewHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
-        var nameTextView = itemView.findViewById<TextView>(R.id.name_text_view)
-        var urlTextView = itemView.findViewById<TextView>(R.id.url_text_view)
+        private val nameTextView: TextView = itemView.findViewById(R.id.name_text_view)
+        private val urlTextView: TextView = itemView.findViewById(R.id.url_text_view)
 
         fun bind(server: Server, itemClick: (Server) -> Unit) {
             nameTextView.text = server.name
@@ -84,7 +78,7 @@ class ServerListAdapter(val ServerData: ArrayList<Server>,val itemClick: (Server
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 val charSearch = constraint.toString()
                 if (charSearch.isEmpty()) {
-                    ServerFilterList = ServerData
+                    serverFilterList = ServerData
                 } else {
                     val resultList = ArrayList<Server>()
                     for (item in ServerData) {
@@ -95,15 +89,15 @@ class ServerListAdapter(val ServerData: ArrayList<Server>,val itemClick: (Server
                             resultList.add(item)
                         }
                     }
-                    ServerFilterList = resultList
+                    serverFilterList = resultList
                 }
                 val filterResults = FilterResults()
-                filterResults.values = ServerFilterList
+                filterResults.values = serverFilterList
                 return filterResults
             }
             @Suppress("UNCHECKED_CAST")
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                ServerFilterList = results?.values as ArrayList<Server>
+                serverFilterList = results?.values as ArrayList<Server>
                 notifyDataSetChanged()
             }
 

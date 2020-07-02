@@ -4,23 +4,22 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.core.widget.doOnTextChanged
+import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.openeclassclient.databinding.FragmentLoginBinding
 import com.example.openeclassclient.network.eClassApi
-import com.example.openeclassclient.network.interceptor
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_login.view.*
-import kotlinx.android.synthetic.main.fragment_login.view.recycler_view
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,77 +28,87 @@ import timber.log.Timber
 
 class LoginFragment : Fragment() {
 
-    //TODO Prevent user going back to previous screens
     //TODO hide bottom sheet on back button press
+
+    private lateinit var binding: FragmentLoginBinding
+    private lateinit var viewModel: LoginViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false)
+        viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
+        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_login,container,false)
+
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val bottomSheetBehavior = BottomSheetBehavior.from(view.bottom_sheet)
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
 
         //Disable Nav Drawer
         requireActivity().findViewById<DrawerLayout>(R.id.drawer_layout).setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 
-        //Add ServerList Data
-        val data = resources.getStringArray(R.array.server_list)
-        val serverArray = arrayListOf<Server>()
-        for (i in data.indices) {
-            val str = data[i].split("||")
-            serverArray.add(Server(str[0],str[1]))
-        }
-
         //ServerList on Click
-        var selectedServer: Server = Server("","")
-        val adapter = ServerListAdapter(serverArray){
-            selectedServer = it
+        val adapter = ServerListAdapter(viewModel.serverArray){
+            viewModel.updateSelectedServer(it)
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            interceptor.setHost(selectedServer.url)
-            view.server_button.text = it.url
-            requireActivity().getSharedPreferences("login", Context.MODE_PRIVATE).edit().putString("url",selectedServer.url).apply()
         }
+
+        if (viewModel.selectedServer.value!!.url.isNotBlank()) binding.serverButton.text = viewModel.selectedServer.value!!.url
+        viewModel.selectedServer.observe(viewLifecycleOwner, Observer {
+            selectedServer -> if (selectedServer.url.isNotBlank()) binding.serverButton.text = selectedServer.url
+        })
+
         //Setup recyclerview
-        view.recycler_view.adapter = adapter
-        view.recycler_view.layoutManager = LinearLayoutManager(this.context)
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(this.context)
 
-        var token: String? = null
-
-
-        view.server_button.setOnClickListener() {
-            recycler_view.adapter?.notifyDataSetChanged()
-            view.searchview.requestFocus()
+        binding.serverButton.setOnClickListener {
+            binding.recyclerView.adapter?.notifyDataSetChanged()
+            binding.searchview.requestFocus()
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
 
-        view.login_button.setOnClickListener() {
-            val username = view.user_text.text.toString()
-            val password = view.pass_text.text.toString()
+        binding.loginButton.setOnClickListener {
+            val username = binding.userText.text.toString()
+            val password = binding.passText.text.toString()
             if (username.contains("007")) {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://youtu.be/vaKHTJuOuyE?t=6")))
             }
-            interceptor.setHost(selectedServer.url)
-            eClassApi.MobileApi.getToken(username, password)
-                .enqueue(object : Callback<String> {
-                    override fun onFailure(call: Call<String>, t: Throwable) {}
-                    override fun onResponse(call: Call<String>, response: Response<String>) {
-                        token = response.body()
-                        Timber.i("Login Response: ${response.body()}")
-                        view.server_button.text = token
-                        activity!!.getPreferences(Context.MODE_PRIVATE).edit().putBoolean("hasLoggedIn", true).apply()
-                        activity!!.getPreferences(Context.MODE_PRIVATE).edit().putString("token",token).apply()
-                        findNavController().navigate(R.id.action_loginFragment_to_MainActivity)
-                    }
-                })
+            if (viewModel.selectedServer.value!!.url.isNotBlank()) {
+
+                eClassApi.MobileApi.getToken(username, password)
+                    .enqueue(object : Callback<String> {
+                        override fun onFailure(call: Call<String>, t: Throwable) {
+                            Toast.makeText(context, "Check your Connection", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                        override fun onResponse(call: Call<String>, response: Response<String>) {
+                            val token = response.body()
+                            if (token == "FAILED") {
+                                Toast.makeText(context, "Wrong username/password", Toast.LENGTH_SHORT)
+                                    .show()
+                            } else if(token == "NOTENABLED") {
+                                Toast.makeText(context, "Απενεργοποιημένος από τους διαχειριστές", Toast.LENGTH_SHORT)
+                                    .show()
+                            } else {
+                                Timber.i("Login Response: ${response.body()}")
+                                activity!!.getPreferences(Context.MODE_PRIVATE).edit()
+                                    .putBoolean("hasLoggedIn", true).apply()
+                                activity!!.getPreferences(Context.MODE_PRIVATE).edit()
+                                    .putString("token", token).apply()
+                                findNavController().navigate(R.id.action_loginFragment_to_MainActivity)
+                            }
+                        }
+                    })
+
+            }
         }
 
-        view.searchview.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+        binding.searchview.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }

@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.example.openeclassclient.network.CalendarResponse
 import com.example.openeclassclient.network.eClassApi
 import retrofit2.Call
