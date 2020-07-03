@@ -57,9 +57,15 @@ class LoginFragment : Fragment() {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
-        if (viewModel.selectedServer.value!!.url.isNotBlank()) binding.serverButton.text = viewModel.selectedServer.value!!.url
         viewModel.selectedServer.observe(viewLifecycleOwner, Observer {
             selectedServer -> if (selectedServer.url.isNotBlank()) binding.serverButton.text = selectedServer.url
+        })
+
+        viewModel.loginSuccessful.observe(viewLifecycleOwner, Observer { loginSuccessful ->
+            if (loginSuccessful) {
+                findNavController().navigate(R.id.action_loginFragment_to_MainActivity)
+                viewModel.resetLoginSuccessful()
+            }
         })
 
         //Setup recyclerview
@@ -73,39 +79,13 @@ class LoginFragment : Fragment() {
         }
 
         binding.loginButton.setOnClickListener {
-            val username = binding.userText.text.toString()
-            val password = binding.passText.text.toString()
+            val username = binding.userText.editText?.text.toString()
+            val password = binding.passText.editText?.text.toString()
             if (username.contains("007")) {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://youtu.be/vaKHTJuOuyE?t=6")))
             }
-            if (viewModel.selectedServer.value!!.url.isNotBlank()) {
+            viewModel.Login(username,password)
 
-                eClassApi.MobileApi.getToken(username, password)
-                    .enqueue(object : Callback<String> {
-                        override fun onFailure(call: Call<String>, t: Throwable) {
-                            Toast.makeText(context, "Check your Connection", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                        override fun onResponse(call: Call<String>, response: Response<String>) {
-                            val token = response.body()
-                            if (token == "FAILED") {
-                                Toast.makeText(context, "Wrong username/password", Toast.LENGTH_SHORT)
-                                    .show()
-                            } else if(token == "NOTENABLED") {
-                                Toast.makeText(context, "Απενεργοποιημένος από τους διαχειριστές", Toast.LENGTH_SHORT)
-                                    .show()
-                            } else {
-                                Timber.i("Login Response: ${response.body()}")
-                                activity!!.getPreferences(Context.MODE_PRIVATE).edit()
-                                    .putBoolean("hasLoggedIn", true).apply()
-                                activity!!.getPreferences(Context.MODE_PRIVATE).edit()
-                                    .putString("token", token).apply()
-                                findNavController().navigate(R.id.action_loginFragment_to_MainActivity)
-                            }
-                        }
-                    })
-
-            }
         }
 
         binding.searchview.setOnQueryTextListener(object: SearchView.OnQueryTextListener{

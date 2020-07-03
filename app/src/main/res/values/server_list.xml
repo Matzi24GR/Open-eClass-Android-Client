@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <string-array name="server_list">
+    <item>Aristotle University of Thessaloniki||opencourses.auth.gr</item>
+    <item>Athens University of Economics and Business||eclass.aueb.gr</item>
     <item>Demo Open Eclass||demo.openeclass.org</item>
-    <item>Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης||opencourses.auth.gr</item>
-    <item>ΔΙ.ΠΑ.Ε. - Πανεπιστημιούπολη Καβάλας||eclass.teiemt.gr</item>
-    <item>Δημοκρίτειο Πανεπιστήμιο Θράκης||eclass.duth.gr</item>
-    <item>Εθνικό και Καποδιστριακό Πανεπιστήμιο Αθηνών||eclass.uoa.gr</item>
-    <item>Ελληνικό Μεσογειακό Πανεπιστήμιο||eclass.hmu.gr</item>
-    <item>Ιόνιο Πανεπιστήμιο||opencourses.ionio.gr</item>
-    <item>Οικονομικό Πανεπιστήμιο Αθηνών||eclass.aueb.gr</item>
-    <item>Πάντειον Πανεπιστήμιο||openeclass.panteion.gr</item>
-    <item>Πανελλήνιο Σχολικό Δίκτυο||eclass.sch.gr</item>
-    <item>Πανεπιστήμιο Αιγαίου||eclass.aegean.gr</item>
-    <item>Πανεπιστήμιο Δυτικής Αττικής||eclass.uniwa.gr</item>
-    <item>Πανεπιστήμιο Δυτικής Μακεδονίας||eclass.uowm.gr</item>
-    <item>Πανεπιστήμιο Θεσσαλίας||eclass.uth.gr</item>
-    <item>Πανεπιστήμιο Μακεδονίας||openeclass.uom.gr</item>
-    <item>Πανεπιστήμιο Πατρών||eclass.upatras.gr</item>
-    <item>Πανεπιστήμιο Πειραιώς||eclass.unipi.gr</item>
-    <item>Πανεπιστήμιο Πελοποννήσου||eclass.uop.gr</item>
-    <item>Πολυτεχνείο Κρήτης||www.eclass.tuc.gr</item>
-    <item>Χαροκόπειο Πανεπιστήμιο||eclass.hua.gr</item>
+    <item>Democritus University of Thrace||eclass.duth.gr</item>
+    <item>Harokopio University||eclass.hua.gr</item>
+    <item>Hellenic Mediterranean University||eclass.hmu.gr</item>
+    <item>International Hellenic University - Kavala Campus||eclass.teiemt.gr</item>
+    <item>Ionian University||opencourses.ionio.gr</item>
+    <item>National and Kapodistrian University of Athens||eclass.uoa.gr</item>
+    <item>Panhellenic School Network||eclass.sch.gr</item>
+    <item>Panteion University||openeclass.panteion.gr</item>
+    <item>Technical University of Crete||www.eclass.tuc.gr</item>
+    <item>University of Macedonia||openeclass.uom.gr</item>
+    <item>University of Patras||eclass.upatras.gr</item>
+    <item>University of Peloponnese||eclass.uop.gr</item>
+    <item>University of Piraeus||eclass.unipi.gr</item>
+    <item>University of Thessaly||eclass.uth.gr</item>
+    <item>University of West Attica||eclass.uniwa.gr</item>
+    <item>University of Western Macedonia||eclass.uowm.gr</item>
+    <item>University of the Aegean||eclass.aegean.gr</item>
 </string-array>
 </resources>

@@ -20,7 +20,7 @@ class CalendarFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_calendar, container, false)
 
-        val token = activity?.getPreferences(Context.MODE_PRIVATE)?.getString("token",null)
+        val token = requireContext().getSharedPreferences("login", Context.MODE_PRIVATE).getString("token",null)
 
         eClassApi.JsonApi.getCalendar("PHPSESSID=" + token).enqueue(
             object: Callback<CalendarResponse> {

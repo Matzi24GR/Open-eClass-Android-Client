@@ -21,7 +21,7 @@ class CourseListFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_course_list, container, false)
 
         val CoursesTextView = view.findViewById<TextView>(R.id.coursesTextView)
-        val token = activity?.getPreferences(Context.MODE_PRIVATE)?.getString("token",null)
+        val token = requireContext().getSharedPreferences("login", Context.MODE_PRIVATE).getString("token",null)
         if (token != null) {
             eClassApi.MobileApi.getCourses(token).enqueue(object :
                 Callback<String> {

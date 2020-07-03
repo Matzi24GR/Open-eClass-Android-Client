@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        val hasLoggedIn: Boolean = getPreferences(Context.MODE_PRIVATE).getBoolean("hasLoggedIn", false)
+        val hasLoggedIn: Boolean = getSharedPreferences("login", Context.MODE_PRIVATE).getBoolean("hasLoggedIn", false)
 
         if ( !hasLoggedIn ) {
             binding.bottomNav.visibility = View.GONE
@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.logOutButton -> {
-                getPreferences(Context.MODE_PRIVATE).edit().putBoolean("hasLoggedIn", false).apply()
+                getSharedPreferences("login", Context.MODE_PRIVATE).edit().putBoolean("hasLoggedIn", false).apply()
                 findNavController(R.id.fragment).navigate(R.id.mainActivity)
                 true
             }

@@ -12,8 +12,7 @@
         <TextView
             android:id="@+id/announcementTextView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="announcements" />
+            android:layout_height="wrap_content" />
     </ScrollView>
 
 </FrameLayout>

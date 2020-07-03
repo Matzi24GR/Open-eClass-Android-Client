@@ -24,7 +24,7 @@ class AnnouncementFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_announcement, container, false)
 
         val announcementTextView = view.findViewById<TextView>(R.id.announcementTextView)
-        val token = activity?.getPreferences(Context.MODE_PRIVATE)?.getString("token",null)
+        val token = requireContext().getSharedPreferences("login", Context.MODE_PRIVATE).getString("token",null)
 
         eClassApi.JsonApi.getAnnouncements("PHPSESSID=" + token).enqueue(
             object: Callback<AnnouncementResponse> {
