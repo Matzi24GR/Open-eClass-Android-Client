@@ -1,7 +1,6 @@
-package com.example.openeclassclient.network
+package com.geomat.openeclassclient.network
 
 
-import android.content.Context
 import android.util.Log
 import okhttp3.Interceptor
 import okhttp3.Response

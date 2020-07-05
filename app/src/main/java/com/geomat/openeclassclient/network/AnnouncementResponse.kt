@@ -1,4 +1,4 @@
-package com.example.openeclassclient.network
+package com.geomat.openeclassclient.network
 
 data class AnnouncementResponse (
 

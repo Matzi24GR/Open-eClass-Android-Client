@@ -1,4 +1,4 @@
-package com.example.openeclassclient
+package com.geomat.openeclassclient
 
 import android.content.Context
 import android.os.Bundle
@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.example.openeclassclient.network.eClassApi
+import com.geomat.openeclassclient.network.eClassApi
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

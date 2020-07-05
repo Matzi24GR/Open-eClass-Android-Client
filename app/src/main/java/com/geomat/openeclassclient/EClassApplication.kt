@@ -1,4 +1,4 @@
-package com.example.openeclassclient
+package com.geomat.openeclassclient
 
 import android.app.Application
 import timber.log.Timber

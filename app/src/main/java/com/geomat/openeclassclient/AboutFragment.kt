@@ -1,4 +1,4 @@
-package com.example.openeclassclient
+package com.geomat.openeclassclient
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

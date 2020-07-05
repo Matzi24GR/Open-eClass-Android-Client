@@ -1,13 +1,11 @@
-package com.example.openeclassclient
+package com.geomat.openeclassclient
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
@@ -16,14 +14,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.openeclassclient.databinding.FragmentLoginBinding
-import com.example.openeclassclient.network.eClassApi
+import com.geomat.openeclassclient.databinding.FragmentLoginBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.android.synthetic.main.fragment_login.view.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import timber.log.Timber
 
 
 class LoginFragment : Fragment() {
@@ -38,7 +30,8 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
-        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_login,container,false)
+        binding = DataBindingUtil.inflate(inflater,
+            R.layout.fragment_login,container,false)
 
         return binding.root
     }
@@ -52,10 +45,11 @@ class LoginFragment : Fragment() {
         requireActivity().findViewById<DrawerLayout>(R.id.drawer_layout).setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 
         //ServerList on Click
-        val adapter = ServerListAdapter(viewModel.serverArray){
-            viewModel.updateSelectedServer(it)
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        }
+        val adapter =
+            ServerListAdapter(viewModel.serverArray) {
+                viewModel.updateSelectedServer(it)
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
 
         viewModel.selectedServer.observe(viewLifecycleOwner, Observer {
             selectedServer -> if (selectedServer.url.isNotBlank()) binding.serverButton.text = selectedServer.url

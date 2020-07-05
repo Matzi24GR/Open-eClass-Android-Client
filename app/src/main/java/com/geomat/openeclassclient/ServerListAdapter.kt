@@ -1,4 +1,4 @@
-package com.example.openeclassclient
+package com.geomat.openeclassclient
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,8 +7,8 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.openeclassclient.network.eClassApi
-import com.example.openeclassclient.network.interceptor
+import com.geomat.openeclassclient.network.eClassApi
+import com.geomat.openeclassclient.network.interceptor
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,7 +37,9 @@ class ServerListAdapter(val ServerData: ArrayList<Server>, private val itemClick
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.from(parent)
+        return ViewHolder.from(
+            parent
+        )
     }
 
     class ViewHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
@@ -68,7 +70,9 @@ class ServerListAdapter(val ServerData: ArrayList<Server>, private val itemClick
                 val view = layoutInflater
                     .inflate(R.layout.server_list_item, parent, false)
 
-                return ViewHolder(view)
+                return ViewHolder(
+                    view
+                )
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.example.openeclassclient
+package com.geomat.openeclassclient
 
 import android.app.Application
 import android.content.Context
@@ -6,8 +6,8 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.openeclassclient.network.eClassApi
-import com.example.openeclassclient.network.interceptor
+import com.geomat.openeclassclient.network.eClassApi
+import com.geomat.openeclassclient.network.interceptor
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,7 +20,9 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     val serverArray = arrayListOf<Server>()
 
-    private val _selectedServer =  MutableLiveData<Server>(Server("",""))
+    private val _selectedServer =  MutableLiveData<Server>(
+        Server("", "")
+    )
     val selectedServer: LiveData<Server>
         get() = _selectedServer
 
@@ -35,7 +37,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     init {
         for (i in data.indices) {
             val str = data[i].split("||")
-            serverArray.add(Server(str[0],str[1]))
+            serverArray.add(Server(str[0], str[1]))
         }
     }
 

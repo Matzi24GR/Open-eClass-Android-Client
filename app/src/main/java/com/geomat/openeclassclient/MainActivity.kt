@@ -1,4 +1,4 @@
-package com.example.openeclassclient
+package com.geomat.openeclassclient
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
@@ -13,8 +13,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
-import com.example.openeclassclient.databinding.ActivityMainBinding
-import com.example.openeclassclient.network.interceptor
+import com.geomat.openeclassclient.databinding.ActivityMainBinding
+import com.geomat.openeclassclient.network.interceptor
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -25,7 +25,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this,
+            R.layout.activity_main
+        )
 
         val url = getSharedPreferences("login", Context.MODE_PRIVATE).getString("url","localhost")
         interceptor.setHost(url!!)
@@ -63,7 +65,9 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.logOutButton -> {
                 getSharedPreferences("login", Context.MODE_PRIVATE).edit().putBoolean("hasLoggedIn", false).apply()
-                findNavController(R.id.fragment).navigate(R.id.mainActivity)
+                findNavController(R.id.fragment).navigate(
+                    R.id.mainActivity
+                )
                 true
             }
             else -> super.onOptionsItemSelected(item)
