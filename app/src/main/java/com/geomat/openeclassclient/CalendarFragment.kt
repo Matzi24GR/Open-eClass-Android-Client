@@ -1,4 +1,4 @@
-package com.example.openeclassclient
+package com.geomat.openeclassclient
 
 import android.content.Context
 import android.os.Bundle
@@ -6,9 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import com.example.openeclassclient.network.CalendarResponse
-import com.example.openeclassclient.network.eClassApi
+import com.geomat.openeclassclient.network.CalendarResponse
+import com.geomat.openeclassclient.network.eClassApi
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,17 +20,16 @@ class CalendarFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_calendar, container, false)
 
-        val CalendarTextView = view.findViewById<TextView>(R.id.calendarTextView)
-        val token = activity?.getPreferences(Context.MODE_PRIVATE)?.getString("token",null)
+        val token = requireContext().getSharedPreferences("login", Context.MODE_PRIVATE).getString("token",null)
 
         eClassApi.JsonApi.getCalendar("PHPSESSID=" + token).enqueue(
             object: Callback<CalendarResponse> {
             override fun onFailure(call: Call<CalendarResponse>, t: Throwable) {
-                CalendarTextView.text = "Failure: " + t.message
+                //CalendarTextView.text = "Failure: " + t.message
             }
 
             override fun onResponse(call: Call<CalendarResponse>, response: Response<CalendarResponse>) {
-                CalendarTextView.text = response.body().toString()
+                //CalendarTextView.text = response.body().toString()
             }
 
             })

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Open eClass Client</string>
+    <string name="password">Κωδικός</string>
+    <string name="select_server">Επιλογή Server</string>
+    <string name="login">Σύνδεση</string>
+    <string name="username">Όνομα Χρήστη</string>
+    <string name="home_tab">Αρχική</string>
+    <string name="announcements_tab">Ανακοινώσεις</string>
+    <string name="courses_tab">Μαθήματα</string>
+    <string name="calendar_tab">Ημερολόγιο</string>
+    <string name="search_server">Αναζήτηση Server</string>
+</resources>

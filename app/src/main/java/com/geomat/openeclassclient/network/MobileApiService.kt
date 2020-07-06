@@ -1,8 +1,5 @@
-package com.example.openeclassclient.network
+package com.geomat.openeclassclient.network
 
-import android.content.Context
-import android.content.SharedPreferences
-import com.example.openeclassclient.MainActivity
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
@@ -75,6 +72,7 @@ object eClassApi {
         retrofit.create(MobileApiService::class.java)
     }
     val JsonApi: JsonApiService by lazy {
-        retrofitJson.create(JsonApiService::class.java)
+        retrofitJson.create(
+            JsonApiService::class.java)
     }
 }

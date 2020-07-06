@@ -1,4 +1,4 @@
-package com.example.openeclassclient
+package com.geomat.openeclassclient
 
 import android.content.Context
 import android.os.Bundle
@@ -7,9 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.example.openeclassclient.network.AnnouncementResponse
-import com.example.openeclassclient.network.eClassApi
-import kotlinx.android.synthetic.main.activity_main.*
+import com.geomat.openeclassclient.network.AnnouncementResponse
+import com.geomat.openeclassclient.network.eClassApi
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,7 +23,7 @@ class AnnouncementFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_announcement, container, false)
 
         val announcementTextView = view.findViewById<TextView>(R.id.announcementTextView)
-        val token = activity?.getPreferences(Context.MODE_PRIVATE)?.getString("token",null)
+        val token = requireContext().getSharedPreferences("login", Context.MODE_PRIVATE).getString("token",null)
 
         eClassApi.JsonApi.getAnnouncements("PHPSESSID=" + token).enqueue(
             object: Callback<AnnouncementResponse> {

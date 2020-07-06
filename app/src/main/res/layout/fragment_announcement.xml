@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AnnouncementFragment">
+    tools:context="com.geomat.openeclassclient.AnnouncementFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -12,8 +12,7 @@
         <TextView
             android:id="@+id/announcementTextView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="announcements" />
+            android:layout_height="wrap_content" />
     </ScrollView>
 
 </FrameLayout>
