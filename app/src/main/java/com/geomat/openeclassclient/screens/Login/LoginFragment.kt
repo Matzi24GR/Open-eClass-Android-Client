@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient
+package com.geomat.openeclassclient.screens.Login
 
 import android.content.Intent
 import android.net.Uri
@@ -14,8 +14,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.databinding.FragmentLoginBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 
 
 class LoginFragment : Fragment() {
@@ -51,10 +53,12 @@ class LoginFragment : Fragment() {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
 
+        // Selected Server Observer
         viewModel.selectedServer.observe(viewLifecycleOwner, Observer {
             selectedServer -> if (selectedServer.url.isNotBlank()) binding.serverButton.text = selectedServer.url
         })
 
+        // Login Successfull Event Observer
         viewModel.loginSuccessful.observe(viewLifecycleOwner, Observer { loginSuccessful ->
             if (loginSuccessful) {
                 findNavController().navigate(R.id.action_loginFragment_to_MainActivity)
@@ -62,12 +66,23 @@ class LoginFragment : Fragment() {
             }
         })
 
+        // Show SnackBar Event Observer
+        viewModel.showSnackBarString.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                Snackbar.make(
+                    requireActivity().findViewById(android.R.id.content),
+                    it,
+                    Snackbar.LENGTH_LONG
+                ).show()
+                viewModel.resetSnackbarString()
+            }
+        })
+
         //Setup recyclerview
         binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(this.context)
 
         binding.serverButton.setOnClickListener {
-            binding.recyclerView.adapter?.notifyDataSetChanged()
+            //binding.recyclerView.adapter?.notifyDataSetChanged()
             binding.searchview.requestFocus()
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
