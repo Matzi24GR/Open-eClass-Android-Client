@@ -5,11 +5,12 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.geomat.openeclassclient.CalendarFragment">
+    tools:context="com.geomat.openeclassclient.screens.Calendar.CalendarFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/calendarRecyclerView"/>
+        android:id="@+id/calendarRecyclerView"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

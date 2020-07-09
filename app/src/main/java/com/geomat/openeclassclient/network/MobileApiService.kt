@@ -49,6 +49,13 @@ interface  MobileApiService {
                  @Field("pass")password: String):
             Call<String>
 
+    @FormUrlEncoded
+    @POST
+    fun getApiEnabled(@Url url: String,
+                      @Field("uname")username: String,
+                      @Field("pass")password: String):
+            Call<String>
+
 }
 
 interface JsonApiService {

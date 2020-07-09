@@ -4,6 +4,7 @@ package com.geomat.openeclassclient.network
 import android.util.Log
 import okhttp3.Interceptor
 import okhttp3.Response
+import timber.log.Timber
 
 
 class HostSelectionInterceptor: Interceptor {
@@ -23,15 +24,17 @@ class HostSelectionInterceptor: Interceptor {
 
         var request = chain.request()
 
-        //val host = "openeclass.uom.gr"
-        Log.i("interceptor", host)
-        val newUrl = request.url().newBuilder()
-            .host(host)
-            .build()
+        if (host.isEmpty()){
+            //host = request.url().host()
+        } else {
+            val newUrl = request.url().newBuilder()
+                .host(host)
+                .build()
 
-        request = request.newBuilder()
-            .url(newUrl)
-            .build()
+            request = request.newBuilder()
+                .url(newUrl)
+                .build()
+        }
 
         return chain.proceed(request)
     }

@@ -1,9 +1,6 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
-
 apply plugin: 'kotlin-kapt'
 
 android {
@@ -20,8 +17,8 @@ android {
         applicationId "com.geomat.openeclassclient"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "0.2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -37,20 +34,13 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.72"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.google.android.material:material:1.1.0'
-    implementation 'androidx.core:core-ktx:1.3.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    kapt "com.android.databinding:compiler:3.1.4"
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
 
     //Timber Logging Library
     implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    //Material
+    implementation 'com.google.android.material:material:1.1.0'
 
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -60,6 +50,28 @@ dependencies {
     //Moshi
     implementation 'com.squareup.moshi:moshi:1.9.3'
     implementation 'com.squareup.moshi:moshi-kotlin:1.9.3'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.0'
+
+    // Support libraries
+    implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
+
+    // Android KTX
+    implementation "androidx.core:core-ktx:$version_core"
+
+    // Room and Lifecycle dependencies
+    implementation "androidx.room:room-runtime:$version_room"
+    kapt "androidx.room:room-compiler:$version_room"
+    implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle_extensions"
+
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version_coroutine"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_coroutine"
+
+    // Navigation
+    implementation "android.arch.navigation:navigation-fragment-ktx:$version_navigation"
+    implementation "android.arch.navigation:navigation-ui-ktx:$version_navigation"
+
+    // Testing
+    testImplementation 'junit:junit:4.13'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
