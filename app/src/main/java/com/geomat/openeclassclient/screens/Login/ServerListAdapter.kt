@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.network.eClassApi
@@ -16,24 +18,18 @@ import retrofit2.Response
 import java.util.*
 import kotlin.collections.ArrayList
 
-//TODO Add Search
-
 data class Server(var name: String, var url: String)
 
-class ServerListAdapter(val ServerData: ArrayList<Server>, private val itemClick: (Server) -> Unit): RecyclerView.Adapter<ServerListAdapter.ViewHolder>(), Filterable {
+class ServerListAdapter(val ServerData: ArrayList<Server>, private val itemClick: (Server) -> Unit): ListAdapter<Server, ServerListAdapter.ViewHolder>(ServerDiffCallback()), Filterable {
 
     var serverFilterList = ArrayList<Server>()
 
     init {
-        serverFilterList = ServerData
-    }
-
-    override fun getItemCount(): Int {
-        return serverFilterList.size
+        submitList(ServerData)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = serverFilterList[position]
+        val item = getItem(position)
         holder.bind(item, itemClick)
     }
 
@@ -100,9 +96,19 @@ class ServerListAdapter(val ServerData: ArrayList<Server>, private val itemClick
             @Suppress("UNCHECKED_CAST")
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
                 serverFilterList = results?.values as ArrayList<Server>
-                notifyDataSetChanged()
+                submitList(serverFilterList)
             }
 
+        }
+    }
+
+    class ServerDiffCallback: DiffUtil.ItemCallback<Server>() {
+        override fun areItemsTheSame(oldItem: Server, newItem: Server): Boolean {
+            return oldItem.name == newItem.name
+        }
+
+        override fun areContentsTheSame(oldItem: Server, newItem: Server): Boolean {
+            return oldItem == newItem
         }
     }
 }

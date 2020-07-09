@@ -82,7 +82,6 @@ class LoginFragment : Fragment() {
         binding.recyclerView.adapter = adapter
 
         binding.serverButton.setOnClickListener {
-            //binding.recyclerView.adapter?.notifyDataSetChanged()
             binding.searchview.requestFocus()
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
