@@ -17,8 +17,8 @@ android {
         applicationId "com.geomat.openeclassclient"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 2
-        versionName "0.2.0"
+        versionCode 3
+        versionName "0.3.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -46,10 +46,16 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
+    implementation 'com.tickaroo.tikxml:retrofit-converter:0.8.13'
 
     //Moshi
     implementation 'com.squareup.moshi:moshi:1.9.3'
     implementation 'com.squareup.moshi:moshi-kotlin:1.9.3'
+
+    //  TikXml
+    implementation 'com.tickaroo.tikxml:annotation:0.8.13'
+    implementation 'com.tickaroo.tikxml:core:0.8.13'
+    kapt 'com.tickaroo.tikxml:processor:0.8.13'
 
     // Support libraries
     implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
