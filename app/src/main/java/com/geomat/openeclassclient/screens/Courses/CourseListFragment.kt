@@ -27,13 +27,12 @@ class CourseListFragment : Fragment() {
         if (token != null) {
             eClassApi.MobileApi.getCourses(token).enqueue(object :
                 Callback<CourseResponse> {
-                override fun onFailure(call: Call<CourseResponse>, t: Throwable) {
+                override fun onFailure(call: Call<String>, t: Throwable) {
                     CoursesTextView.text = "Failure: " + t.message
                 }
 
-                override fun onResponse(call: Call<CourseResponse>, response: Response<CourseResponse>) {
-                    if (response.body() == null) CoursesTextView.text = "null"
-                    CoursesTextView.text = response.body()!!.courseGroup.courseList[0].code
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    CoursesTextView.text = response.body()
                 }
 
             })
