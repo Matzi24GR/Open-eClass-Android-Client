@@ -65,7 +65,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
         if (_selectedServer.value!!.url.isNotBlank()) {
 
-            eClassApi.MobileApi.getToken(username, password)
+            eClassApi.PlainTextApi.getToken(username, password)
                 .enqueue(object : Callback<String> {
                     override fun onFailure(call: Call<String>, t: Throwable) {
                         _showSnackbarString.value = "Check your Connection"

@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.*
 
 private const val BASE_URL = "https://localhost/"
@@ -25,7 +26,13 @@ private val moshi = Moshi.Builder()
 private val tikXml = TikXml.Builder().writeDefaultXmlDeclaration(true).build()
 
 private val retrofitXml = Retrofit.Builder()
-    .addConverterFactory(TikXmlConverterFactory.create(tikXml))
+    .addConverterFactory(TikXmlConverterFactory.create())
+    .baseUrl(BASE_URL)
+    .client(okHttpClient)
+    .build()
+
+private val retrofitPlainText = Retrofit.Builder()
+    .addConverterFactory(ScalarsConverterFactory.create())
     .baseUrl(BASE_URL)
     .client(okHttpClient)
     .build()
@@ -45,6 +52,11 @@ interface  MobileApiService {
     @POST("/modules/mobile/mcourses.php")
     fun getCourses(@Field("token")token: String):
             Call<CourseResponse>
+}
+
+interface  MobileApiPlainTextService {
+
+    //Provided Api For Mobile App With PlainText Result
 
     @FormUrlEncoded
     @POST("/modules/mobile/mlogin.php")
@@ -82,7 +94,9 @@ object eClassApi {
         retrofitXml.create(MobileApiService::class.java)
     }
     val JsonApi: JsonApiService by lazy {
-        retrofitJson.create(
-            JsonApiService::class.java)
+        retrofitJson.create(JsonApiService::class.java)
+    }
+    val PlainTextApi: MobileApiPlainTextService by lazy {
+        retrofitPlainText.create(MobileApiPlainTextService::class.java)
     }
 }

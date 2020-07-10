@@ -26,6 +26,7 @@ class HostSelectionInterceptor: Interceptor {
 
         if (host.isEmpty()){
             //host = request.url().host()
+            Timber.i("Host Empty")
         } else {
             val newUrl = request.url().newBuilder()
                 .host(host)

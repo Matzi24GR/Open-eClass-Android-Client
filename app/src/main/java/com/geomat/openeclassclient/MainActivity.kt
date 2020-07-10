@@ -17,6 +17,7 @@ import com.geomat.openeclassclient.database.EClassDatabase
 import com.geomat.openeclassclient.databinding.ActivityMainBinding
 import com.geomat.openeclassclient.network.interceptor
 import com.geomat.openeclassclient.repository.CalendarEventRepository
+import com.geomat.openeclassclient.repository.CoursesRepository
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -73,7 +74,11 @@ class MainActivity : AppCompatActivity() {
                     R.id.mainActivity
                 )
                 val calendarRepo = CalendarEventRepository(EClassDatabase.getInstance(this).calendarEventDao)
-                GlobalScope.launch { calendarRepo.clear() }
+                val courseRepo = CoursesRepository(EClassDatabase.getInstance(this).coursesDao)
+                GlobalScope.launch {
+                    calendarRepo.clear()
+                    courseRepo.clear()
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
