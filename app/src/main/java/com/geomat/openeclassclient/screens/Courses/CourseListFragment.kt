@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.geomat.openeclassclient.R
+import com.geomat.openeclassclient.network.CourseResponse
 import com.geomat.openeclassclient.network.eClassApi
 import retrofit2.Call
 import retrofit2.Callback
@@ -25,13 +26,14 @@ class CourseListFragment : Fragment() {
         val token = requireContext().getSharedPreferences("login", Context.MODE_PRIVATE).getString("token",null)
         if (token != null) {
             eClassApi.MobileApi.getCourses(token).enqueue(object :
-                Callback<String> {
-                override fun onFailure(call: Call<String>, t: Throwable) {
+                Callback<CourseResponse> {
+                override fun onFailure(call: Call<CourseResponse>, t: Throwable) {
                     CoursesTextView.text = "Failure: " + t.message
                 }
 
-                override fun onResponse(call: Call<String>, response: Response<String>) {
-                    CoursesTextView.text = response.body()
+                override fun onResponse(call: Call<CourseResponse>, response: Response<CourseResponse>) {
+                    if (response.body() == null) CoursesTextView.text = "null"
+                    CoursesTextView.text = response.body()!!.courseGroup.courseList[0].code
                 }
 
             })

@@ -36,45 +36,16 @@ class CalendarFragment : Fragment() {
         val repository = CalendarEventRepository(EClassDatabase.getInstance(requireContext()).calendarEventDao)
         val recyclerView = view.findViewById<RecyclerView>(R.id.calendarRecyclerView)
         val data = repository.allEvents
+        val adapter = CalendarEventAdapter()
+        recyclerView.adapter = adapter
 
+
+        GlobalScope.launch { repository.refreshData(token!!) }
         data.observe(viewLifecycleOwner, Observer {
             if (data.value != null) {
-                val adapter = CalendarEventAdapter(data.value!!)
-                recyclerView.adapter = adapter
+                adapter.submitList(data.value)
             }
         })
-
-        eClassApi.JsonApi.getCalendar("PHPSESSID=" + token).enqueue(
-            object: Callback<CalendarResponse> {
-            override fun onFailure(call: Call<CalendarResponse>, t: Throwable) {
-                //CalendarTextView.text = "Failure: " + t.message
-            }
-
-            override fun onResponse(call: Call<CalendarResponse>, response: Response<CalendarResponse>) {
-                val responseList = response.body()?.result
-                var DBlist = mutableListOf<CalendarEvent>()
-
-                for (i in responseList!!.indices) {
-                    with(responseList[i]){
-                        DBlist.add(CalendarEvent(
-                            this.id.toLong(),
-                            this.title,
-                            this.start.toLong(),
-                            this.end.toLong(),
-                            this.content,
-                            this.event_group,
-                            this.Class,
-                            this.event_type,
-                            this.course,
-                            this.url
-                        ))
-                    }
-                }
-
-                GlobalScope.launch { repository.insertAll(DBlist) }
-            }
-
-            })
 
         return view
     }

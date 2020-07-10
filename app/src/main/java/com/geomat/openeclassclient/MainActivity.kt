@@ -13,9 +13,13 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
+import com.geomat.openeclassclient.database.EClassDatabase
 import com.geomat.openeclassclient.databinding.ActivityMainBinding
 import com.geomat.openeclassclient.network.interceptor
+import com.geomat.openeclassclient.repository.CalendarEventRepository
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -68,6 +72,8 @@ class MainActivity : AppCompatActivity() {
                 findNavController(R.id.fragment).navigate(
                     R.id.mainActivity
                 )
+                val calendarRepo = CalendarEventRepository(EClassDatabase.getInstance(this).calendarEventDao)
+                GlobalScope.launch { calendarRepo.clear() }
                 true
             }
             else -> super.onOptionsItemSelected(item)

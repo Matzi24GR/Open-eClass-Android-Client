@@ -1,21 +1,27 @@
 package com.geomat.openeclassclient.screens.Calendar
 
+import android.text.Html
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.text.HtmlCompat
+import androidx.core.text.toSpanned
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.database.CalendarEvent
+import com.geomat.openeclassclient.screens.Login.Server
+import timber.log.Timber
+import java.text.SimpleDateFormat
 
-class CalendarEventAdapter(var data: List<CalendarEvent>) : RecyclerView.Adapter<CalendarEventAdapter.ViewHolder>() {
+class CalendarEventAdapter : ListAdapter<CalendarEvent, CalendarEventAdapter.ViewHolder>(CalendarEventDiffCallback()) {
 
-    override fun getItemCount(): Int {
-        return data.size
-    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = data[position]
+        val item = getItem(position)
         holder.bind(item)
     }
 
@@ -41,9 +47,9 @@ class CalendarEventAdapter(var data: List<CalendarEvent>) : RecyclerView.Adapter
         fun bind(calendarEvent: CalendarEvent) {
             textView1.text = calendarEvent.id.toString()
             textView2.text = calendarEvent.title
-            textView3.text = calendarEvent.start.toString()
-            textView4.text = calendarEvent.end.toString()
-            textView5.text = calendarEvent.content
+            textView3.text = SimpleDateFormat.getDateTimeInstance().format(calendarEvent.start)
+            textView4.text = SimpleDateFormat.getDateTimeInstance().format(calendarEvent.end)
+            textView5.text = HtmlCompat.fromHtml(calendarEvent.content.toString(), HtmlCompat.FROM_HTML_MODE_COMPACT)
             textView6.text = calendarEvent.event_group
             textView7.text = calendarEvent.Class
             textView8.text = calendarEvent.courseCode
@@ -62,6 +68,16 @@ class CalendarEventAdapter(var data: List<CalendarEvent>) : RecyclerView.Adapter
                     view
                 )
             }
+        }
+    }
+
+    class CalendarEventDiffCallback: DiffUtil.ItemCallback<CalendarEvent>() {
+        override fun areItemsTheSame(oldItem: CalendarEvent, newItem: CalendarEvent): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: CalendarEvent, newItem: CalendarEvent): Boolean {
+            return oldItem == newItem
         }
     }
 }
