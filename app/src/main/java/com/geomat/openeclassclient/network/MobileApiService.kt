@@ -2,6 +2,8 @@ package com.geomat.openeclassclient.network
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.tickaroo.tikxml.TikXml
+import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -21,7 +23,15 @@ private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
     .build()
 
-private val retrofit = Retrofit.Builder()
+private val tikXml = TikXml.Builder().writeDefaultXmlDeclaration(true).build()
+
+private val retrofitXml = Retrofit.Builder()
+    .addConverterFactory(TikXmlConverterFactory.create())
+    .baseUrl(BASE_URL)
+    .client(okHttpClient)
+    .build()
+
+private val retrofitPlainText = Retrofit.Builder()
     .addConverterFactory(ScalarsConverterFactory.create())
     .baseUrl(BASE_URL)
     .client(okHttpClient)
@@ -41,7 +51,12 @@ interface  MobileApiService {
     @FormUrlEncoded
     @POST("/modules/mobile/mcourses.php")
     fun getCourses(@Field("token")token: String):
-            Call<String>
+            Call<CourseResponse>
+}
+
+interface  MobileApiPlainTextService {
+
+    //Provided Api For Mobile App With PlainText Result
 
     @FormUrlEncoded
     @POST("/modules/mobile/mlogin.php")
@@ -76,10 +91,12 @@ interface JsonApiService {
 
 object eClassApi {
     val MobileApi: MobileApiService by lazy {
-        retrofit.create(MobileApiService::class.java)
+        retrofitXml.create(MobileApiService::class.java)
     }
     val JsonApi: JsonApiService by lazy {
-        retrofitJson.create(
-            JsonApiService::class.java)
+        retrofitJson.create(JsonApiService::class.java)
+    }
+    val PlainTextApi: MobileApiPlainTextService by lazy {
+        retrofitPlainText.create(MobileApiPlainTextService::class.java)
     }
 }

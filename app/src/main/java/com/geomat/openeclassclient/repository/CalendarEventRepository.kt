@@ -36,22 +36,30 @@ class CalendarEventRepository(private val calendarEventDao: CalendarEventDao) {
                     val responseList = result.body()?.result
                     val dbList = mutableListOf<CalendarEvent>()
 
-                    for (i in responseList!!.indices) {
-                        with(responseList[i]){
-                            dbList.add(
-                                CalendarEvent(
-                                    this.id.toLong(),
-                                    this.title,
-                                    this.start.toLong(),
-                                    this.end.toLong(),
-                                    HtmlCompat.fromHtml(this.content, HtmlCompat.FROM_HTML_MODE_COMPACT).replace(Regex("""\(deadline: \d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\)"""),""),
-                                    this.event_group,
-                                    this.Class,
-                                    this.event_type,
-                                    this.course,
-                                    this.url
+                    if (responseList!!.isNotEmpty()) {
+                        for (i in responseList.indices) {
+                            with(responseList[i]) {
+                                dbList.add(
+                                    CalendarEvent(
+                                        this.id.toLong(),
+                                        this.title,
+                                        this.start.toLong(),
+                                        this.end.toLong(),
+                                        HtmlCompat.fromHtml(
+                                            this.content,
+                                            HtmlCompat.FROM_HTML_MODE_COMPACT
+                                        ).replace(
+                                            Regex("""\(deadline: \d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\)"""),
+                                            ""
+                                        ),
+                                        this.event_group,
+                                        this.Class,
+                                        this.event_type,
+                                        this.course,
+                                        this.url
+                                    )
                                 )
-                            )
+                            }
                         }
                     }
                     insertAll(dbList)
