@@ -25,14 +25,9 @@ private val moshi = Moshi.Builder()
 
 private val tikXml = TikXml.Builder().writeDefaultXmlDeclaration(true).build()
 
-private val retrofitXml = Retrofit.Builder()
-    .addConverterFactory(TikXmlConverterFactory.create())
-    .baseUrl(BASE_URL)
-    .client(okHttpClient)
-    .build()
-
-private val retrofitPlainText = Retrofit.Builder()
+private val retrofit = Retrofit.Builder()
     .addConverterFactory(ScalarsConverterFactory.create())
+    .addConverterFactory(TikXmlConverterFactory.create())
     .baseUrl(BASE_URL)
     .client(okHttpClient)
     .build()
@@ -52,11 +47,6 @@ interface  MobileApiService {
     @POST("/modules/mobile/mcourses.php")
     fun getCourses(@Field("token")token: String):
             Call<CourseResponse>
-}
-
-interface  MobileApiPlainTextService {
-
-    //Provided Api For Mobile App With PlainText Result
 
     @FormUrlEncoded
     @POST("/modules/mobile/mlogin.php")
@@ -70,12 +60,11 @@ interface  MobileApiPlainTextService {
                       @Field("uname")username: String,
                       @Field("pass")password: String):
             Call<String>
-
 }
 
 interface JsonApiService {
 
-    //Hidden Open EClass Api
+    //Undocumented Json Open EClass Api
 
     @Headers("X-Requested-With: xmlhttprequest")
     @GET("/modules/announcements/myannouncements.php")
@@ -91,12 +80,9 @@ interface JsonApiService {
 
 object eClassApi {
     val MobileApi: MobileApiService by lazy {
-        retrofitXml.create(MobileApiService::class.java)
+        retrofit.create(MobileApiService::class.java)
     }
     val JsonApi: JsonApiService by lazy {
         retrofitJson.create(JsonApiService::class.java)
-    }
-    val PlainTextApi: MobileApiPlainTextService by lazy {
-        retrofitPlainText.create(MobileApiPlainTextService::class.java)
     }
 }
