@@ -57,6 +57,12 @@ dependencies {
     implementation 'com.tickaroo.tikxml:core:0.8.13'
     kapt 'com.tickaroo.tikxml:processor:0.8.13'
 
+    // Glide
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+
+    // Jsoup
+    implementation 'org.jsoup:jsoup:1.13.1'
+
     // Support libraries
     implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
 

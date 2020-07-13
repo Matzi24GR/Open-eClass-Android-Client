@@ -78,6 +78,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                             else -> {
                                 Timber.i("Login Response: ${response.body()}")
                                 context.getSharedPreferences("login", Context.MODE_PRIVATE).edit()
+                                    .putString("username", username).apply()
+                                context.getSharedPreferences("login", Context.MODE_PRIVATE).edit()
                                     .putBoolean("hasLoggedIn", true).apply()
                                 context.getSharedPreferences("login", Context.MODE_PRIVATE).edit()
                                     .putString("token", token).apply()

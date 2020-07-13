@@ -23,7 +23,11 @@ private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
     .build()
 
-private val tikXml = TikXml.Builder().writeDefaultXmlDeclaration(true).build()
+private val retrofitHtml = Retrofit.Builder()
+    .addConverterFactory(ScalarsConverterFactory.create())
+    .baseUrl(BASE_URL)
+    .client(okHttpClient)
+    .build()
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(ScalarsConverterFactory.create())
@@ -57,8 +61,8 @@ interface  MobileApiService {
     @FormUrlEncoded
     @POST
     fun getApiEnabled(@Url url: String,
-                      @Field("uname")username: String,
-                      @Field("pass")password: String):
+                      @Field("uname")username: String = "",
+                      @Field("pass")password: String = ""):
             Call<String>
 }
 
@@ -78,11 +82,19 @@ interface JsonApiService {
 
 }
 
+interface HtmlParserService {
+    @GET("/main/portfolio.php")
+    fun getMainPage(@Header("Cookie")token: String): Call<String>
+}
+
 object eClassApi {
     val MobileApi: MobileApiService by lazy {
         retrofit.create(MobileApiService::class.java)
     }
     val JsonApi: JsonApiService by lazy {
         retrofitJson.create(JsonApiService::class.java)
+    }
+    val HtmlParser: HtmlParserService by lazy {
+        retrofitHtml.create(HtmlParserService::class.java)
     }
 }
