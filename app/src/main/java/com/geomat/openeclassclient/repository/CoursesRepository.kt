@@ -6,11 +6,10 @@ import com.geomat.openeclassclient.database.CoursesDao
 import com.geomat.openeclassclient.network.eClassApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 
 class CoursesRepository(private val coursesDao: CoursesDao ) {
 
-    val allCourses: LiveData<List<Course>> = coursesDao.getAllEvents()
+    val allCourses: LiveData<List<Course>> = coursesDao.getAllCourses()
 
     suspend fun insertAll(courses: List<Course>) {
         coursesDao.insertAll(courses)
@@ -35,7 +34,7 @@ class CoursesRepository(private val coursesDao: CoursesDao ) {
                         for (i in responseList.indices) {
                             with(responseList[i]){
                                 dbList.add(
-                                    Course(this.code,this.title,this.description)
+                                    Course(this.code,this.title,this.description,"")
                                 )
                             }
                         }

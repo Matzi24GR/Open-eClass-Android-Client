@@ -1,10 +1,7 @@
 package com.geomat.openeclassclient.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface CoursesDao {
@@ -16,9 +13,15 @@ interface CoursesDao {
     fun insertAll(courses: List<Course>)
 
     @Query("SELECT * FROM courses_table ORDER BY `title` ASC")
-    fun getAllEvents(): LiveData<List<Course>>
+    fun getAllCourses(): LiveData<List<Course>>
+
+    @Query("SELECT * FROM courses_table ORDER BY `title` ASC")
+    fun getAllCoursesNonLive(): List<Course>
 
     @Query("DELETE FROM  courses_table")
     fun clear()
+
+    @Query("UPDATE courses_table SET announcementFeedUrl = :url WHERE id = :courseId")
+    fun setAnnouncementFeedUrl(url: String, courseId: String)
 
 }

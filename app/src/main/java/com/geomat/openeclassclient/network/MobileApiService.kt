@@ -23,6 +23,8 @@ private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
     .build()
 
+private val tikXml = TikXml.Builder().exceptionOnUnreadXml(false).build()
+
 private val retrofitHtml = Retrofit.Builder()
     .addConverterFactory(ScalarsConverterFactory.create())
     .baseUrl(BASE_URL)
@@ -31,7 +33,7 @@ private val retrofitHtml = Retrofit.Builder()
 
 private val retrofit = Retrofit.Builder()
     .addConverterFactory(ScalarsConverterFactory.create())
-    .addConverterFactory(TikXmlConverterFactory.create())
+    .addConverterFactory(TikXmlConverterFactory.create(tikXml))
     .baseUrl(BASE_URL)
     .client(okHttpClient)
     .build()
@@ -64,6 +66,10 @@ interface  MobileApiService {
                       @Field("uname")username: String = "",
                       @Field("pass")password: String = ""):
             Call<String>
+
+    @GET
+    fun getRssFeed(@Url url: String):
+            Call<RssResponse>
 }
 
 interface JsonApiService {
@@ -85,6 +91,11 @@ interface JsonApiService {
 interface HtmlParserService {
     @GET("/main/portfolio.php")
     fun getMainPage(@Header("Cookie")token: String): Call<String>
+
+    @GET("/modules/announcements/")
+    fun getAnnouncementPage(@Header("Cookie")token: String,
+                            @Query("course")course: String
+    ): Call<String>
 }
 
 object eClassApi {

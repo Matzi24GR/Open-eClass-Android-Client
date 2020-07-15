@@ -30,9 +30,8 @@ class UserInfoRepository(private val userDao: UserInfoDao) {
                 if (response.isSuccessful) {
                     val document = Jsoup.parse(response.body())
                     val infoBox = document.select("div [id=profile_box]")
-Timber.i(infoBox.toString())
                     val username = infoBox.select("div [class=not_visible text-center]").text()
-                    val fullName = infoBox.select("a").text()
+                    val fullName = infoBox.select("a")[0].text()
                     val category = infoBox.select("span[class=tag-value text-muted]")[0].text()
                     val imgUrl = infoBox.select("img").attr("src")
 

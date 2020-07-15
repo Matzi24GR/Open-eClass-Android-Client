@@ -10,5 +10,6 @@ data class Course(
     val id: String,                 // ex. DAI107
 
     var title: String,              // ex.  Βάσεις Δεδομένων ΙΙ - ΠΛ0601
-    var desc: String                // ex.  ""
+    var desc: String,                // ex.  ""
+    var announcementFeedUrl: String
 )

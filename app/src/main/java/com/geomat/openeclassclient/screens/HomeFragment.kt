@@ -53,10 +53,9 @@ class HomeFragment : Fragment() {
         GlobalScope.launch { repo.refreshData(token!!) }
         repo.getUserWithUsername(username!!).observe(viewLifecycleOwner, Observer {
             if (it != null) {
-                Timber.i("here2")
                 UserText.text = it.username
                 FullNameText.text = it.fullName
-                CategoryText.text = it.category
+                CategoryText.text = it.category.replace(" » ","\n")
                 val imageUrl = "https://$url${it.imageUrl}".toUri()
                 Glide.with(imageView.context).load(imageUrl).into(imageView)
             }

@@ -31,7 +31,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textTitle"
+        android:id="@+id/titleText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -43,7 +43,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
-        android:id="@+id/textStart"
+        android:id="@+id/date_text"
         android:layout_width="238dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"

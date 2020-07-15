@@ -16,6 +16,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.geomat.openeclassclient.database.EClassDatabase
 import com.geomat.openeclassclient.databinding.ActivityMainBinding
 import com.geomat.openeclassclient.network.interceptor
+import com.geomat.openeclassclient.repository.AnnouncementRepository
 import com.geomat.openeclassclient.repository.CalendarEventRepository
 import com.geomat.openeclassclient.repository.CoursesRepository
 import kotlinx.android.synthetic.main.activity_main.*
@@ -75,9 +76,11 @@ class MainActivity : AppCompatActivity() {
                 )
                 val calendarRepo = CalendarEventRepository(EClassDatabase.getInstance(this).calendarEventDao)
                 val courseRepo = CoursesRepository(EClassDatabase.getInstance(this).coursesDao)
+                val announcementRepo = AnnouncementRepository(EClassDatabase.getInstance(this))
                 GlobalScope.launch {
                     calendarRepo.clear()
                     courseRepo.clear()
+                    announcementRepo.clear()
                 }
                 true
             }

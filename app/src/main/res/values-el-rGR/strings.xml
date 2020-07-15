@@ -10,4 +10,5 @@
     <string name="courses_tab">Μαθήματα</string>
     <string name="calendar_tab">Ημερολόγιο</string>
     <string name="search_server">Αναζήτηση Server</string>
+    <string name="HomeTabProfileIcon" >Είκονα προφίλ χρήστη</string>
 </resources>
