@@ -16,8 +16,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.databinding.FragmentLoginBinding
+import com.geomat.openeclassclient.network.ServerInfoResponse
+import com.geomat.openeclassclient.network.eClassApi
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class LoginFragment : Fragment() {
@@ -56,6 +61,22 @@ class LoginFragment : Fragment() {
         // Selected Server Observer
         viewModel.selectedServer.observe(viewLifecycleOwner, Observer {
             selectedServer -> if (selectedServer.url.isNotBlank()) binding.serverButton.text = selectedServer.url
+
+            eClassApi.MobileApi.getServerInfo().enqueue(object: Callback<ServerInfoResponse>{
+                override fun onFailure(call: Call<ServerInfoResponse>, t: Throwable) {
+                }
+
+                override fun onResponse(call: Call<ServerInfoResponse>, response: Response<ServerInfoResponse>) {
+                    val list = response.body()?.AuthTypeList
+
+                    if (list?.size == 1 ) {
+                        if (list[0].url.isNotBlank()) {
+                            val action = LoginFragmentDirections.actionLoginFragmentToWebViewFragment(list[0].url,selectedServer.name,list[0].title)
+                            findNavController().navigate(action)
+                        }
+                    }
+                }
+            })
         })
 
         // Login Successfull Event Observer
@@ -89,9 +110,6 @@ class LoginFragment : Fragment() {
         binding.loginButton.setOnClickListener {
             val username = binding.userText.editText?.text.toString()
             val password = binding.passText.editText?.text.toString()
-            if (username.contains("007")) {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://youtu.be/vaKHTJuOuyE?t=6")))
-            }
             viewModel.Login(username,password)
 
         }

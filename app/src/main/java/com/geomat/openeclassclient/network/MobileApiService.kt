@@ -67,6 +67,10 @@ interface  MobileApiService {
                       @Field("pass")password: String = ""):
             Call<String>
 
+    @GET("/modules/mobile/midentity.php")
+    fun getServerInfo():
+            Call<ServerInfoResponse>
+
     @GET
     fun getRssFeed(@Url url: String):
             Call<RssResponse>

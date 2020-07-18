@@ -28,19 +28,22 @@
         android:id="@+id/loginFragment"
         android:name="com.geomat.openeclassclient.screens.Login.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_MainActivity"
             app:destination="@id/mainActivity"
+            app:exitAnim="@anim/slidedown"
             app:popUpTo="@id/navgraph"
-            app:popUpToInclusive="true"
-            app:exitAnim="@anim/slidedown" />
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_loginFragment_to_webViewFragment"
+            app:destination="@id/ExternalAuthFragment" />
     </fragment>
     <action
         android:id="@+id/tologinFragment"
         app:destination="@id/loginFragment"
-        app:popUpTo="@+id/navgraph"
-        app:popUpToInclusive="true"/>
+        app:popUpTo="@id/navgraph"
+        app:popUpToInclusive="true" />
     <fragment
         android:id="@+id/aboutFragment"
         android:name="com.geomat.openeclassclient.screens.AboutFragment"
@@ -51,4 +54,24 @@
         android:name="com.geomat.openeclassclient.screens.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/ExternalAuthFragment"
+        android:name="com.geomat.openeclassclient.screens.Login.ExternalAuthFragment"
+        android:label="fragment_external_auth"
+        tools:layout="@layout/fragment_external_auth">
+        <argument
+            android:name="url"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_webViewFragment_to_mainActivity"
+            app:destination="@id/mainActivity"
+            app:popUpTo="@id/navgraph"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="serverName"
+            app:argType="string" />
+        <argument
+            android:name="authName"
+            app:argType="string" />
+    </fragment>
 </navigation>

@@ -10,8 +10,10 @@
     <string name="courses_tab">Courses</string>
     <string name="calendar_tab">Calendar</string>
     <string name="search_server">Search Servers</string>
-    <string name="HomeTabProfileIcon" >User Profile Picture</string>
+    <string name="HomeTabProfileIcon">User Profile Picture</string>
     <string name="Administrators">Administrators</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- TODO: Remove or change this placeholder text -->
 
 </resources>
