@@ -74,4 +74,9 @@
             android:name="authName"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/serverSelectFragment"
+        android:name="com.geomat.openeclassclient.ServerSelectFragment"
+        android:label="fragment_server_select"
+        tools:layout="@layout/fragment_server_select" />
 </navigation>
