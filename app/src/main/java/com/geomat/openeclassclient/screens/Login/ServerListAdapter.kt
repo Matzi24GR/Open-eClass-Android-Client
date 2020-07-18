@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.geomat.openeclassclient.R
+import com.geomat.openeclassclient.databinding.ServerListItemBinding
 import com.geomat.openeclassclient.network.eClassApi
 import com.geomat.openeclassclient.network.interceptor
 import retrofit2.Call
@@ -34,42 +35,36 @@ class ServerListAdapter(val ServerData: ArrayList<Server>, private val itemClick
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.from(
-            parent
-        )
+        return ViewHolder.from(parent)
     }
 
-    class ViewHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
-        private val nameTextView: TextView = itemView.findViewById(R.id.name_text_view)
-        private val urlTextView: TextView = itemView.findViewById(R.id.url_text_view)
+    class ViewHolder private constructor(private val binding: ServerListItemBinding) : RecyclerView.ViewHolder(binding.root){
 
         fun bind(server: Server, itemClick: (Server) -> Unit) {
-            nameTextView.text = server.name
-            urlTextView.text = server.url
-            itemView.setOnClickListener{itemClick(server)}
-            interceptor.setHost("")
-            eClassApi.MobileApi.getApiEnabled("https://${server.url}/modules/mobile/mlogin.php")
-                .enqueue(object : Callback<String> {
-                    override fun onFailure(call: Call<String>, t: Throwable) {}
-                    override fun onResponse(call: Call<String>, response: Response<String>) {
+            with(binding) {
+                nameTextView.text = server.name
+                urlTextView.text = server.url
+                itemView.setOnClickListener{itemClick(server)}
+                interceptor.setHost("")
+                eClassApi.MobileApi.getApiEnabled("https://${server.url}/modules/mobile/mlogin.php")
+                    .enqueue(object : Callback<String> {
+                        override fun onFailure(call: Call<String>, t: Throwable) {}
+                        override fun onResponse(call: Call<String>, response: Response<String>) {
                             when(response.body()){
                                 "FAILED"-> urlTextView.text = "✓ "+server.url
                                 "NOTENABLED"-> urlTextView.text = "✗ " +server.url +" (Απενεργοποιημένο)"
                                 else -> urlTextView.text = "✗ "+server.url
                             }
-                    }
-                })
+                        }
+                    })
+            }
+
         }
 
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val view = layoutInflater
-                    .inflate(R.layout.server_list_item, parent, false)
-
-                return ViewHolder(
-                    view
-                )
+                val itemBinding = ServerListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                return ViewHolder(itemBinding)
             }
         }
     }

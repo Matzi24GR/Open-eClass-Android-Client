@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.database.EClassDatabase
+import com.geomat.openeclassclient.databinding.FragmentCourseListBinding
 import com.geomat.openeclassclient.network.CourseResponse
 import com.geomat.openeclassclient.network.eClassApi
 import com.geomat.openeclassclient.repository.CoursesRepository
@@ -22,17 +23,23 @@ import retrofit2.Response
 
 class CourseListFragment : Fragment() {
 
+    private lateinit var binding: FragmentCourseListBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_course_list, container, false)
+        binding = FragmentCourseListBinding.inflate(inflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val repo = CoursesRepository(EClassDatabase.getInstance(requireContext()).coursesDao)
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.course_recycler_view)
         val adapter = CourseListAdapter()
-        recyclerView.adapter = adapter
+        binding.courseRecyclerView.adapter = adapter
 
         val token = requireContext().getSharedPreferences("login", Context.MODE_PRIVATE).getString("token",null)
 
@@ -45,7 +52,5 @@ class CourseListFragment : Fragment() {
         })
 
         GlobalScope.launch { repo.refreshData(token!!) }
-
-        return view
     }
 }

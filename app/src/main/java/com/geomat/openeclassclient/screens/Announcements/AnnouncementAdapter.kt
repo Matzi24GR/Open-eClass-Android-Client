@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.database.Announcement
 import com.geomat.openeclassclient.database.CalendarEvent
+import com.geomat.openeclassclient.databinding.AnnouncementListItemBinding
 import timber.log.Timber
 import java.text.SimpleDateFormat
 
@@ -23,39 +24,28 @@ class AnnouncementAdapter : ListAdapter<Announcement, AnnouncementAdapter.ViewHo
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return AnnouncementAdapter.ViewHolder.from(
-            parent
-        )
+        return ViewHolder.from(parent)
     }
 
-    class ViewHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
-
-        private val titleText: TextView = itemView.findViewById(R.id.titleText)
-        private val descText: TextView = itemView.findViewById(R.id.descriptionText)
-        private val dateText: TextView = itemView.findViewById(R.id.date_text)
-        private val courseText: TextView = itemView.findViewById(R.id.courseNameText)
+    class ViewHolder private constructor(private val binding: AnnouncementListItemBinding): RecyclerView.ViewHolder(binding.root) {
 
         fun bind(announcement: Announcement) {
-            if (announcement.courseId.isNullOrBlank()) {
-                courseText.text = "System"
-            } else {
-                courseText.text = announcement.courseId
+            with(binding) {
+                if (announcement.courseId.isNullOrBlank()) {
+                    courseNameText.text = "System"
+                } else {
+                    courseNameText.text = announcement.courseId
+                }
+                dateText.text = SimpleDateFormat.getDateTimeInstance().format(announcement.date)
+                titleText.text = announcement.title
+                descriptionText.text = announcement.description.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT)
             }
-            dateText.text = SimpleDateFormat.getDateTimeInstance().format(announcement.date)
-            titleText.text = announcement.title
-            descText.text = announcement.description.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT)
-
         }
 
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val view = layoutInflater
-                    .inflate(R.layout.announcement_list_item, parent, false)
-
-                return ViewHolder(
-                    view
-                )
+                val itemBinding = AnnouncementListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                return ViewHolder(itemBinding)
             }
         }
     }
