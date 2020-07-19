@@ -13,7 +13,7 @@
         android:backgroundTint="@color/backgroundColor"
         android:orientation="vertical"
         android:weightSum="4"
-        tools:context=".ServerSelectFragment">
+        tools:context=".screens.Login.ServerSelectFragment">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"

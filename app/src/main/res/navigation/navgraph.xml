@@ -76,7 +76,7 @@
     </fragment>
     <fragment
         android:id="@+id/serverSelectFragment"
-        android:name="com.geomat.openeclassclient.ServerSelectFragment"
+        android:name="com.geomat.openeclassclient.screens.Login.ServerSelectFragment"
         android:label="fragment_server_select"
         tools:layout="@layout/fragment_server_select" />
 </navigation>
