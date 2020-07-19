@@ -61,14 +61,13 @@ class ExternalAuthFragment : Fragment() {
                         .putString("token", token).apply()
 
                     navController.navigate(ExternalAuthFragmentDirections.actionWebViewFragmentToMainActivity())
+                    CookieManager.getInstance().removeAllCookies {}
                     return true
                 }
                 return false
             }
         }
 
-
-        CookieManager.getInstance().removeAllCookies {}
         binding.webView.webViewClient = CustomWebViewClient()
 
         binding.webView.loadUrl(args.url)

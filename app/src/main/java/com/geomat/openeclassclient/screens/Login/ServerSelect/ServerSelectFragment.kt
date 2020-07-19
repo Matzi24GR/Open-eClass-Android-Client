@@ -14,9 +14,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ListAdapter
 import com.geomat.openeclassclient.R
+import com.geomat.openeclassclient.databinding.AuthMethodBottomSheetBinding
 import com.geomat.openeclassclient.databinding.FragmentServerSelectBinding
 import com.geomat.openeclassclient.network.ServerInfoResponse
 import com.geomat.openeclassclient.network.eClassApi
+import com.geomat.openeclassclient.network.interceptor
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
@@ -42,14 +44,12 @@ class ServerSelectFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.resetSelectedServer()
-
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
 
         //Auth Method Bottom Sheet Modal
-        val dialogView = layoutInflater.inflate(R.layout.auth_method_bottom_sheet, null)
+        val dialogBinding = AuthMethodBottomSheetBinding.inflate(layoutInflater, binding.root,false)
         val bottomSheetDialog = BottomSheetDialog(requireContext())
-        bottomSheetDialog.setContentView(dialogView)
+        bottomSheetDialog.setContentView(dialogBinding.root)
 
         //ServerList on Click
         val adapter =
@@ -77,6 +77,7 @@ class ServerSelectFragment : Fragment() {
             viewModel.updateSelectedServer( Server("", url) )
         }
 
+        //TODO fix first click not working sometimes
         // Selected Server Observer
         viewModel.selectedServer.observe(viewLifecycleOwner, Observer { selectedServer ->
 
@@ -91,9 +92,9 @@ class ServerSelectFragment : Fragment() {
                             selectedServer.name = response.body()?.institute?.name.toString()
                         }
 
-                        val list = response.body()?.AuthTypeList
+                        val list = response.body()!!.AuthTypeList
 
-                        when (list?.size) {
+                        when (list.size) {
                             0-> {
                                 //Internal Auth
                                 val action = ServerSelectFragmentDirections.actionServerSelectFragmentToInternalAuthFragment(selectedServer.url, selectedServer.name, "")
@@ -113,15 +114,15 @@ class ServerSelectFragment : Fragment() {
                             }
                             else -> {
                                 val array = arrayListOf<String>()
-                                list?.forEach {
+                                list.forEach {
                                     array.add(it.title)
                                 }
                                 //TODO change this to a better recycler view
-                                dialogView.authMethodListView.adapter = ArrayAdapter<String>(requireContext(), R.layout.support_simple_spinner_dropdown_item , array)
-                                dialogView.authMethodListView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-                                    val item = list?.get(position)
+                                dialogBinding.authMethodListView.adapter = ArrayAdapter<String>(requireContext(), R.layout.support_simple_spinner_dropdown_item , array)
+                                dialogBinding.authMethodListView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                                    val item = list[position]
 
-                                    val action = if (item!!.url.isBlank()) {
+                                    val action = if (item.url.isBlank()) {
                                         //Internal Auth
                                         ServerSelectFragmentDirections
                                             .actionServerSelectFragmentToInternalAuthFragment(selectedServer.url, selectedServer.name, item.title)
@@ -172,6 +173,8 @@ class ServerSelectFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        viewModel.resetSelectedServer()
+        interceptor.setHost("")
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
