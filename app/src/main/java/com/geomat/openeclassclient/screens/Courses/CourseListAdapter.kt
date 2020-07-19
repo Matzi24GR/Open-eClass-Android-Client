@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.database.Course
+import com.geomat.openeclassclient.databinding.CourseListItemBinding
 
 class CourseListAdapter : ListAdapter<Course, CourseListAdapter.ViewHolder>(CourseDiffCallback()) {
 
@@ -19,37 +20,29 @@ class CourseListAdapter : ListAdapter<Course, CourseListAdapter.ViewHolder>(Cour
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return CourseListAdapter.ViewHolder.from(
-            parent
-        )
+        return CourseListAdapter.ViewHolder.from(parent)
     }
 
-    class ViewHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
-        private val titleText = itemView.findViewById<TextView>(R.id.title_text_view)
-        private val codeText = itemView.findViewById<TextView>(R.id.code_text_view)
-        private val descText = itemView.findViewById<TextView>(R.id.desc_text_view)
+    class ViewHolder private constructor(private val binding: CourseListItemBinding) : RecyclerView.ViewHolder(binding.root){
 
         fun bind(course: Course) {
-            if (course.desc.isBlank()) {
-                descText.visibility = View.GONE
-            } else {
-                descText.visibility = View.VISIBLE
-            }
+            with(binding) {
+                if (course.desc.isBlank()) {
+                    descTextView.visibility = View.GONE
+                } else {
+                    descTextView.visibility = View.VISIBLE
+                }
 
-            titleText.text = course.title
-            codeText.text = course.id
-            descText.text = course.desc
+                titleTextView.text = course.title
+                codeTextView.text = course.id
+                descTextView.text = course.desc
+            }
         }
 
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val view = layoutInflater
-                    .inflate(R.layout.course_list_item, parent, false)
-
-                return ViewHolder(
-                    view
-                )
+                val itemBinding = CourseListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                return ViewHolder(itemBinding)
             }
         }
     }

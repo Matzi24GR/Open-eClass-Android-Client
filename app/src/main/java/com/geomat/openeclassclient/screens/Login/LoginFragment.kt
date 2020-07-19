@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
-import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -27,7 +26,6 @@ import retrofit2.Response
 
 class LoginFragment : Fragment() {
 
-    //TODO hide bottom sheet on back button press
 
     private lateinit var binding: FragmentLoginBinding
     private lateinit var viewModel: LoginViewModel
@@ -37,9 +35,7 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
-        binding = DataBindingUtil.inflate(inflater,
-            R.layout.fragment_login,container,false)
-
+        binding = FragmentLoginBinding.inflate(inflater)
         return binding.root
     }
 

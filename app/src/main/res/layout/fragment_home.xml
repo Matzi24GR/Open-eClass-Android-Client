@@ -28,15 +28,15 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="8dp"
                 android:textColor="@color/colorPrimaryDark"
-                app:layout_constraintBottom_toTopOf="@+id/CategoryText"
+                app:layout_constraintBottom_toTopOf="@+id/category_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="@+id/FullNameText"
-                app:layout_constraintTop_toBottomOf="@+id/FullNameText"
+                app:layout_constraintStart_toStartOf="@+id/full_name_text"
+                app:layout_constraintTop_toBottomOf="@+id/full_name_text"
                 tools:text="xyz20432" />
 
             <TextView
-                android:id="@+id/CategoryText"
+                android:id="@+id/category_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -46,11 +46,11 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView2"
+                app:layout_constraintTop_toBottomOf="@+id/image_view"
                 tools:text="Postgraduate\nComputer Science" />
 
             <TextView
-                android:id="@+id/FullNameText"
+                android:id="@+id/full_name_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -61,12 +61,12 @@
                 app:layout_constraintBottom_toTopOf="@+id/usernameText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintStart_toEndOf="@+id/image_view"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text=" John Smith" />
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/image_view"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="16dp"
@@ -74,9 +74,9 @@
                 android:layout_marginBottom="8dp"
                 android:contentDescription="@string/HomeTabProfileIcon"
                 android:src="@drawable/ic_baseline_home_24"
-                app:layout_constraintBottom_toTopOf="@+id/CategoryText"
+                app:layout_constraintBottom_toTopOf="@+id/category_text"
                 app:layout_constraintDimensionRatio="h,1:1"
-                app:layout_constraintEnd_toStartOf="@+id/FullNameText"
+                app:layout_constraintEnd_toStartOf="@+id/full_name_text"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

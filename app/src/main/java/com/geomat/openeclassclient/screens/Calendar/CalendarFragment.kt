@@ -13,6 +13,7 @@ import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.database.CalendarEvent
 import com.geomat.openeclassclient.database.CalendarEventDao
 import com.geomat.openeclassclient.database.EClassDatabase
+import com.geomat.openeclassclient.databinding.FragmentCalendarBinding
 import com.geomat.openeclassclient.network.CalendarResponse
 import com.geomat.openeclassclient.network.eClassApi
 import com.geomat.openeclassclient.repository.CalendarEventRepository
@@ -22,23 +23,30 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import timber.log.Timber
 
 class CalendarFragment : Fragment() {
+
+    private lateinit var binding: FragmentCalendarBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_calendar, container, false)
+        binding = FragmentCalendarBinding.inflate(inflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val token = requireContext().getSharedPreferences("login", Context.MODE_PRIVATE).getString("token",null)
 
         val repository = CalendarEventRepository(EClassDatabase.getInstance(requireContext()).calendarEventDao)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.calendarRecyclerView)
+
         val data = repository.allEvents
         val adapter = CalendarEventAdapter()
-        recyclerView.adapter = adapter
-
+        binding.calendarRecyclerView.adapter = adapter
 
         GlobalScope.launch { repository.refreshData(token!!) }
         data.observe(viewLifecycleOwner, Observer {
@@ -47,7 +55,5 @@ class CalendarFragment : Fragment() {
             }
         })
 
-        return view
     }
-
 }
