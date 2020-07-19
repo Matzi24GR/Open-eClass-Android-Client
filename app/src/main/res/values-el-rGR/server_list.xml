@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="schServer">Πανελλήνιο Σχολικό Δίκτυο||eclass.sch.gr</string>
 <string-array name="server_list">
     <item>Demo Open Eclass||demo.openeclass.org</item>
     <item>Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης||opencourses.auth.gr</item>
@@ -10,7 +11,6 @@
     <item>Ιόνιο Πανεπιστήμιο||opencourses.ionio.gr</item>
     <item>Οικονομικό Πανεπιστήμιο Αθηνών||eclass.aueb.gr</item>
     <item>Πάντειον Πανεπιστήμιο||openeclass.panteion.gr</item>
-    <item>Πανελλήνιο Σχολικό Δίκτυο||eclass.sch.gr</item>
     <item>Πανεπιστήμιο Αιγαίου||eclass.aegean.gr</item>
     <item>Πανεπιστήμιο Δυτικής Αττικής||eclass.uniwa.gr</item>
     <item>Πανεπιστήμιο Δυτικής Μακεδονίας||eclass.uowm.gr</item>

@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.screens.Login
+package com.geomat.openeclassclient.screens.Login.InternalAuth
 
 import android.app.Application
 import android.content.Context
@@ -8,17 +8,15 @@ import androidx.lifecycle.MutableLiveData
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.network.eClassApi
 import com.geomat.openeclassclient.network.interceptor
+import com.geomat.openeclassclient.screens.Login.ServerSelect.Server
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
 
-class LoginViewModel(application: Application) : AndroidViewModel(application) {
+class InternalAuthViewModel(application: Application) : AndroidViewModel(application) {
 
     private val context = getApplication<Application>().applicationContext
-    private var data: Array<String> = context.resources.getStringArray(R.array.server_list)
-
-    val serverArray = arrayListOf<Server>()
 
     // Selected Server
     private val _selectedServer =  MutableLiveData<Server>(
@@ -43,22 +41,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         _showSnackbarString.value = null
     }
 
-    init {
-        for (i in data.indices) {
-            val str = data[i].split("||")
-            serverArray.add(
-                Server(
-                    str[0],
-                    str[1]
-                )
-            )
-        }
-    }
-
     fun updateSelectedServer(server: Server) {
         _selectedServer.value = server
-        interceptor.setHost(server.url)
-        context.getSharedPreferences("login", Context.MODE_PRIVATE).edit().putString("url",server.url).apply()
     }
 
     fun Login(username: String, password: String) {

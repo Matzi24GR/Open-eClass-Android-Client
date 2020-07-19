@@ -1,15 +1,12 @@
-package com.geomat.openeclassclient.screens.Login
+package com.geomat.openeclassclient.screens.Login.ServerSelect
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.databinding.ServerListItemBinding
 import com.geomat.openeclassclient.network.eClassApi
 import com.geomat.openeclassclient.network.interceptor
@@ -21,7 +18,9 @@ import kotlin.collections.ArrayList
 
 data class Server(var name: String, var url: String)
 
-class ServerListAdapter(val ServerData: ArrayList<Server>, private val itemClick: (Server) -> Unit): ListAdapter<Server, ServerListAdapter.ViewHolder>(ServerDiffCallback()), Filterable {
+class ServerListAdapter(val ServerData: ArrayList<Server>, private val itemClick: (Server) -> Unit): ListAdapter<Server, ServerListAdapter.ViewHolder>(
+    ServerDiffCallback()
+), Filterable {
 
     var serverFilterList = ArrayList<Server>()
 
@@ -35,7 +34,9 @@ class ServerListAdapter(val ServerData: ArrayList<Server>, private val itemClick
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.from(parent)
+        return ViewHolder.from(
+            parent
+        )
     }
 
     class ViewHolder private constructor(private val binding: ServerListItemBinding) : RecyclerView.ViewHolder(binding.root){
@@ -64,7 +65,9 @@ class ServerListAdapter(val ServerData: ArrayList<Server>, private val itemClick
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val itemBinding = ServerListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                return ViewHolder(itemBinding)
+                return ViewHolder(
+                    itemBinding
+                )
             }
         }
     }

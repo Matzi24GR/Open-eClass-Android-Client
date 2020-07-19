@@ -13,10 +13,7 @@ class HostSelectionInterceptor: Interceptor {
     private var host: String = "localhost"
 
     fun setHost(host: String) {
-        this.host = host
-    }
-
-    fun HostSelectionInterceptor(host: String) {
+        Timber.i("New Host Selected: $host")
         this.host = host
     }
 
@@ -24,9 +21,9 @@ class HostSelectionInterceptor: Interceptor {
 
         var request = chain.request()
 
-        if (host.isEmpty()){
+        if (host.isBlank()){
             //host = request.url().host()
-            Timber.i("Host Empty")
+            Timber.i("Host Blank")
         } else {
             val newUrl = request.url().newBuilder()
                 .host(host)

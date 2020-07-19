@@ -22,6 +22,7 @@ import com.geomat.openeclassclient.repository.CoursesRepository
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,7 +36,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val url = getSharedPreferences("login", Context.MODE_PRIVATE).getString("url","localhost")
-        interceptor.setHost(url!!)
+        if (url != null ) {
+            Timber.i("Got Url: $url")
+            interceptor.setHost(url)
+        }
 
         // Finding the Navigation Controller
         val navController = findNavController(R.id.fragment)
@@ -44,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNav.setupWithNavController(navController)
 
         drawerLayout = binding.drawerLayout
-        appBarConfiguration = AppBarConfiguration(bottom_nav.menu, drawerLayout)
+        appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
         NavigationUI.setupWithNavController(binding.navView, navController)
 
@@ -54,8 +58,7 @@ class MainActivity : AppCompatActivity() {
 
         if ( !hasLoggedIn ) {
             binding.bottomNav.visibility = View.GONE
-            supportActionBar!!.hide()
-            navController.navigate(R.id.tologinFragment)
+            navController.navigate(MainActivityDirections.actionGlobalServerSelectFragment())
         }
 
     }

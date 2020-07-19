@@ -14,6 +14,7 @@ import com.geomat.openeclassclient.databinding.FragmentHomeBinding
 import com.geomat.openeclassclient.repository.UserInfoRepository
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class HomeFragment : Fragment() {
 

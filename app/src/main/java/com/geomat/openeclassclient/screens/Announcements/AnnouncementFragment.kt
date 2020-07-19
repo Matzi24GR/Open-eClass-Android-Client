@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.database.EClassDatabase
 import com.geomat.openeclassclient.databinding.FragmentAnnouncementBinding
-import com.geomat.openeclassclient.databinding.FragmentLoginBinding
 import com.geomat.openeclassclient.repository.AnnouncementRepository
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

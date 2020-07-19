@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="schServer">Panhellenic School Network||eclass.sch.gr</string>
 <string-array name="server_list">
     <item>Aristotle University of Thessaloniki||opencourses.auth.gr</item>
     <item>Athens University of Economics and Business||eclass.aueb.gr</item>
@@ -10,7 +11,6 @@
     <item>International Hellenic University - Kavala Campus||eclass.teiemt.gr</item>
     <item>Ionian University||opencourses.ionio.gr</item>
     <item>National and Kapodistrian University of Athens||eclass.uoa.gr</item>
-    <item>Panhellenic School Network||eclass.sch.gr</item>
     <item>Panteion University||openeclass.panteion.gr</item>
     <item>Technical University of Crete||www.eclass.tuc.gr</item>
     <item>University of Macedonia||openeclass.uom.gr</item>

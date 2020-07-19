@@ -1,36 +1,37 @@
-package com.geomat.openeclassclient.screens.Login
+package com.geomat.openeclassclient.screens.Login.ExternalAuth
 
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.geomat.openeclassclient.R
+import com.geomat.openeclassclient.databinding.FragmentExternalAuthBinding
+import kotlinx.android.synthetic.main.fragment_external_auth.*
+import kotlinx.coroutines.flow.callbackFlow
 import timber.log.Timber
 
 
 class ExternalAuthFragment : Fragment() {
 
     val args: ExternalAuthFragmentArgs by navArgs()
+    private lateinit var binding: FragmentExternalAuthBinding
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_external_auth, container, false)
+        binding = FragmentExternalAuthBinding.inflate(inflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val webView = view.findViewById<WebView>(R.id.webView)
 
         val navController  = findNavController()
 
@@ -41,7 +42,6 @@ class ExternalAuthFragment : Fragment() {
                 request: WebResourceRequest?
             ): Boolean {
                 val url = request?.url.toString()
-                Toast.makeText(requireContext(),url,Toast.LENGTH_SHORT).show()
                 if (url.contains("eclass-token:")) {
                     Timber.i("Login Response: $url")
 
@@ -60,7 +60,6 @@ class ExternalAuthFragment : Fragment() {
                     requireContext().getSharedPreferences("login", Context.MODE_PRIVATE).edit()
                         .putString("token", token).apply()
 
-                    webView.clearCache(true)
                     navController.navigate(ExternalAuthFragmentDirections.actionWebViewFragmentToMainActivity())
                     return true
                 }
@@ -68,10 +67,11 @@ class ExternalAuthFragment : Fragment() {
             }
         }
 
-        webView.webViewClient = CustomWebViewClient()
 
+        CookieManager.getInstance().removeAllCookies {}
+        binding.webView.webViewClient = CustomWebViewClient()
 
-        webView.loadUrl(args.url)
+        binding.webView.loadUrl(args.url)
 
 
     }
