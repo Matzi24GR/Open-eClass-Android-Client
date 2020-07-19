@@ -46,7 +46,6 @@ class ServerListAdapter(val ServerData: ArrayList<Server>, private val itemClick
                 nameTextView.text = server.name
                 urlTextView.text = server.url
                 itemView.setOnClickListener{itemClick(server)}
-                interceptor.setHost("")
                 eClassApi.MobileApi.getApiEnabled("https://${server.url}/modules/mobile/mlogin.php")
                     .enqueue(object : Callback<String> {
                         override fun onFailure(call: Call<String>, t: Throwable) {}
