@@ -21,6 +21,9 @@ interface CoursesDao {
     @Query("DELETE FROM  courses_table")
     fun clear()
 
+    @Query("SELECT COUNT(*) FROM courses_table")
+    fun getNumberOfCourses(): Int
+
     @Query("UPDATE courses_table SET announcementFeedUrl = :url WHERE id = :courseId")
     fun setAnnouncementFeedUrl(url: String, courseId: String)
 

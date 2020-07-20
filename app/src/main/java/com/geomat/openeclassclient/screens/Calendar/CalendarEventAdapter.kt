@@ -1,6 +1,7 @@
 package com.geomat.openeclassclient.screens.Calendar
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.DiffUtil
@@ -25,15 +26,17 @@ class CalendarEventAdapter : ListAdapter<CalendarEvent, CalendarEventAdapter.Vie
 
         fun bind(calendarEvent: CalendarEvent) {
             with(binding) {
-                textID.text = calendarEvent.id.toString()
+                if (calendarEvent.start == calendarEvent.end) textEnd.visibility = View.GONE
+                    else textEnd.visibility = View.VISIBLE
+                if (calendarEvent.content.isBlank()) textContent.visibility = View.GONE
+                else textContent.visibility = View.VISIBLE
+
+                //.replaceFirst(Regex("^(.*?): "),"") To get rid of course name at start of title
                 textTitle.text = calendarEvent.title
                 textStart.text = SimpleDateFormat.getDateTimeInstance().format(calendarEvent.start)
                 textEnd.text = SimpleDateFormat.getDateTimeInstance().format(calendarEvent.end)
-                textContent.text = HtmlCompat.fromHtml(calendarEvent.content, HtmlCompat.FROM_HTML_MODE_COMPACT)
+                textContent.text = HtmlCompat.fromHtml(calendarEvent.content, HtmlCompat.FROM_HTML_MODE_COMPACT).trimEnd()
                 textEventGroup.text = calendarEvent.event_group
-                textClass.text = calendarEvent.Class
-                textCourse.text = calendarEvent.courseCode
-                textUrl.text = calendarEvent.url
                 textEventType.text = calendarEvent.event_type
             }
 

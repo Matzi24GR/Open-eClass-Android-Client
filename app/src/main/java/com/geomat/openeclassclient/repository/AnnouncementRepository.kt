@@ -69,6 +69,9 @@ class AnnouncementRepository(database: EClassDatabase) {
     }
 
     suspend fun fillInFeedUrls(token: String) {
+        if (courseDao.getNumberOfCourses() == 0) {
+            CoursesRepository(courseDao).refreshData(token)
+        }
         val allCourses = courseDao.getAllCoursesNonLive()
         allCourses.forEach {
             if (it.announcementFeedUrl.isBlank()) {
