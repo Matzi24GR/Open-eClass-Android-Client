@@ -15,7 +15,7 @@ private const val BASE_URL = "https://localhost/"
 
 var interceptor = HostSelectionInterceptor()
 
-val okHttpClient = OkHttpClient.Builder()
+val okHttpClient: OkHttpClient = OkHttpClient.Builder()
     .addInterceptor(interceptor)
     .build()
 
@@ -102,7 +102,7 @@ interface HtmlParserService {
     ): Call<String>
 }
 
-object eClassApi {
+object EclassApi {
     val MobileApi: MobileApiService by lazy {
         retrofit.create(MobileApiService::class.java)
     }

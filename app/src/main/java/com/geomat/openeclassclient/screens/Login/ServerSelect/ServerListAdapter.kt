@@ -8,8 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.geomat.openeclassclient.databinding.ServerListItemBinding
-import com.geomat.openeclassclient.network.eClassApi
-import com.geomat.openeclassclient.network.interceptor
+import com.geomat.openeclassclient.network.EclassApi
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -46,7 +45,7 @@ class ServerListAdapter(val ServerData: ArrayList<Server>, private val itemClick
                 nameTextView.text = server.name
                 urlTextView.text = server.url
                 itemView.setOnClickListener{itemClick(server)}
-                eClassApi.MobileApi.getApiEnabled("https://${server.url}/modules/mobile/mlogin.php")
+                EclassApi.MobileApi.getApiEnabled("https://${server.url}/modules/mobile/mlogin.php")
                     .enqueue(object : Callback<String> {
                         override fun onFailure(call: Call<String>, t: Throwable) {}
                         override fun onResponse(call: Call<String>, response: Response<String>) {

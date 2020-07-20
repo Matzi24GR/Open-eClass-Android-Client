@@ -5,9 +5,7 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.geomat.openeclassclient.R
-import com.geomat.openeclassclient.network.eClassApi
-import com.geomat.openeclassclient.network.interceptor
+import com.geomat.openeclassclient.network.EclassApi
 import com.geomat.openeclassclient.screens.Login.ServerSelect.Server
 import retrofit2.Call
 import retrofit2.Callback
@@ -45,11 +43,11 @@ class InternalAuthViewModel(application: Application) : AndroidViewModel(applica
         _selectedServer.value = server
     }
 
-    fun Login(username: String, password: String) {
+    fun login(username: String, password: String) {
 
         if (_selectedServer.value!!.url.isNotBlank()) {
 
-            eClassApi.MobileApi.getToken(username, password)
+            EclassApi.MobileApi.getToken(username, password)
                 .enqueue(object : Callback<String> {
                     override fun onFailure(call: Call<String>, t: Throwable) {
                         _showSnackbarString.value = "Check your Connection"

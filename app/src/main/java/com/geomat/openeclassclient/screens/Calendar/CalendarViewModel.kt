@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.geomat.openeclassclient.database.CalendarEvent
-import com.geomat.openeclassclient.database.CalendarEventDao
 import com.geomat.openeclassclient.database.EClassDatabase
 import com.geomat.openeclassclient.repository.CalendarEventRepository
 

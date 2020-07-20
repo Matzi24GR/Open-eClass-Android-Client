@@ -7,23 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.geomat.openeclassclient.R
-import com.geomat.openeclassclient.database.CalendarEvent
-import com.geomat.openeclassclient.database.CalendarEventDao
 import com.geomat.openeclassclient.database.EClassDatabase
 import com.geomat.openeclassclient.databinding.FragmentCalendarBinding
-import com.geomat.openeclassclient.network.CalendarResponse
-import com.geomat.openeclassclient.network.eClassApi
 import com.geomat.openeclassclient.repository.CalendarEventRepository
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import timber.log.Timber
 
 class CalendarFragment : Fragment() {
 

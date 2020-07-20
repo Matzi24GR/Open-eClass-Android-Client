@@ -11,4 +11,16 @@
     <string name="calendar_tab">Ημερολόγιο</string>
     <string name="search_server">Αναζήτηση Server</string>
     <string name="HomeTabProfileIcon" >Είκονα προφίλ χρήστη</string>
+    <string name="Administrators">Διαχειριστές</string>
+    <string name="server_url">Διεύθυνση Server</string>
+    <string name="connect">Σύνδεση</string>
+    <string name="select_server_from_list">Επιλογή από την λίστα</string>
+    <string name="sch">Πανελλήνιο Σχολικό Δίκτυο</string>
+    <string name="greek_school_network_eclass_logo_description">Λογότυπο η τάξης</string>
+    <string name="serverSelectLabel">Επιλογή Server</string>
+    <string name="InternalAuthLabel">Σύνδεση</string>
+    <string name="ExternalAuthLabel">Εξωτερική Ταυτοποίηση</string>
+    <string name="AboutLabel">Σχετικά</string>
+    <string name="select_authentication_method">Επιλογή Τύπου Ταυτοποίησης</string>
+    <string name="log_out">Αποσύνδεση</string>
 </resources>

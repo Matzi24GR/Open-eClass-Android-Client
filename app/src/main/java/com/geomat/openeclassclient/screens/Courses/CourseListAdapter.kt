@@ -3,11 +3,9 @@ package com.geomat.openeclassclient.screens.Courses
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.database.Course
 import com.geomat.openeclassclient.databinding.CourseListItemBinding
 
@@ -20,7 +18,7 @@ class CourseListAdapter : ListAdapter<Course, CourseListAdapter.ViewHolder>(Cour
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return CourseListAdapter.ViewHolder.from(parent)
+        return ViewHolder.from(parent)
     }
 
     class ViewHolder private constructor(private val binding: CourseListItemBinding) : RecyclerView.ViewHolder(binding.root){

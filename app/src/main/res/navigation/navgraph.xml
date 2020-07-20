@@ -13,26 +13,28 @@
 
     <fragment
         android:id="@+id/announcementFragment"
+        android:label="@string/announcements_tab"
         android:name="com.geomat.openeclassclient.screens.Announcements.AnnouncementFragment"
         tools:layout="@layout/fragment_announcement" />
     <fragment
         android:id="@+id/courseListFragment"
         android:name="com.geomat.openeclassclient.screens.Courses.CourseListFragment"
-        android:label="@string/app_name"
+        android:label="@string/courses_tab"
         tools:layout="@layout/fragment_course_list" />
     <fragment
         android:id="@+id/calendarFragment"
+        android:label="@string/calendar_tab"
         android:name="com.geomat.openeclassclient.screens.Calendar.CalendarFragment"
         tools:layout="@layout/fragment_calendar" />
     <fragment
-        android:id="@+id/loginFragment"
+        android:id="@+id/internalAuthFragment"
         android:name="com.geomat.openeclassclient.screens.Login.InternalAuth.InternalAuthFragment"
-        android:label="fragment_login"
+        android:label="@string/InternalAuthLabel"
         tools:layout="@layout/fragment_internal_auth">
         <action
             android:id="@+id/action_loginFragment_to_MainActivity"
             app:destination="@id/mainActivity"
-            app:exitAnim="@anim/slidedown"
+            app:exitAnim="@anim/slide_down"
             app:popUpTo="@id/navgraph"
             app:popUpToInclusive="true" />
         <argument
@@ -48,17 +50,17 @@
     <fragment
         android:id="@+id/aboutFragment"
         android:name="com.geomat.openeclassclient.screens.AboutFragment"
-        android:label="About"
+        android:label="@string/AboutLabel"
         tools:layout="@layout/fragment_about" />
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.geomat.openeclassclient.screens.HomeFragment"
-        android:label="fragment_home"
+        android:label="@string/home_tab"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/ExternalAuthFragment"
         android:name="com.geomat.openeclassclient.screens.Login.ExternalAuth.ExternalAuthFragment"
-        android:label="fragment_external_auth"
+        android:label="@string/ExternalAuthLabel"
         tools:layout="@layout/fragment_external_auth">
         <argument
             android:name="url"
@@ -78,11 +80,11 @@
     <fragment
         android:id="@+id/serverSelectFragment"
         android:name="com.geomat.openeclassclient.screens.Login.ServerSelect.ServerSelectFragment"
-        android:label="fragment_server_select"
-        tools:layout="@layout/fragment_server_select" >
+        android:label="@string/serverSelectLabel"
+        tools:layout="@layout/fragment_server_select">
         <action
             android:id="@+id/action_serverSelectFragment_to_InternalAuthFragment"
-            app:destination="@id/loginFragment" />
+            app:destination="@id/internalAuthFragment" />
         <action
             android:id="@+id/action_serverSelectFragment_to_ExternalAuthFragment"
             app:destination="@id/ExternalAuthFragment" />

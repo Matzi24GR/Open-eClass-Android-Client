@@ -12,7 +12,7 @@ class RssResponse {
     var version: String = ""
 
     @Element(name = "channel")
-    lateinit var Channel: Channel
+    lateinit var channel: Channel
 }
 
 @Xml(name = "channel")

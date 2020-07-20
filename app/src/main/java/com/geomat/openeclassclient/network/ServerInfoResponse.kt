@@ -17,7 +17,7 @@ class ServerInfoResponse {
     lateinit var administrator: Administrator
 
     @Element(name = "auth")
-    var AuthTypeList: List<AuthType> = mutableListOf()
+    var authTypeList: List<AuthType> = mutableListOf()
 
 }
 

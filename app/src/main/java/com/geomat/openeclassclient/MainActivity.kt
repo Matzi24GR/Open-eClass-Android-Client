@@ -7,19 +7,16 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
-import androidx.viewbinding.ViewBinding
 import com.geomat.openeclassclient.database.EClassDatabase
 import com.geomat.openeclassclient.databinding.ActivityMainBinding
 import com.geomat.openeclassclient.network.interceptor
 import com.geomat.openeclassclient.repository.AnnouncementRepository
 import com.geomat.openeclassclient.repository.CalendarEventRepository
 import com.geomat.openeclassclient.repository.CoursesRepository
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -27,7 +24,6 @@ import timber.log.Timber
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var drawerLayout: DrawerLayout
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,11 +42,15 @@ class MainActivity : AppCompatActivity() {
 
         // Setting Navigation Controller with the BottomNavigationView
         binding.bottomNav.setupWithNavController(navController)
-
-        drawerLayout = binding.drawerLayout
-        appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
+        val topLevelDestinations = setOf(
+            R.id.serverSelectFragment,
+            R.id.homeFragment,
+            R.id.announcementFragment,
+            R.id.courseListFragment,
+            R.id.calendarFragment
+        )
+        appBarConfiguration = AppBarConfiguration(topLevelDestinations)
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
-        NavigationUI.setupWithNavController(binding.navView, navController)
 
 
 

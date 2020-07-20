@@ -12,8 +12,16 @@
     <string name="search_server">Search Servers</string>
     <string name="HomeTabProfileIcon">User Profile Picture</string>
     <string name="Administrators">Administrators</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="server_url">Server Url</string>
+    <string name="connect">Connect</string>
+    <string name="select_server_from_list">Select Server From List</string>
+    <string name="sch">Greek School Network</string>
+    <string name="greek_school_network_eclass_logo_description">Greek School Network Eclass Logo</string>
+    <string name="serverSelectLabel">Select Server</string>
+    <string name="InternalAuthLabel">InternalAuth</string>
+    <string name="AboutLabel">About</string>
+    <string name="ExternalAuthLabel">ExternalAuth</string>
+    <string name="select_authentication_method">Select Authentication Method</string>
+    <string name="log_out">Log Out</string>
 
 </resources>

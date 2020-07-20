@@ -5,7 +5,9 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.NavDirections
 import com.geomat.openeclassclient.R
+import com.geomat.openeclassclient.network.AuthType
 import com.geomat.openeclassclient.network.interceptor
 import timber.log.Timber
 
@@ -46,8 +48,8 @@ class ServerSelectViewModel(application: Application): AndroidViewModel(applicat
     }
 
     fun updateSelectedServer(server: Server) {
-        _selectedServer.value = server
         interceptor.setHost(server.url)
+        _selectedServer.value = server
         Timber.i("Set Url: ${server.url}")
         context.getSharedPreferences("login", Context.MODE_PRIVATE).edit().putString("url",server.url).apply()
     }
@@ -55,5 +57,19 @@ class ServerSelectViewModel(application: Application): AndroidViewModel(applicat
     fun splitServerString(string: String): Server {
         val split = string.split("||")
         return Server(split[0],split[1])
+    }
+
+    fun decideAction(item: AuthType?): NavDirections {
+        with(ServerSelectFragmentDirections) {
+            return when {
+                // Internal Auth
+                item == null -> actionServerSelectFragmentToInternalAuthFragment(selectedServer.value!!.url, selectedServer.value!!.name, "")
+                // Internal Auth
+                item.url.isBlank() -> actionServerSelectFragmentToInternalAuthFragment(selectedServer.value!!.url, selectedServer.value!!.name, item.title)
+                // External Auth
+                else -> { actionServerSelectFragmentToExternalAuthFragment(item.url, selectedServer.value!!.name, item.title)
+                }
+            }
+        }
     }
 }

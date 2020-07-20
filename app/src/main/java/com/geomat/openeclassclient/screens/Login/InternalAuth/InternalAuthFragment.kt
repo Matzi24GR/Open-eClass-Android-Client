@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -26,6 +27,7 @@ class InternalAuthFragment : Fragment() {
     ): View? {
         viewModel = ViewModelProvider(this).get(InternalAuthViewModel::class.java)
         binding = FragmentInternalAuthBinding.inflate(inflater)
+        if (args.authName.isNotBlank()) (activity as AppCompatActivity).supportActionBar?.title = args.authName
         return binding.root
     }
 
@@ -34,7 +36,7 @@ class InternalAuthFragment : Fragment() {
 
         viewModel.updateSelectedServer(Server(args.serverName,args.url))
 
-        // Login Successfull Event Observer
+        // Login Successful Event Observer
         viewModel.loginSuccessful.observe(viewLifecycleOwner, Observer { loginSuccessful ->
             if (loginSuccessful) {
                 findNavController().navigate(InternalAuthFragmentDirections.actionLoginFragmentToMainActivity())
@@ -57,7 +59,7 @@ class InternalAuthFragment : Fragment() {
         binding.loginButton.setOnClickListener {
             val username = binding.userText.editText?.text.toString()
             val password = binding.passText.editText?.text.toString()
-            viewModel.Login(username,password)
+            viewModel.login(username,password)
         }
 
     }

@@ -4,20 +4,15 @@ import androidx.core.text.HtmlCompat
 import androidx.lifecycle.LiveData
 import com.geomat.openeclassclient.database.CalendarEvent
 import com.geomat.openeclassclient.database.CalendarEventDao
-import com.geomat.openeclassclient.network.CalendarResponse
-import com.geomat.openeclassclient.network.eClassApi
+import com.geomat.openeclassclient.network.EclassApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import timber.log.Timber
 
 class CalendarEventRepository(private val calendarEventDao: CalendarEventDao) {
 
     val allEvents: LiveData<List<CalendarEvent>> = calendarEventDao.getAllEvents()
 
-    suspend fun insertAll(events: List<CalendarEvent>) {
+    fun insertAll(events: List<CalendarEvent>) {
         calendarEventDao.insertAll(events)
     }
 
@@ -31,7 +26,7 @@ class CalendarEventRepository(private val calendarEventDao: CalendarEventDao) {
 
         withContext(Dispatchers.IO) {
             try {
-                val result = eClassApi.JsonApi.getCalendar("PHPSESSID=$token").execute()
+                val result = EclassApi.JsonApi.getCalendar("PHPSESSID=$token").execute()
                 if (result.isSuccessful) {
                     val responseList = result.body()?.result
                     val dbList = mutableListOf<CalendarEvent>()

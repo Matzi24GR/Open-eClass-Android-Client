@@ -6,20 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.RecyclerView
-import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.database.EClassDatabase
 import com.geomat.openeclassclient.databinding.FragmentCourseListBinding
-import com.geomat.openeclassclient.network.CourseResponse
-import com.geomat.openeclassclient.network.eClassApi
 import com.geomat.openeclassclient.repository.CoursesRepository
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class CourseListFragment : Fragment() {
 

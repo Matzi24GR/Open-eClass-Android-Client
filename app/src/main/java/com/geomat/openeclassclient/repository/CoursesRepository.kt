@@ -3,7 +3,7 @@ package com.geomat.openeclassclient.repository
 import androidx.lifecycle.LiveData
 import com.geomat.openeclassclient.database.Course
 import com.geomat.openeclassclient.database.CoursesDao
-import com.geomat.openeclassclient.network.eClassApi
+import com.geomat.openeclassclient.network.EclassApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -11,7 +11,7 @@ class CoursesRepository(private val coursesDao: CoursesDao ) {
 
     val allCourses: LiveData<List<Course>> = coursesDao.getAllCourses()
 
-    suspend fun insertAll(courses: List<Course>) {
+    fun insertAll(courses: List<Course>) {
         coursesDao.insertAll(courses)
     }
 
@@ -25,7 +25,7 @@ class CoursesRepository(private val coursesDao: CoursesDao ) {
 
         withContext(Dispatchers.IO) {
             try {
-                val result = eClassApi.MobileApi.getCourses(token).execute()
+                val result = EclassApi.MobileApi.getCourses(token).execute()
                 if (result.isSuccessful) {
                     val responseList = result.body()?.courseGroup?.courseList
                     val dbList = mutableListOf<Course>()

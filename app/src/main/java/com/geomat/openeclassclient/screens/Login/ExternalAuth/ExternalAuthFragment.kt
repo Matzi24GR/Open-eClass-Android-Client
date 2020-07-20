@@ -5,15 +5,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.*
-import android.widget.Toast
+import android.webkit.CookieManager
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.databinding.FragmentExternalAuthBinding
-import kotlinx.android.synthetic.main.fragment_external_auth.*
-import kotlinx.coroutines.flow.callbackFlow
 import timber.log.Timber
 
 
@@ -28,10 +28,12 @@ class ExternalAuthFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentExternalAuthBinding.inflate(inflater)
+        if (args.authName.isNotBlank()) (activity as AppCompatActivity).supportActionBar?.title = args.authName
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
 
         val navController  = findNavController()
 
@@ -45,7 +47,7 @@ class ExternalAuthFragment : Fragment() {
                 if (url.contains("eclass-token:")) {
                     Timber.i("Login Response: $url")
 
-                    // Ex eclass-token:a961162%7C28207agpmpvl1islpr8sobmm8n
+                    // Ex eclass-token:a961162%7C28207656262415267923679599
                     //    eclass-token:[username]%7C[        token        ]
 
                     val usernameAndToken = url.replace("eclass-token:","").split("%7C")

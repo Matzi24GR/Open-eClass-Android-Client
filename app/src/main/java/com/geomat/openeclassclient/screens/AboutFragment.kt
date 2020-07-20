@@ -1,11 +1,10 @@
 package com.geomat.openeclassclient.screens
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.geomat.openeclassclient.R
+import androidx.fragment.app.Fragment
 import com.geomat.openeclassclient.databinding.FragmentAboutBinding
 
 class AboutFragment : Fragment() {

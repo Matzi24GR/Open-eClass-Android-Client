@@ -7,25 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.ListView
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ListAdapter
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.databinding.AuthMethodBottomSheetBinding
 import com.geomat.openeclassclient.databinding.FragmentServerSelectBinding
 import com.geomat.openeclassclient.network.ServerInfoResponse
-import com.geomat.openeclassclient.network.eClassApi
+import com.geomat.openeclassclient.network.EclassApi
 import com.geomat.openeclassclient.network.interceptor
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.auth_method_bottom_sheet.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import timber.log.Timber
 
 class ServerSelectFragment : Fragment() {
 
@@ -64,7 +62,7 @@ class ServerSelectFragment : Fragment() {
         binding.recyclerView.adapter = adapter
 
         binding.serverListButton.setOnClickListener {
-            binding.searchview.requestFocus()
+            binding.searchView.requestFocus()
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
 
@@ -77,66 +75,45 @@ class ServerSelectFragment : Fragment() {
             viewModel.updateSelectedServer( Server("", url) )
         }
 
-        //TODO fix first click not working sometimes
         // Selected Server Observer
         viewModel.selectedServer.observe(viewLifecycleOwner, Observer { selectedServer ->
 
             if (selectedServer.url.isNotBlank()) {
-                eClassApi.MobileApi.getServerInfo().enqueue(object: Callback<ServerInfoResponse> {
+                EclassApi.MobileApi.getServerInfo().enqueue(object: Callback<ServerInfoResponse> {
                     override fun onFailure(call: Call<ServerInfoResponse>, t: Throwable) {
+                        Timber.i("Failed: $t")
                     }
 
                     override fun onResponse(call: Call<ServerInfoResponse>, response: Response<ServerInfoResponse>) {
 
+                        // Get server name when user sets his own url with the EditText
                         if (selectedServer.name.isBlank()) {
                             selectedServer.name = response.body()?.institute?.name.toString()
                         }
 
-                        val list = response.body()!!.AuthTypeList
+                        val list = response.body()!!.authTypeList
 
-                        when (list.size) {
-                            0-> {
-                                //Internal Auth
-                                val action = ServerSelectFragmentDirections.actionServerSelectFragmentToInternalAuthFragment(selectedServer.url, selectedServer.name, "")
-                                findNavController().navigate(action)
-                            }
-                            1 -> {
-                                val action = if (list[0].url.isBlank()) {
-                                    //Internal Auth
-                                    ServerSelectFragmentDirections
-                                        .actionServerSelectFragmentToInternalAuthFragment(selectedServer.url, selectedServer.name, list[0].title)
-                                } else {
-                                    //External Auth
-                                    ServerSelectFragmentDirections
-                                        .actionServerSelectFragmentToExternalAuthFragment(list[0].url, selectedServer.name, list[0].title)
-                                }
-                                findNavController().navigate(action)
-                            }
-                            else -> {
-                                val array = arrayListOf<String>()
-                                list.forEach {
-                                    array.add(it.title)
-                                }
-                                //TODO change this to a better recycler view
-                                dialogBinding.authMethodListView.adapter = ArrayAdapter<String>(requireContext(), R.layout.support_simple_spinner_dropdown_item , array)
-                                dialogBinding.authMethodListView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                                    val item = list[position]
+                        if ( list.size > 1) {
 
-                                    val action = if (item.url.isBlank()) {
-                                        //Internal Auth
-                                        ServerSelectFragmentDirections
-                                            .actionServerSelectFragmentToInternalAuthFragment(selectedServer.url, selectedServer.name, item.title)
-                                    } else {
-                                        //External Auth
-                                        ServerSelectFragmentDirections
-                                            .actionServerSelectFragmentToExternalAuthFragment(item.url, selectedServer.name, item.title)
-                                    }
-                                    bottomSheetDialog.dismiss()
-                                    findNavController().navigate(action)
+                            val array = list.map { it.title }
 
-                                }
-                                bottomSheetDialog.show()
+                            //TODO change this to a better recycler view
+                            dialogBinding.authMethodListView.adapter = ArrayAdapter<String>(requireContext(), R.layout.support_simple_spinner_dropdown_item , array)
+
+                            dialogBinding.authMethodListView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+
+                                bottomSheetDialog.dismiss()
+                                findNavController().navigate(
+                                    viewModel.decideAction(list[position])
+                                )
+
                             }
+                            bottomSheetDialog.show()
+
+                        } else {
+                            findNavController().navigate(
+                                viewModel.decideAction(list.getOrNull(0))
+                            )
                         }
                     }
                 })
@@ -156,7 +133,7 @@ class ServerSelectFragment : Fragment() {
             }
         })
 
-        binding.searchview.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+        binding.searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
@@ -173,10 +150,13 @@ class ServerSelectFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.resetSelectedServer()
         interceptor.setHost("")
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
+    override fun onStop() {
+        super.onStop()
+        viewModel.resetSelectedServer()
+    }
 }
