@@ -1,6 +1,7 @@
 package com.geomat.openeclassclient.network
 
 
+import androidx.core.net.toUri
 import okhttp3.Interceptor
 import okhttp3.Response
 import timber.log.Timber
@@ -24,9 +25,7 @@ class HostSelectionInterceptor: Interceptor {
             //host = request.url().host()
             Timber.i("Host Blank")
         } else {
-            val newUrl = request.url().newBuilder()
-                .host(host)
-                .build()
+            val newUrl = request.url().toString().replace("localhost", host)
 
             request = request.newBuilder()
                 .url(newUrl)
