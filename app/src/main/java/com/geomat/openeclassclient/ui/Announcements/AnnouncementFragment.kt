@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.screens.Announcements
+package com.geomat.openeclassclient.ui.Announcements
 
 import android.content.Context
 import android.os.Bundle

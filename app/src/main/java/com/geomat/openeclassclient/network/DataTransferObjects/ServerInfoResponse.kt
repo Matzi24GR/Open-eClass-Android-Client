@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.network
+package com.geomat.openeclassclient.network.DataTransferObjects
 
 import com.tickaroo.tikxml.annotation.Attribute
 import com.tickaroo.tikxml.annotation.Element

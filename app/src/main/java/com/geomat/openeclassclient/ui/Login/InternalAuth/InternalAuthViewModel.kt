@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.screens.Login.InternalAuth
+package com.geomat.openeclassclient.ui.Login.InternalAuth
 
 import android.app.Application
 import android.content.Context
@@ -6,7 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.geomat.openeclassclient.network.EclassApi
-import com.geomat.openeclassclient.screens.Login.ServerSelect.Server
+import com.geomat.openeclassclient.ui.Login.ServerSelect.Server
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.screens.Login.ServerSelect
+package com.geomat.openeclassclient.ui.Login.ServerSelect
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

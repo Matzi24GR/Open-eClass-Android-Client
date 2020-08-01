@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.screens.Calendar
+package com.geomat.openeclassclient.ui.Calendar
 
 import android.content.Context
 import android.os.Bundle

@@ -10,13 +10,13 @@ import androidx.room.Query
 interface UserInfoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(userInfo: UserInfo)
+    fun insert(userInfo: DatabaseUserInfo)
 
     @Query("SELECT * FROM user_info_table")
-    fun getAllUsers(): LiveData<List<UserInfo>>
+    fun getAllUsers(): LiveData<List<DatabaseUserInfo>>
 
     @Query("SELECT * FROM user_info_table WHERE username = :username")
-    fun getUserWithUsername(username: String): LiveData<UserInfo>
+    fun getUserWithUsername(username: String): LiveData<DatabaseUserInfo>
 
     @Query("DELETE FROM  user_info_table")
     fun clearAll()

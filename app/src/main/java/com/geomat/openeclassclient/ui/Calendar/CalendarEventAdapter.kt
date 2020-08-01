@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.screens.Calendar
+package com.geomat.openeclassclient.ui.Calendar
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,8 +7,8 @@ import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.geomat.openeclassclient.database.CalendarEvent
 import com.geomat.openeclassclient.databinding.CalendarListItemBinding
+import com.geomat.openeclassclient.domain.CalendarEvent
 import java.text.SimpleDateFormat
 
 class CalendarEventAdapter : ListAdapter<CalendarEvent, CalendarEventAdapter.ViewHolder>(CalendarEventDiffCallback()) {

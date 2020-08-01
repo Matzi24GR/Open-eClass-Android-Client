@@ -7,16 +7,16 @@ import androidx.room.*
 interface CoursesDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(course: Course)
+    fun insert(course: DatabaseCourse)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(courses: List<Course>)
+    fun insertAll(courses: List<DatabaseCourse>)
 
     @Query("SELECT * FROM courses_table ORDER BY `title` ASC")
-    fun getAllCourses(): LiveData<List<Course>>
+    fun getAllCourses(): LiveData<List<DatabaseCourse>>
 
     @Query("SELECT * FROM courses_table ORDER BY `title` ASC")
-    fun getAllCoursesNonLive(): List<Course>
+    fun getAllCoursesNonLive(): List<DatabaseCourse>
 
     @Query("DELETE FROM  courses_table")
     fun clear()

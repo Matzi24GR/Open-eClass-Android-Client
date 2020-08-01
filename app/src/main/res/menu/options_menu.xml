@@ -4,4 +4,8 @@
     <item
         android:id="@+id/logOutButton"
         android:title="@string/log_out" />
+    <item
+        android:id="@+id/deleteButton"
+        android:title="Delete"
+        android:visible="false" />
 </menu>

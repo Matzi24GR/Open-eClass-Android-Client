@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.screens.Courses
+package com.geomat.openeclassclient.ui.Courses
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.geomat.openeclassclient.database.Course
 import com.geomat.openeclassclient.databinding.CourseListItemBinding
+import com.geomat.openeclassclient.domain.Course
 
 class CourseListAdapter : ListAdapter<Course, CourseListAdapter.ViewHolder>(CourseDiffCallback()) {
 

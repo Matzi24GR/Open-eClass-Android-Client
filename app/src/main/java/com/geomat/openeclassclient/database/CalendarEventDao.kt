@@ -10,13 +10,13 @@ import androidx.room.Query
 interface CalendarEventDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(event: CalendarEvent)
+    fun insert(event: DatabaseCalendarEvent)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(events: List<CalendarEvent>)
+    fun insertAll(events: List<DatabaseCalendarEvent>)
 
     @Query("SELECT * FROM calendar_event_table ORDER BY `end` DESC")
-    fun getAllEvents(): LiveData<List<CalendarEvent>>
+    fun getAllEvents(): LiveData<List<DatabaseCalendarEvent>>
 
     @Query("DELETE FROM  calendar_event_table")
     fun clear()

@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.screens.Login.ServerSelect
+package com.geomat.openeclassclient.ui.Login.ServerSelect
 
 import android.app.Application
 import android.content.Context
@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavDirections
 import com.geomat.openeclassclient.R
-import com.geomat.openeclassclient.network.AuthType
+import com.geomat.openeclassclient.network.DataTransferObjects.AuthType
 import com.geomat.openeclassclient.network.interceptor
 import timber.log.Timber
 

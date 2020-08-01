@@ -7,28 +7,28 @@
 
     <activity
         android:id="@+id/mainActivity"
-        android:name="com.geomat.openeclassclient.MainActivity"
+        android:name="com.geomat.openeclassclient.ui.MainActivity"
         android:label="activity_main"
         tools:layout="@layout/activity_main" />
 
     <fragment
         android:id="@+id/announcementFragment"
         android:label="@string/announcements_tab"
-        android:name="com.geomat.openeclassclient.screens.Announcements.AnnouncementFragment"
+        android:name="com.geomat.openeclassclient.ui.Announcements.AnnouncementFragment"
         tools:layout="@layout/fragment_announcement" />
     <fragment
         android:id="@+id/courseListFragment"
-        android:name="com.geomat.openeclassclient.screens.Courses.CourseListFragment"
+        android:name="com.geomat.openeclassclient.ui.Courses.CourseListFragment"
         android:label="@string/courses_tab"
         tools:layout="@layout/fragment_course_list" />
     <fragment
         android:id="@+id/calendarFragment"
         android:label="@string/calendar_tab"
-        android:name="com.geomat.openeclassclient.screens.Calendar.CalendarFragment"
+        android:name="com.geomat.openeclassclient.ui.Calendar.CalendarFragment"
         tools:layout="@layout/fragment_calendar" />
     <fragment
         android:id="@+id/internalAuthFragment"
-        android:name="com.geomat.openeclassclient.screens.Login.InternalAuth.InternalAuthFragment"
+        android:name="com.geomat.openeclassclient.ui.Login.InternalAuth.InternalAuthFragment"
         android:label="@string/InternalAuthLabel"
         tools:layout="@layout/fragment_internal_auth">
         <action
@@ -49,17 +49,17 @@
     </fragment>
     <fragment
         android:id="@+id/aboutFragment"
-        android:name="com.geomat.openeclassclient.screens.AboutFragment"
+        android:name="com.geomat.openeclassclient.ui.AboutFragment"
         android:label="@string/AboutLabel"
         tools:layout="@layout/fragment_about" />
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.geomat.openeclassclient.screens.HomeFragment"
+        android:name="com.geomat.openeclassclient.ui.HomeFragment"
         android:label="@string/home_tab"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/ExternalAuthFragment"
-        android:name="com.geomat.openeclassclient.screens.Login.ExternalAuth.ExternalAuthFragment"
+        android:name="com.geomat.openeclassclient.ui.Login.ExternalAuth.ExternalAuthFragment"
         android:label="@string/ExternalAuthLabel"
         tools:layout="@layout/fragment_external_auth">
         <argument
@@ -79,7 +79,7 @@
     </fragment>
     <fragment
         android:id="@+id/serverSelectFragment"
-        android:name="com.geomat.openeclassclient.screens.Login.ServerSelect.ServerSelectFragment"
+        android:name="com.geomat.openeclassclient.ui.Login.ServerSelect.ServerSelectFragment"
         android:label="@string/serverSelectLabel"
         tools:layout="@layout/fragment_server_select">
         <action

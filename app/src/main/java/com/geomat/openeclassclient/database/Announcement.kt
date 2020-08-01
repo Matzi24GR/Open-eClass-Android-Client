@@ -2,9 +2,10 @@ package com.geomat.openeclassclient.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.geomat.openeclassclient.domain.Announcement
 
 @Entity(tableName = "announcements_table")
-data class Announcement(
+data class DatabaseAnnouncement(
 
     @PrimaryKey
     var id: String,                  // ex.  15 or s15 for system announcements
@@ -16,3 +17,16 @@ data class Announcement(
     var date: Long                   // ex.  1591786714000
 
 )
+
+fun List<DatabaseAnnouncement>.asDomainModel(): List<Announcement> {
+    return map {
+        Announcement(
+            id = it.id,
+            courseId = it.courseId,
+            title = it.title,
+            link = it.link,
+            description = it.description,
+            date = it.date
+        )
+    }
+}

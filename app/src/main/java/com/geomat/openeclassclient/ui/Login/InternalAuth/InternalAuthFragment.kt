@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.screens.Login.InternalAuth
+package com.geomat.openeclassclient.ui.Login.InternalAuth
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.geomat.openeclassclient.databinding.FragmentInternalAuthBinding
-import com.geomat.openeclassclient.screens.Login.ServerSelect.Server
+import com.geomat.openeclassclient.ui.Login.ServerSelect.Server
 import com.google.android.material.snackbar.Snackbar
 
 class InternalAuthFragment : Fragment() {

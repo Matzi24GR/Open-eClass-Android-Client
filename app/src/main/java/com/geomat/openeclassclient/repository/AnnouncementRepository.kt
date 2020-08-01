@@ -1,25 +1,27 @@
 package com.geomat.openeclassclient.repository
 
-import android.net.Uri
-import androidx.core.text.HtmlCompat
-import androidx.core.text.parseAsHtml
 import androidx.lifecycle.LiveData
-import com.geomat.openeclassclient.database.Announcement
+import androidx.lifecycle.Transformations
+import com.geomat.openeclassclient.database.DatabaseAnnouncement
 import com.geomat.openeclassclient.database.EClassDatabase
+import com.geomat.openeclassclient.database.asDomainModel
+import com.geomat.openeclassclient.domain.Announcement
+import com.geomat.openeclassclient.network.DataTransferObjects.asDatabaseModel
 import com.geomat.openeclassclient.network.EclassApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
+import retrofit2.await
 import timber.log.Timber
-import java.text.SimpleDateFormat
-import java.util.*
 
 class AnnouncementRepository(database: EClassDatabase) {
 
     private val courseDao = database.coursesDao
     private val announcementDao = database.announcementDao
 
-    val allAnnouncements: LiveData<List<Announcement>> = announcementDao.getAllAnnouncements()
+    val allAnnouncements: LiveData<List<Announcement>> = Transformations.map(announcementDao.getAllAnnouncements()){
+        it.asDomainModel()
+    }
 
     suspend fun updateAllAnnouncements() {
         withContext(Dispatchers.IO) {
@@ -32,37 +34,8 @@ class AnnouncementRepository(database: EClassDatabase) {
             }
             feedUrls.forEach { currentFeed ->
                 if (currentFeed.isNotBlank()) {
-                    try {
-                        val result = EclassApi.MobileApi.getRssFeed(currentFeed).execute()
-                        if (result.isSuccessful) {
-                            val announcements = result.body()?.channel?.announcementList
-                            announcements?.forEach {currentAnnouncement ->
-                                val announcement = Announcement("","","","","",0)
-                                val uri = Uri.parse(currentAnnouncement.link.parseAsHtml().toString())
-                                val id = uri.getQueryParameter("aid")
-                                if (id.isNullOrEmpty()) { // That means its a normal announcement
-                                    val anId = uri.getQueryParameter("an_id")
-                                    val cId  = uri.getQueryParameter("course")
-                                    announcement.id = anId.toString()
-                                    announcement.courseId = cId
-                                } else {                  // System announcement
-                                    val aid = uri.getQueryParameter("aid")
-                                    announcement.id = "s$aid"   //add s to the start of id so it is different compared to course announcements
-                                    announcement.courseId = null
-                                }
-                                val dateFormat = SimpleDateFormat("E, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH)
-                                val date = dateFormat.parse(currentAnnouncement.pubDate)
-                                announcement.title = currentAnnouncement.title
-                                announcement.link = currentAnnouncement.link
-                                announcement.description = currentAnnouncement.description.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
-                                announcement.date = date.time
-
-                               announcementDao.insert(announcement)
-
-                            }
-                        }
-                    } catch (cause: Throwable) {
-                    }
+                    val announcements = EclassApi.MobileApi.getRssFeed(currentFeed).await()
+                    announcementDao.insertAll(announcements.asDatabaseModel())
                 }
             }
         }
@@ -80,20 +53,15 @@ class AnnouncementRepository(database: EClassDatabase) {
         }
     }
 
-    suspend fun setRssUrlForCourse(token: String, course: String) {
+    private suspend fun setRssUrlForCourse(token: String, course: String) {
         withContext(Dispatchers.IO) {
-            try {
-                val result = EclassApi.HtmlParser.getAnnouncementPage("PHPSESSID=$token", course).execute()
-                if (result.isSuccessful) {
-                    val document = Jsoup.parse(result.body())
-                    val url = document.select("a[href*=/modules/announcements/rss]").attr("href")
-
-                    if (url.isNotBlank()) {
-                        courseDao.setAnnouncementFeedUrl(url, course)
-                    }
-                }
-            } catch (cause: Throwable) {
+            val page = EclassApi.HtmlParser.getAnnouncementPage("PHPSESSID=$token", course).await()
+            val document = Jsoup.parse(page)
+            val url = document.select("a[href*=/modules/announcements/rss]").attr("href")
+            if (url.isNotBlank()) {
+                courseDao.setAnnouncementFeedUrl(url, course)
             }
+
         }
     }
 

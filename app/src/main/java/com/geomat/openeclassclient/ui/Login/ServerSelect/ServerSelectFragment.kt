@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.screens.Login.ServerSelect
+package com.geomat.openeclassclient.ui.Login.ServerSelect
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -14,7 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.databinding.AuthMethodBottomSheetBinding
 import com.geomat.openeclassclient.databinding.FragmentServerSelectBinding
-import com.geomat.openeclassclient.network.ServerInfoResponse
+import com.geomat.openeclassclient.network.DataTransferObjects.ServerInfoResponse
 import com.geomat.openeclassclient.network.EclassApi
 import com.geomat.openeclassclient.network.interceptor
 import com.google.android.material.bottomsheet.BottomSheetBehavior

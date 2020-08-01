@@ -10,13 +10,13 @@ import androidx.room.Query
 interface AnnouncementDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(announcement: Announcement)
+    fun insert(databaseAnnouncement: DatabaseAnnouncement)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(announcements: List<Announcement>)
+    fun insertAll(databaseAnnouncements: List<DatabaseAnnouncement>)
 
     @Query("SELECT * FROM announcements_table ORDER BY `date` DESC")
-    fun getAllAnnouncements(): LiveData<List<Announcement>>
+    fun getAllAnnouncements(): LiveData<List<DatabaseAnnouncement>>
 
     @Query("DELETE FROM  announcements_table")
     fun clear()

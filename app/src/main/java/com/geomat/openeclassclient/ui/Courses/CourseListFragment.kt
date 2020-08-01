@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.screens.Courses
+package com.geomat.openeclassclient.ui.Courses
 
 import android.content.Context
 import android.os.Bundle

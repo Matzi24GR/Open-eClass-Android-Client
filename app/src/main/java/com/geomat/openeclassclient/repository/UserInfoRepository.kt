@@ -1,49 +1,34 @@
 package com.geomat.openeclassclient.repository
 
 import androidx.lifecycle.LiveData
-import com.geomat.openeclassclient.database.UserInfo
+import androidx.lifecycle.Transformations
 import com.geomat.openeclassclient.database.UserInfoDao
+import com.geomat.openeclassclient.database.asDomainModel
+import com.geomat.openeclassclient.domain.UserInfo
+import com.geomat.openeclassclient.network.DataTransferObjects.UserInfoResponse
+import com.geomat.openeclassclient.network.DataTransferObjects.asDatabaseModel
 import com.geomat.openeclassclient.network.EclassApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.jsoup.Jsoup
-import timber.log.Timber
+import retrofit2.await
 
 class UserInfoRepository(private val userDao: UserInfoDao) {
 
     fun getUserWithUsername(username: String) :LiveData<UserInfo> {
-        return userDao.getUserWithUsername(username)
-    }
-
-    fun insertUser(user: UserInfo) {
-        userDao.insert(user)
+        return Transformations.map(userDao.getUserWithUsername(username)) {
+            if (it != null) {
+                return@map it.asDomainModel()
+            }
+            return@map null
+        }
     }
 
     suspend fun refreshData(token: String) {
         withContext(Dispatchers.IO) {
-            try {
-                val response = EclassApi.HtmlParser.getMainPage("PHPSESSID=$token").execute()
-                if (response.isSuccessful) {
-                    val document = Jsoup.parse(response.body())
-                    val infoBox = document.select("div [id=profile_box]")
-                    val username = infoBox.select("div [class=not_visible text-center]").text()
-                    val fullName = infoBox.select("a")[0].text()
-                    val category = infoBox.select("span[class=tag-value text-muted]")[0].text()
-                    val imgUrl = infoBox.select("img").attr("src")
-
-                    insertUser(
-                        UserInfo(username,
-                            fullName,
-                            category,
-                            imgUrl
-                        )
-                    )
-                } else {
-                    Timber.i("UserInfo Refresh Failed")
-                }
-            } catch (cause: Throwable) {
-            }
+            val response = EclassApi.HtmlParser.getMainPage("PHPSESSID=$token").await()
+            userDao.insert(
+                UserInfoResponse(response).asDatabaseModel()
+            )
         }
-
     }
 }

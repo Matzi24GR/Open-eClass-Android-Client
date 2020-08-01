@@ -2,9 +2,10 @@ package com.geomat.openeclassclient.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.geomat.openeclassclient.domain.CalendarEvent
 
 @Entity(tableName = "calendar_event_table")
-data class CalendarEvent(
+data class DatabaseCalendarEvent(
 
     @PrimaryKey
     val id: Long,                   // ex. 18
@@ -19,3 +20,20 @@ data class CalendarEvent(
     var courseCode: String,         // ex.  "DAI104"
     var url: String                 // ex.  "https://openeclass.uom.gr/modules/work/index.php?id=18&course=DAI104"
 )
+
+fun List<DatabaseCalendarEvent>.asDomainModel(): List<CalendarEvent> {
+    return map {
+        CalendarEvent(
+            id = it.id,
+            title = it.title,
+            start = it.start,
+            end = it.end,
+            content = it.content,
+            event_group = it.event_group,
+            Class = it.Class,
+            event_type = it.event_type,
+            courseCode = it.courseCode,
+            url = it.url
+        )
+    }
+}

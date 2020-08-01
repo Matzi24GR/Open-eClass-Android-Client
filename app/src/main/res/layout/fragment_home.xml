@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/backgroundColor"
     android:orientation="vertical"
-    tools:context="com.geomat.openeclassclient.screens.HomeFragment">
+    tools:context="com.geomat.openeclassclient.ui.HomeFragment">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"

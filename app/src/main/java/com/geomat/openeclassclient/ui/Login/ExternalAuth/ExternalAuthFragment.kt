@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.screens.Login.ExternalAuth
+package com.geomat.openeclassclient.ui.Login.ExternalAuth
 
 import android.content.Context
 import android.os.Bundle

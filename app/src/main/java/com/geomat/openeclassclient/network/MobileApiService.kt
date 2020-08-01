@@ -1,5 +1,6 @@
 package com.geomat.openeclassclient.network
 
+import com.geomat.openeclassclient.network.DataTransferObjects.*
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.tickaroo.tikxml.TikXml
@@ -83,7 +84,7 @@ interface JsonApiService {
     @Headers("X-Requested-With: xmlhttprequest")
     @GET("/modules/announcements/myannouncements.php")
     fun getAnnouncements(@Header("Cookie")token: String):
-            Call<AnnouncementResponse>
+            Call<MyAnnouncementResponse>
 
     @Headers("X-Requested-With: xmlhttprequest")
     @GET("/main/calendar_data.php?from=0&to=1683013600000")

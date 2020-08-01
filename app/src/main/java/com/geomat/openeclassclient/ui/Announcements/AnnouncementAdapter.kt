@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.screens.Announcements
+package com.geomat.openeclassclient.ui.Announcements
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,8 +7,8 @@ import androidx.core.text.parseAsHtml
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.geomat.openeclassclient.database.Announcement
 import com.geomat.openeclassclient.databinding.AnnouncementListItemBinding
+import com.geomat.openeclassclient.domain.Announcement
 import java.text.SimpleDateFormat
 
 class AnnouncementAdapter : ListAdapter<Announcement, AnnouncementAdapter.ViewHolder>(AnnouncementDiffCallback()) {

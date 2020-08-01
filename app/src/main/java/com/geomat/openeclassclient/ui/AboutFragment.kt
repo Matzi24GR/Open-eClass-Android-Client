@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.screens
+package com.geomat.openeclassclient.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater

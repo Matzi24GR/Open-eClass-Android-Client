@@ -1,18 +1,20 @@
 package com.geomat.openeclassclient.repository
 
 import androidx.lifecycle.LiveData
-import com.geomat.openeclassclient.database.Course
+import androidx.lifecycle.Transformations
 import com.geomat.openeclassclient.database.CoursesDao
+import com.geomat.openeclassclient.database.asDomainModel
+import com.geomat.openeclassclient.domain.Course
+import com.geomat.openeclassclient.network.DataTransferObjects.asDatabaseModel
 import com.geomat.openeclassclient.network.EclassApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.await
 
 class CoursesRepository(private val coursesDao: CoursesDao ) {
 
-    val allCourses: LiveData<List<Course>> = coursesDao.getAllCourses()
-
-    fun insertAll(courses: List<Course>) {
-        coursesDao.insertAll(courses)
+    val allCourses: LiveData<List<Course>> = Transformations.map(coursesDao.getAllCourses()){
+        it.asDomainModel()
     }
 
     suspend fun clear() {
@@ -24,25 +26,8 @@ class CoursesRepository(private val coursesDao: CoursesDao ) {
     suspend fun refreshData(token: String) {
 
         withContext(Dispatchers.IO) {
-            try {
-                val result = EclassApi.MobileApi.getCourses(token).execute()
-                if (result.isSuccessful) {
-                    val responseList = result.body()?.courseGroup?.courseList
-                    val dbList = mutableListOf<Course>()
-
-                    if (responseList!!.isNotEmpty()) {
-                        for (i in responseList.indices) {
-                            with(responseList[i]){
-                                dbList.add(
-                                    Course(this.code,this.title,this.description,"")
-                                )
-                            }
-                        }
-                    }
-                    insertAll(dbList)
-                }
-            } catch (cause: Throwable) {
-            }
+            val courses = EclassApi.MobileApi.getCourses(token).await()
+            coursesDao.insertAll(courses.asDatabaseModel())
         }
     }
 }

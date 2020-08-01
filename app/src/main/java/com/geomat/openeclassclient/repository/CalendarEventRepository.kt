@@ -1,19 +1,20 @@
 package com.geomat.openeclassclient.repository
 
-import androidx.core.text.HtmlCompat
 import androidx.lifecycle.LiveData
-import com.geomat.openeclassclient.database.CalendarEvent
+import androidx.lifecycle.Transformations
 import com.geomat.openeclassclient.database.CalendarEventDao
+import com.geomat.openeclassclient.database.asDomainModel
+import com.geomat.openeclassclient.domain.CalendarEvent
+import com.geomat.openeclassclient.network.DataTransferObjects.asDatabaseModel
 import com.geomat.openeclassclient.network.EclassApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.await
 
 class CalendarEventRepository(private val calendarEventDao: CalendarEventDao) {
 
-    val allEvents: LiveData<List<CalendarEvent>> = calendarEventDao.getAllEvents()
-
-    fun insertAll(events: List<CalendarEvent>) {
-        calendarEventDao.insertAll(events)
+    val allEvents: LiveData<List<CalendarEvent>> = Transformations.map(calendarEventDao.getAllEvents()){
+        it.asDomainModel()
     }
 
     suspend fun clear() {
@@ -23,44 +24,9 @@ class CalendarEventRepository(private val calendarEventDao: CalendarEventDao) {
     }
 
     suspend fun refreshData(token: String) {
-
         withContext(Dispatchers.IO) {
-            try {
-                val result = EclassApi.JsonApi.getCalendar("PHPSESSID=$token").execute()
-                if (result.isSuccessful) {
-                    val responseList = result.body()?.result
-                    val dbList = mutableListOf<CalendarEvent>()
-
-                    if (responseList!!.isNotEmpty()) {
-                        for (i in responseList.indices) {
-                            with(responseList[i]) {
-                                dbList.add(
-                                    CalendarEvent(
-                                        this.id.toLong(),
-                                        this.title,
-                                        this.start.toLong(),
-                                        this.end.toLong(),
-                                        HtmlCompat.fromHtml(
-                                            this.content,
-                                            HtmlCompat.FROM_HTML_MODE_COMPACT
-                                        ).replace(
-                                            Regex("""\(deadline: \d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\)"""),
-                                            ""
-                                        ),
-                                        this.event_group,
-                                        this.Class,
-                                        this.event_type,
-                                        this.course,
-                                        this.url
-                                    )
-                                )
-                            }
-                        }
-                    }
-                    insertAll(dbList)
-                }
-            } catch (cause: Throwable) {
-            }
+            val calendar = EclassApi.JsonApi.getCalendar("PHPSESSID=$token").await()
+            calendarEventDao.insertAll(calendar.asDatabaseModel())
         }
 
     }

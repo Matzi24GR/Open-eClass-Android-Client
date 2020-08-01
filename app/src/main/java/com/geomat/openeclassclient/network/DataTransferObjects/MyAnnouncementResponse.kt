@@ -1,6 +1,6 @@
-package com.geomat.openeclassclient.network
+package com.geomat.openeclassclient.network.DataTransferObjects
 
-data class AnnouncementResponse (
+data class MyAnnouncementResponse (
 
     val iTotalDisplayRecords : Int,
     val iTotalRecords : Int,
