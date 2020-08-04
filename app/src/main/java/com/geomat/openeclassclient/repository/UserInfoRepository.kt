@@ -11,6 +11,7 @@ import com.geomat.openeclassclient.network.EclassApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.await
+import timber.log.Timber
 
 class UserInfoRepository(private val userDao: UserInfoDao) {
 
@@ -25,10 +26,12 @@ class UserInfoRepository(private val userDao: UserInfoDao) {
 
     suspend fun refreshData(token: String) {
         withContext(Dispatchers.IO) {
-            val response = EclassApi.HtmlParser.getMainPage("PHPSESSID=$token").await()
-            userDao.insert(
-                UserInfoResponse(response).asDatabaseModel()
-            )
+            try {
+                val response = EclassApi.HtmlParser.getMainPage("PHPSESSID=$token").await()
+                userDao.insert(UserInfoResponse(response).asDatabaseModel())
+            } catch (e: Exception) {
+                Timber.i(e)
+            }
         }
     }
 }

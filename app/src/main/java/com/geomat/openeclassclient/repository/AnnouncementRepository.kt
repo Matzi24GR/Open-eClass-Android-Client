@@ -13,6 +13,7 @@ import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import retrofit2.await
 import timber.log.Timber
+import java.lang.Exception
 
 class AnnouncementRepository(database: EClassDatabase) {
 
@@ -34,8 +35,12 @@ class AnnouncementRepository(database: EClassDatabase) {
             }
             feedUrls.forEach { currentFeed ->
                 if (currentFeed.isNotBlank()) {
-                    val announcements = EclassApi.MobileApi.getRssFeed(currentFeed).await()
-                    announcementDao.insertAll(announcements.asDatabaseModel())
+                    try {
+                        val announcements = EclassApi.MobileApi.getRssFeed(currentFeed).await()
+                        announcementDao.insertAll(announcements.asDatabaseModel())
+                    } catch (e: Exception) {
+                        Timber.i(e)
+                    }
                 }
             }
         }
@@ -55,11 +60,15 @@ class AnnouncementRepository(database: EClassDatabase) {
 
     private suspend fun setRssUrlForCourse(token: String, course: String) {
         withContext(Dispatchers.IO) {
-            val page = EclassApi.HtmlParser.getAnnouncementPage("PHPSESSID=$token", course).await()
-            val document = Jsoup.parse(page)
-            val url = document.select("a[href*=/modules/announcements/rss]").attr("href")
-            if (url.isNotBlank()) {
-                courseDao.setAnnouncementFeedUrl(url, course)
+            try {
+                val page = EclassApi.HtmlParser.getAnnouncementPage("PHPSESSID=$token", course).await()
+                val document = Jsoup.parse(page)
+                val url = document.select("a[href*=/modules/announcements/rss]").attr("href")
+                if (url.isNotBlank()) {
+                    courseDao.setAnnouncementFeedUrl(url, course)
+                }
+            } catch (e: Exception) {
+                Timber.i(e)
             }
 
         }

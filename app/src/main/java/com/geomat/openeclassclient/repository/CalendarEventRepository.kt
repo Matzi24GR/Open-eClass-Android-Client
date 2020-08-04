@@ -10,6 +10,8 @@ import com.geomat.openeclassclient.network.EclassApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.await
+import timber.log.Timber
+import java.lang.Exception
 
 class CalendarEventRepository(private val calendarEventDao: CalendarEventDao) {
 
@@ -25,8 +27,12 @@ class CalendarEventRepository(private val calendarEventDao: CalendarEventDao) {
 
     suspend fun refreshData(token: String) {
         withContext(Dispatchers.IO) {
-            val calendar = EclassApi.JsonApi.getCalendar("PHPSESSID=$token").await()
-            calendarEventDao.insertAll(calendar.asDatabaseModel())
+            try {
+                val calendar = EclassApi.JsonApi.getCalendar("PHPSESSID=$token").await()
+                calendarEventDao.insertAll(calendar.asDatabaseModel())
+            } catch (e: Exception) {
+                Timber.i(e)
+            }
         }
 
     }

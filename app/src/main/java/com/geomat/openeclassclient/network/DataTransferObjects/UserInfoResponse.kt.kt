@@ -2,15 +2,36 @@ package com.geomat.openeclassclient.network.DataTransferObjects
 
 import com.geomat.openeclassclient.database.DatabaseUserInfo
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
+import timber.log.Timber
 
 class UserInfoResponse (page: String) {
     private val document = Jsoup.parse(page)
-    private val infoBox = document.select("div [id=profile_box]")
 
-    val username = infoBox.select("div [class=not_visible text-center]").text()
-    val fullName = infoBox.select("a")[0].text()
-    val category = infoBox.select("span[class=tag-value text-muted]")[0].text()
-    val imgUrl = infoBox.select("img").attr("src")
+    var username: String = ""
+    var fullName: String = ""
+    var category: String = ""
+    var imgUrl: String = ""
+
+
+    init {
+        try {
+            val infoBox = document.select("div [id=profile_box]")
+
+            val usernameElement= infoBox.select("div [class=not_visible text-center]")
+            val fullNameElement = infoBox.select("a").first()
+            val categoryElement = infoBox.select("span[class=tag-value text-muted]").first()
+            val imgUrlElement = infoBox.select("img")
+
+            username = usernameElement.text()
+            fullName = fullNameElement.text()
+            category = categoryElement.text()
+            imgUrl = imgUrlElement.attr("src")
+        } catch (e: Exception) {
+            Timber.i(e)
+        }
+    }
+
 }
 
 fun UserInfoResponse.asDatabaseModel(): DatabaseUserInfo {

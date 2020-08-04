@@ -10,6 +10,7 @@ import com.geomat.openeclassclient.network.EclassApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.await
+import timber.log.Timber
 
 class CoursesRepository(private val coursesDao: CoursesDao ) {
 
@@ -26,8 +27,12 @@ class CoursesRepository(private val coursesDao: CoursesDao ) {
     suspend fun refreshData(token: String) {
 
         withContext(Dispatchers.IO) {
-            val courses = EclassApi.MobileApi.getCourses(token).await()
-            coursesDao.insertAll(courses.asDatabaseModel())
+            try {
+                val courses = EclassApi.MobileApi.getCourses(token).await()
+                coursesDao.insertAll(courses.asDatabaseModel())
+            } catch (e: Exception) {
+                Timber.i(e)
+            }
         }
     }
 }

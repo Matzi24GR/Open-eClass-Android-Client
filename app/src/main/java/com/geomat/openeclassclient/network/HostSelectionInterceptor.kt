@@ -21,7 +21,7 @@ class HostSelectionInterceptor: Interceptor {
 
         var request = chain.request()
 
-        if (host.isBlank()){
+        if (host.isBlank()) {
             //host = request.url().host()
             Timber.i("Host Blank")
         } else {
@@ -34,5 +34,4 @@ class HostSelectionInterceptor: Interceptor {
 
         return chain.proceed(request)
     }
-
 }
