@@ -11,7 +11,9 @@ import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.geomat.openeclassclient.database.EClassDatabase
 import com.geomat.openeclassclient.databinding.FragmentHomeBinding
+import com.geomat.openeclassclient.repository.AnnouncementRepository
 import com.geomat.openeclassclient.repository.UserInfoRepository
+import com.geomat.openeclassclient.ui.Announcements.AnnouncementAdapter
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -45,6 +47,17 @@ class HomeFragment : Fragment() {
                 binding.categoryText.text = it.category.replace(" » ","\n")
                 val imageUrl = "https://$url${it.imageUrl}".toUri()
                 Glide.with(binding.imageView.context).load(imageUrl).into(binding.imageView)
+            }
+        })
+
+        val announcementRepo = AnnouncementRepository(database)
+        val announcements = announcementRepo.allAnnouncements
+
+        val adapter = AnnouncementAdapter()
+        binding.homeAnnouncementRecyclerView.adapter = adapter
+        announcements.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                adapter.submitList(it.take(2))
             }
         })
 
