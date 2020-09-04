@@ -23,4 +23,5 @@
     <string name="AboutLabel">Σχετικά</string>
     <string name="select_authentication_method">Επιλογή Τύπου Ταυτοποίησης</string>
     <string name="log_out">Αποσύνδεση</string>
+    <string name="menu_refresh">Ανανέωση</string>
 </resources>

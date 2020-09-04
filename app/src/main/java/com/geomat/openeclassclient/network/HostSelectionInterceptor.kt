@@ -1,7 +1,6 @@
 package com.geomat.openeclassclient.network
 
 
-import androidx.core.net.toUri
 import okhttp3.Interceptor
 import okhttp3.Response
 import timber.log.Timber

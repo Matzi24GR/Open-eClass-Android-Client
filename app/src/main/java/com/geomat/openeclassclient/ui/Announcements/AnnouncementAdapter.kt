@@ -35,7 +35,19 @@ class AnnouncementAdapter : ListAdapter<Announcement, AnnouncementAdapter.ViewHo
                 }
                 dateText.text = SimpleDateFormat.getDateTimeInstance().format(announcement.date)
                 titleText.text = announcement.title
-                descriptionText.text = announcement.description.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT)
+                descriptionText.maxLines = 5
+                descriptionText.text = announcement.description.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).trim()
+
+                layout.setOnClickListener {
+                    if (descriptionText.maxLines == 5) descriptionText.maxLines = Int.MAX_VALUE
+                    else if (descriptionText.maxLines == Int.MAX_VALUE) descriptionText.maxLines = 5
+                }
+
+                descriptionText.setOnClickListener {
+                    if (descriptionText.maxLines == 5) descriptionText.maxLines = Int.MAX_VALUE
+                    else if (descriptionText.maxLines == Int.MAX_VALUE) descriptionText.maxLines = 5
+                }
+                
             }
         }
 

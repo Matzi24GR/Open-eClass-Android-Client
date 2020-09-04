@@ -7,12 +7,18 @@
     android:layout_height="wrap_content"
     android:elevation="1dp"
     android:layout_margin="8dp"
-    app:cardCornerRadius="8dp">
+    app:cardCornerRadius="8dp"
+    android:clickable="true"
+    android:focusable="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="8dp">
+        android:padding="8dp"
+        android:background="?selectableItemBackground"
+        android:addStatesFromChildren="true"
+        android:id="@+id/layout"
+        android:animateLayoutChanges="true">
 
         <TextView
             android:id="@+id/courseNameText"
@@ -59,6 +65,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:autoLink="all|web|map|email"
+            android:maxLines="5"
             android:outlineProvider="paddedBounds"
             app:layout_constraintBottom_toTopOf="@+id/courseNameText"
             app:layout_constraintEnd_toEndOf="parent"

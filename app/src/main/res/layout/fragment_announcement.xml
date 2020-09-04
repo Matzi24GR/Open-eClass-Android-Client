@@ -7,10 +7,17 @@
     android:background="@color/backgroundColor"
     tools:context="com.geomat.openeclassclient.ui.Announcements.AnnouncementFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/announcementRecyclerView"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        android:id="@+id/swipeRefresh">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/announcementRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </FrameLayout>
