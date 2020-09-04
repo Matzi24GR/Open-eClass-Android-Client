@@ -1,10 +1,19 @@
 package com.geomat.openeclassclient.database
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.geomat.openeclassclient.domain.CalendarEvent
 
-@Entity(tableName = "calendar_event_table")
+@Entity(tableName = "calendar_event_table",
+    foreignKeys = [
+        ForeignKey(
+            entity = DatabaseCourse::class,
+            parentColumns = arrayOf("id"),
+            childColumns = arrayOf("courseCode"),
+            onDelete = ForeignKey.CASCADE)
+    ]
+)
 data class DatabaseCalendarEvent(
 
     @PrimaryKey
@@ -19,6 +28,23 @@ data class DatabaseCalendarEvent(
     var event_type: String,         // ex.  "assignment"
     var courseCode: String,         // ex.  "DAI104"
     var url: String                 // ex.  "https://openeclass.uom.gr/modules/work/index.php?id=18&course=DAI104"
+)
+
+@Entity(tableName = "Calendar_sync_table",
+    foreignKeys = [
+        ForeignKey(
+            entity = DatabaseCalendarEvent::class,
+            parentColumns = arrayOf("id"),
+            childColumns = arrayOf("databaseId"),
+            onDelete = ForeignKey.SET_NULL)
+    ]
+)
+data class DatabaseCalendarSyncId(
+
+    @PrimaryKey
+    var calendarSyncId: Long,
+
+    var databaseId: Long
 )
 
 fun List<DatabaseCalendarEvent>.asDomainModel(): List<CalendarEvent> {

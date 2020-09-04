@@ -1,10 +1,19 @@
 package com.geomat.openeclassclient.database
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.geomat.openeclassclient.domain.Announcement
 
-@Entity(tableName = "announcements_table")
+@Entity(tableName = "announcements_table",
+    foreignKeys = [
+        ForeignKey(
+            entity = DatabaseCourse::class,
+            parentColumns = arrayOf("id"),
+            childColumns = arrayOf("courseId"),
+            onDelete = ForeignKey.CASCADE)
+    ]
+)
 data class DatabaseAnnouncement(
 
     @PrimaryKey

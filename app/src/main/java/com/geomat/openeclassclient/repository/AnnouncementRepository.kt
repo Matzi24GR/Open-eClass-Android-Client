@@ -2,8 +2,8 @@ package com.geomat.openeclassclient.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import com.geomat.openeclassclient.database.DatabaseAnnouncement
 import com.geomat.openeclassclient.database.EClassDatabase
+import com.geomat.openeclassclient.database.DatabaseFeedUrl
 import com.geomat.openeclassclient.database.asDomainModel
 import com.geomat.openeclassclient.domain.Announcement
 import com.geomat.openeclassclient.network.DataTransferObjects.asDatabaseModel
@@ -26,21 +26,14 @@ class AnnouncementRepository(database: EClassDatabase) {
 
     suspend fun updateAllAnnouncements() {
         withContext(Dispatchers.IO) {
-            val allCourses = courseDao.getAllCoursesNonLive()
-            val feedUrls = mutableListOf<String>()
+            val feedUrls = courseDao.getAllFeedUrls() as MutableList
             feedUrls.add("/rss.php")        //System Announcements Url
-            allCourses.forEach {
-                Timber.i(it.announcementFeedUrl)
-                feedUrls.add(it.announcementFeedUrl)
-            }
             feedUrls.forEach { currentFeed ->
-                if (currentFeed.isNotBlank()) {
-                    try {
-                        val announcements = EclassApi.MobileApi.getRssFeed(currentFeed).await()
-                        announcementDao.insertAll(announcements.asDatabaseModel())
-                    } catch (e: Exception) {
-                        Timber.i(e)
-                    }
+                try {
+                    val announcements = EclassApi.MobileApi.getRssFeed(currentFeed).await()
+                    announcementDao.insertAll(announcements.asDatabaseModel())
+                } catch (e: Exception) {
+                    Timber.i(e)
                 }
             }
         }
@@ -50,11 +43,9 @@ class AnnouncementRepository(database: EClassDatabase) {
         if (courseDao.getNumberOfCourses() == 0) {
             CoursesRepository(courseDao).refreshData(token)
         }
-        val allCourses = courseDao.getAllCoursesNonLive()
+        val allCourses = courseDao.getCoursesWithNoFeedUrl()
         allCourses.forEach {
-            if (it.announcementFeedUrl.isBlank()) {
-                setRssUrlForCourse(token, it.id)
-            }
+            setRssUrlForCourse(token, it.id)
         }
     }
 
@@ -65,7 +56,7 @@ class AnnouncementRepository(database: EClassDatabase) {
                 val document = Jsoup.parse(page)
                 val url = document.select("a[href*=/modules/announcements/rss]").attr("href")
                 if (url.isNotBlank()) {
-                    courseDao.setAnnouncementFeedUrl(url, course)
+                    courseDao.insertFeedUrl(DatabaseFeedUrl(url, course))
                 }
             } catch (e: Exception) {
                 Timber.i(e)

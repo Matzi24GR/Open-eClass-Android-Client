@@ -57,6 +57,11 @@ interface  MobileApiService {
 
     @FormUrlEncoded
     @POST("/modules/mobile/mlogin.php")
+    fun checkTokenStatus(@Field("token")token: String):
+            Call<String>
+
+    @FormUrlEncoded
+    @POST("/modules/mobile/mlogin.php")
     fun getToken(@Field("uname")username: String,
                  @Field("pass")password: String):
             Call<String>

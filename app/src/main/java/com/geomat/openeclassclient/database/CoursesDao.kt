@@ -9,7 +9,7 @@ interface CoursesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(course: DatabaseCourse)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertAll(courses: List<DatabaseCourse>)
 
     @Query("SELECT * FROM courses_table ORDER BY `title` ASC")
@@ -24,7 +24,13 @@ interface CoursesDao {
     @Query("SELECT COUNT(*) FROM courses_table")
     fun getNumberOfCourses(): Int
 
-    @Query("UPDATE courses_table SET announcementFeedUrl = :url WHERE id = :courseId")
-    fun setAnnouncementFeedUrl(url: String, courseId: String)
+    @Query("SELECT * FROM courses_table c WHERE NOT EXISTS ( SELECT * FROM feed_urls_table f WHERE c.id = f.courseId) ORDER BY `title` ASC")
+    fun getCoursesWithNoFeedUrl(): List<DatabaseCourse>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertFeedUrl(urlDatabase: DatabaseFeedUrl)
+
+    @Query("SELECT announcementFeedUrl FROM feed_urls_table")
+    fun getAllFeedUrls(): List<String>
 
 }

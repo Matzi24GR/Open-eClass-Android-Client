@@ -21,4 +21,13 @@ interface CalendarEventDao {
     @Query("DELETE FROM  calendar_event_table")
     fun clear()
 
+    @Query("SELECT * FROM calendar_event_table c WHERE NOT EXISTS ( SELECT * FROM calendar_sync_table s WHERE c.id = s.databaseId)")
+    fun getEventsThatArentSynced(): List<DatabaseCalendarEvent>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertSyncedEvent(syncedEvent: DatabaseCalendarSyncId)
+
+    @Query("SELECT calendarSyncId FROM calendar_sync_table")
+    fun getAllSyncedEventsIds(): List<Long>
+
 }

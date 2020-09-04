@@ -32,10 +32,10 @@ fun CalendarResponse.asDatabaseModel(): List<DatabaseCalendarEvent> {
     return result.map {
         DatabaseCalendarEvent(
             id = it.id.toLong(),
-            title = it.title,
+            title = HtmlCompat.fromHtml(it.title,HtmlCompat.FROM_HTML_MODE_LEGACY).toString(),
             start = it.start.toLong(),
             end = it.end.toLong(),
-            content = HtmlCompat.fromHtml(it.content,HtmlCompat.FROM_HTML_MODE_COMPACT)
+            content = HtmlCompat.fromHtml(it.content,HtmlCompat.FROM_HTML_MODE_LEGACY)
                 .replace(
                     Regex("""\(deadline: \d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\)"""), ""),
             event_group = it.event_group,

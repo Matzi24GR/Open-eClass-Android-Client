@@ -34,4 +34,10 @@ class UserInfoRepository(private val userDao: UserInfoDao) {
             }
         }
     }
+
+    suspend fun clear() {
+        withContext(Dispatchers.IO) {
+            userDao.clearAll()
+        }
+    }
 }
