@@ -12,6 +12,8 @@ import com.geomat.openeclassclient.databinding.FragmentCourseListBinding
 import com.geomat.openeclassclient.repository.CoursesRepository
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import java.lang.AssertionError
 
 class CourseListFragment : Fragment() {
 
@@ -43,6 +45,13 @@ class CourseListFragment : Fragment() {
             }
         })
 
-        GlobalScope.launch { repo.refreshData(token!!) }
+        GlobalScope.launch {
+            try {
+                repo.refreshData(token!!)
+            } catch (e: AssertionError){
+                Timber.i(e)
+            }
+        }
+        //GlobalScope.launch { repo.refreshData(token!!) }
     }
 }
