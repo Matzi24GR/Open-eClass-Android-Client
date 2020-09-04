@@ -24,5 +24,6 @@
     <string name="select_authentication_method">Select Authentication Method</string>
     <string name="log_out">Log Out</string>
     <string name="menu_refresh">Refresh</string>
+    <string name="read_more">Read More</string>
 
 </resources>

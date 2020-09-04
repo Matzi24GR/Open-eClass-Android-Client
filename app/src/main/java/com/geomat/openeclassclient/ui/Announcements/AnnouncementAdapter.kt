@@ -1,6 +1,8 @@
 package com.geomat.openeclassclient.ui.Announcements
 
+import android.text.Html
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.core.text.parseAsHtml
@@ -8,16 +10,18 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.geomat.openeclassclient.databinding.AnnouncementListItemBinding
+import com.geomat.openeclassclient.databinding.BottomSheetAnnouncementFullBinding
 import com.geomat.openeclassclient.domain.Announcement
+import timber.log.Timber
 import java.text.SimpleDateFormat
 
-class AnnouncementAdapter : ListAdapter<Announcement, AnnouncementAdapter.ViewHolder>(AnnouncementDiffCallback()) {
+class AnnouncementAdapter(private val itemClick: (Announcement) -> Unit) : ListAdapter<Announcement, AnnouncementAdapter.ViewHolder>(AnnouncementDiffCallback()) {
 
     //TODO handle images in announcement content
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
+        holder.bind(item, itemClick)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -26,7 +30,7 @@ class AnnouncementAdapter : ListAdapter<Announcement, AnnouncementAdapter.ViewHo
 
     class ViewHolder private constructor(private val binding: AnnouncementListItemBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(announcement: Announcement) {
+        fun bind(announcement: Announcement, itemClick: (Announcement) -> Unit) {
             with(binding) {
                 if (announcement.courseId.isNullOrBlank()) {
                     courseNameText.text = "System"
@@ -38,16 +42,21 @@ class AnnouncementAdapter : ListAdapter<Announcement, AnnouncementAdapter.ViewHo
                 descriptionText.maxLines = 5
                 descriptionText.text = announcement.description.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).trim()
 
-                layout.setOnClickListener {
-                    if (descriptionText.maxLines == 5) descriptionText.maxLines = Int.MAX_VALUE
-                    else if (descriptionText.maxLines == Int.MAX_VALUE) descriptionText.maxLines = 5
-                }
+                layout.setOnClickListener { itemClick(announcement) }
+                descriptionText.setOnClickListener { itemClick(announcement) }
 
-                descriptionText.setOnClickListener {
-                    if (descriptionText.maxLines == 5) descriptionText.maxLines = Int.MAX_VALUE
-                    else if (descriptionText.maxLines == Int.MAX_VALUE) descriptionText.maxLines = 5
-                }
-                
+                descriptionText.post(Runnable {
+                    val maxLines = 5
+                    if (descriptionText.lineCount > maxLines) {
+                        //readMoreText.visibility = View.VISIBLE
+                        val start = descriptionText.layout.getLineStart(0)
+                        val end = descriptionText.layout.getLineEnd(maxLines-1)
+                        val string = descriptionText.text.substring(start, end-3)+"<b>...</b>".parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT)
+                        descriptionText.text = string
+                    } else {
+                        readMoreText.visibility = View.INVISIBLE
+                    }
+                })
             }
         }
 

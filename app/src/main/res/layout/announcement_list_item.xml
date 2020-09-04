@@ -65,7 +65,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:autoLink="all|web|map|email"
-            android:maxLines="5"
+            android:lineSpacingExtra="4sp"
             android:outlineProvider="paddedBounds"
             app:layout_constraintBottom_toTopOf="@+id/courseNameText"
             app:layout_constraintEnd_toEndOf="parent"
@@ -73,6 +73,20 @@
             app:layout_constraintTop_toBottomOf="@+id/titleText"
             app:layout_constraintVertical_bias="0.0"
             tools:text="2. Στην αίθουσα που ανήκετε θα υπάρχει ο αντίστοιχος επιτηρητής με λίστα των φοιτητών που έχουν δηλώσει το μάθημα και ανήκουν στην αίθουσα. Οι επιτηρητές θα ξεκινήσουν να καλούν τα επίθετα σας στις 10:00 ακριβώς, οπότε συνδεθείτε στην σωστή αίθουσα με ανοιχτή την κάμερά σας 5-10 λεπτά πριν την εξέταση (δηλαδή στις 09:50). Θα πρέπει να έχετε διαθέσιμη την ακαδημαϊκή σας ταυτότητα." />
+
+        <TextView
+            android:id="@+id/readMoreText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/read_more"
+            android:textColor="@color/colorPrimary"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/date_text"
+            app:layout_constraintEnd_toEndOf="@+id/descriptionText"
+            app:layout_constraintStart_toStartOf="@+id/descriptionText"
+            app:layout_constraintTop_toBottomOf="@+id/titleText"
+            app:layout_constraintVertical_bias="1.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
