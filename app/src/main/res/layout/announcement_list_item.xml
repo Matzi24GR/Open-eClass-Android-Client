@@ -22,14 +22,19 @@
 
         <TextView
             android:id="@+id/courseNameText"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/date_text"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/descriptionText"
             tools:text="Βάσεις Δεδομένων" />
 
         <TextView
@@ -51,9 +56,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/courseNameText"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/courseNameText"
+            app:layout_constraintVertical_bias="1.0"
             tools:text="Sat, 04 Jul 2020 18:02:15" />
 
         <TextView
@@ -63,15 +69,12 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
             android:autoLink="all|web|map|email"
             android:lineSpacingExtra="4sp"
             android:outlineProvider="paddedBounds"
-            app:layout_constraintBottom_toTopOf="@+id/courseNameText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titleText"
-            app:layout_constraintVertical_bias="0.0"
             tools:text="2. Στην αίθουσα που ανήκετε θα υπάρχει ο αντίστοιχος επιτηρητής με λίστα των φοιτητών που έχουν δηλώσει το μάθημα και ανήκουν στην αίθουσα. Οι επιτηρητές θα ξεκινήσουν να καλούν τα επίθετα σας στις 10:00 ακριβώς, οπότε συνδεθείτε στην σωστή αίθουσα με ανοιχτή την κάμερά σας 5-10 λεπτά πριν την εξέταση (δηλαδή στις 09:50). Θα πρέπει να έχετε διαθέσιμη την ακαδημαϊκή σας ταυτότητα." />
 
         <TextView

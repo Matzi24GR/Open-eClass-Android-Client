@@ -20,7 +20,7 @@ class AnnouncementRepository(database: EClassDatabase) {
     private val courseDao = database.coursesDao
     private val announcementDao = database.announcementDao
 
-    val allAnnouncements: LiveData<List<Announcement>> = Transformations.map(announcementDao.getAllAnnouncements()){
+    val allAnnouncements: LiveData<List<Announcement>> = Transformations.map(announcementDao.getAllAnnouncementsWithCourseNames()){
         it.asDomainModel()
     }
 

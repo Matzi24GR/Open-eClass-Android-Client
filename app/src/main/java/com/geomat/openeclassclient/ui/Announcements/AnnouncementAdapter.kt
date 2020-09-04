@@ -32,10 +32,10 @@ class AnnouncementAdapter(private val itemClick: (Announcement) -> Unit) : ListA
 
         fun bind(announcement: Announcement, itemClick: (Announcement) -> Unit) {
             with(binding) {
-                if (announcement.courseId.isNullOrBlank()) {
+                if (announcement.courseName.isNullOrBlank()) {
                     courseNameText.text = "System"
                 } else {
-                    courseNameText.text = announcement.courseId
+                    courseNameText.text = announcement.courseName
                 }
                 dateText.text = SimpleDateFormat.getDateTimeInstance().format(announcement.date)
                 titleText.text = announcement.title
