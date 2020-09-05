@@ -16,6 +16,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.fragment_announcement.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import java.lang.AssertionError
 
 class AnnouncementFragment : Fragment() {
 
@@ -78,8 +80,12 @@ class AnnouncementFragment : Fragment() {
     fun refreshData() {
         val token = requireContext().getSharedPreferences("login", Context.MODE_PRIVATE).getString("token",null)
         GlobalScope.launch {
-            repo.fillInFeedUrls(token!!)
-            repo.updateAllAnnouncements()
+            try {
+                repo.fillInFeedUrls(token!!)
+                repo.updateAllAnnouncements()
+            } catch (e: AssertionError) {
+                Timber.i(e)
+            }
             binding.swipeRefresh.isRefreshing = false
         }
     }

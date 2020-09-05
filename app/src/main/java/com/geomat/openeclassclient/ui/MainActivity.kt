@@ -7,10 +7,13 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
+import androidx.work.ListenableWorker
 import com.geomat.openeclassclient.BuildConfig
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.database.EClassDatabase
@@ -21,8 +24,11 @@ import com.geomat.openeclassclient.repository.AnnouncementRepository
 import com.geomat.openeclassclient.repository.CalendarEventRepository
 import com.geomat.openeclassclient.repository.CoursesRepository
 import com.geomat.openeclassclient.repository.UserInfoRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.awaitResponse
 import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
@@ -64,6 +70,30 @@ class MainActivity : AppCompatActivity() {
             binding.bottomNav.visibility = View.GONE
             navController.navigate(MainActivityDirections.actionGlobalServerSelectFragment())
         }
+
+        val token = applicationContext.getSharedPreferences("login", Context.MODE_PRIVATE).getString("token", null)
+
+
+        GlobalScope.launch{
+            try {
+                val result = EclassApi.MobileApi.checkTokenStatus(token!!).awaitResponse()
+                if (result.body() == "EXPIRED") {
+                    binding.TokenExpiredBanner.visibility = View.VISIBLE
+                } else {
+                    binding.TokenExpiredBanner.visibility = View.GONE
+                }
+            } catch (e: Exception) {
+                Timber.i(e)
+            }
+        }
+        binding.DismissBanner.setOnClickListener {
+            binding.TokenExpiredBanner.visibility = View.GONE
+        }
+        binding.ReLogIn.setOnClickListener {
+            binding.TokenExpiredBanner.visibility = View.GONE
+            navController.navigate(MainActivityDirections.actionGlobalServerSelectFragment())
+        }
+
 
     }
 
