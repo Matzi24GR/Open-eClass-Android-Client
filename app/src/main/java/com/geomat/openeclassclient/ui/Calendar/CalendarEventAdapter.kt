@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.geomat.openeclassclient.databinding.CalendarListItemBinding
 import com.geomat.openeclassclient.domain.CalendarEvent
 import java.text.SimpleDateFormat
+import java.time.DayOfWeek
+import java.util.*
 
 class CalendarEventAdapter : ListAdapter<CalendarEvent, CalendarEventAdapter.ViewHolder>(CalendarEventDiffCallback()) {
 
@@ -26,15 +28,22 @@ class CalendarEventAdapter : ListAdapter<CalendarEvent, CalendarEventAdapter.Vie
 
         fun bind(calendarEvent: CalendarEvent) {
             with(binding) {
-                if (calendarEvent.start == calendarEvent.end) textEnd.visibility = View.GONE
-                    else textEnd.visibility = View.VISIBLE
+                if (calendarEvent.start == calendarEvent.end){
+                    textTime.text = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(calendarEvent.start)
+                } else {
+                    val start = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(calendarEvent.start)
+                    val end = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(calendarEvent.end)
+                    textTime.text = start + "\n" + end
+                }
+
                 if (calendarEvent.content.isBlank()) textContent.visibility = View.GONE
                 else textContent.visibility = View.VISIBLE
 
                 //.replaceFirst(Regex("^(.*?): "),"") To get rid of course name at start of title
+                textDayOfWeek.text = SimpleDateFormat("EEE").format(calendarEvent.start)
+                textDayOfMonth.text = SimpleDateFormat("dd").format(calendarEvent.start)
+                textMonthYear.text = SimpleDateFormat("MMM\nYYYY").format(calendarEvent.start)
                 textTitle.text = calendarEvent.title
-                textStart.text = SimpleDateFormat.getDateTimeInstance().format(calendarEvent.start)
-                textEnd.text = SimpleDateFormat.getDateTimeInstance().format(calendarEvent.end)
                 textContent.text = HtmlCompat.fromHtml(calendarEvent.content, HtmlCompat.FROM_HTML_MODE_COMPACT).trimEnd()
                 textEventGroup.text = calendarEvent.event_group
                 textEventType.text = calendarEvent.event_type
