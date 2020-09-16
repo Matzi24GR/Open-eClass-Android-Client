@@ -41,7 +41,7 @@ fun CalendarResponse.asDatabaseModel(): List<DatabaseCalendarEvent> {
             event_group = it.event_group,
             Class = it.Class,
             event_type = it.event_type,
-            courseCode = it.course,
+            courseCode = if (it.course.isNotBlank()) it.course else null,
             url = it.url
         )
     }

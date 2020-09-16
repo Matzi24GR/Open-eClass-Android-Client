@@ -22,7 +22,7 @@ data class CalendarEvent(
     var event_group: String,        // ex.  "deadline"
     var Class: String,              // ex.  "event-important"
     var event_type: String,         // ex.  "assignment"
-    var courseCode: String,         // ex.  "DAI104"
+    var courseCode: String?,        // ex.  "DAI104" or null for user events
     var url: String                 // ex.  "https://openeclass.uom.gr/modules/work/index.php?id=18&course=DAI104"
 )
 
