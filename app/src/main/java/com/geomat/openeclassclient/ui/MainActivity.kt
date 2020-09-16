@@ -117,10 +117,12 @@ class MainActivity : AppCompatActivity() {
                 val userInfoRepo = UserInfoRepository(database.userInfoDao)
                 val courseRepo = CoursesRepository(database.coursesDao)
                 val announcementRepo = AnnouncementRepository(database)
+                val calendarRepo = CalendarEventRepository(database.calendarEventDao)
                 GlobalScope.launch {
                     userInfoRepo.clear()
                     courseRepo.clear()
                     announcementRepo.clear()
+                    calendarRepo.clear()
                 }
                 true
             }
@@ -129,10 +131,12 @@ class MainActivity : AppCompatActivity() {
                 val userInfoRepo = UserInfoRepository(database.userInfoDao)
                 val courseRepo = CoursesRepository(database.coursesDao)
                 val announcementRepo = AnnouncementRepository(database)
+                val calendarRepo = CalendarEventRepository(database.calendarEventDao)
                 GlobalScope.launch {
                     userInfoRepo.clear()
                     courseRepo.clear()
                     announcementRepo.clear()
+                    calendarRepo.clear()
                 }
                 true
             }
