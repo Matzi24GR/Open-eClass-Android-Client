@@ -5,16 +5,15 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.geomat.openeclassclient.domain.CalendarEvent
 
-//TODO find a way to re add the foreign key
-@Entity(tableName = "calendar_event_table")//,
-//    foreignKeys = [
-//        ForeignKey(
-//            entity = DatabaseCourse::class,
-//            parentColumns = arrayOf("id"),
-//            childColumns = arrayOf("courseCode"),
-//            onDelete = ForeignKey.CASCADE)
-//    ]
-//)
+@Entity(tableName = "calendar_event_table",
+    foreignKeys = [
+        ForeignKey(
+            entity = DatabaseCourse::class,
+            parentColumns = arrayOf("id"),
+            childColumns = arrayOf("courseCode"),
+            onDelete = ForeignKey.CASCADE)
+    ]
+)
 data class DatabaseCalendarEvent(
 
     @PrimaryKey
