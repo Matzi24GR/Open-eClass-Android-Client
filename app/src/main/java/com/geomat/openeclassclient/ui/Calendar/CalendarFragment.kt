@@ -31,6 +31,8 @@ import java.util.*
 
 class CalendarFragment : Fragment() {
 
+    //TODO Add a notice when no events returned
+
     private lateinit var binding: FragmentCalendarBinding
 
     override fun onCreateView(
@@ -147,7 +149,7 @@ class CalendarFragment : Fragment() {
 
                         val selectedCal = array[position].id
                         GlobalScope.launch(Dispatchers.IO) {
-                            val EventsThatNeedSyncing = EClassDatabase.getInstance(requireContext()).calendarEventDao.getEventsThatArentSynced()
+                            val EventsThatNeedSyncing = EClassDatabase.getInstance(requireContext()).calendarEventDao.getEventsThatAreNotSynced()
                             EventsThatNeedSyncing.forEach {
                                 val values = ContentValues().apply {
                                     put(CalendarContract.Events.DTSTART, it.start)

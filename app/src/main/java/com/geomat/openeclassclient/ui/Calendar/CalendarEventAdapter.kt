@@ -42,7 +42,7 @@ class CalendarEventAdapter : ListAdapter<CalendarEvent, CalendarEventAdapter.Vie
                 //.replaceFirst(Regex("^(.*?): "),"") To get rid of course name at start of title
                 textDayOfWeek.text = SimpleDateFormat("EEE").format(calendarEvent.start)
                 textDayOfMonth.text = SimpleDateFormat("dd").format(calendarEvent.start)
-                textMonthYear.text = SimpleDateFormat("MMM\nYYYY").format(calendarEvent.start)
+                textMonthYear.text = SimpleDateFormat("MMM\nyyyy").format(calendarEvent.start)
                 textTitle.text = calendarEvent.title
                 textContent.text = HtmlCompat.fromHtml(calendarEvent.content, HtmlCompat.FROM_HTML_MODE_COMPACT).trimEnd()
                 textEventGroup.text = calendarEvent.event_group

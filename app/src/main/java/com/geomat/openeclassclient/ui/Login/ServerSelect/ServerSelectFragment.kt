@@ -66,7 +66,7 @@ class ServerSelectFragment : Fragment() {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
 
-        binding.SchEclassCard.setOnClickListener {
+        binding.schButton.setOnClickListener {
             viewModel.setSelectedServerToSch()
         }
 

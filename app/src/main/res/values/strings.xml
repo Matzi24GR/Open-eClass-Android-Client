@@ -25,5 +25,13 @@
     <string name="log_out">Log Out</string>
     <string name="menu_refresh">Refresh</string>
     <string name="read_more">Read More</string>
+    <string name="your_session_has_expired">Your session has expired</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="re_login">Re Login</string>
+    <string name="select_calendar">Select Calendar</string>
+    <string name="sync">Sync</string>
+    <string name="delete">Delete</string>
+    <string name="choose_server">Choose Server</string>
+    <string name="server_list">Server List</string>
 
 </resources>

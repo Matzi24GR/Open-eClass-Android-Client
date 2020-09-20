@@ -21,6 +21,8 @@ import java.lang.AssertionError
 
 class AnnouncementFragment : Fragment() {
 
+    //TODO Add a notice when no announcements returned
+
     private lateinit var binding: FragmentAnnouncementBinding
     private lateinit var repo: AnnouncementRepository
 

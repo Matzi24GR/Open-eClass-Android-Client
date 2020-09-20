@@ -17,6 +17,8 @@ import java.lang.AssertionError
 
 class CourseListFragment : Fragment() {
 
+    //TODO Add a notice when no courses returned
+
     private lateinit var binding: FragmentCourseListBinding
 
     override fun onCreateView(

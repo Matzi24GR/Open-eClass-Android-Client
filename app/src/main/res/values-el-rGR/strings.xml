@@ -24,4 +24,13 @@
     <string name="select_authentication_method">Επιλογή Τύπου Ταυτοποίησης</string>
     <string name="log_out">Αποσύνδεση</string>
     <string name="menu_refresh">Ανανέωση</string>
+    <string name="read_more">Δείτε Περισσότερα</string>
+    <string name="your_session_has_expired">H Σύνδεσή σας έληξε</string>
+    <string name="dismiss">Ακύρωση</string>
+    <string name="re_login">Επανασύνδεση</string>
+    <string name="select_calendar">Επιλογή Ημερολογίου</string>
+    <string name="sync">Συγχρονισμός</string>
+    <string name="delete">Διαγραφή</string>
+    <string name="choose_server">Επιλέξτε Server</string>
+    <string name="server_list">Λίστα Server</string>
 </resources>
