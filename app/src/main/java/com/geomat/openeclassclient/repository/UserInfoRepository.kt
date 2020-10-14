@@ -12,8 +12,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.await
 import timber.log.Timber
+import javax.inject.Inject
 
-class UserInfoRepository(private val userDao: UserInfoDao) {
+class UserInfoRepository @Inject constructor(private val userDao: UserInfoDao) {
 
     fun getUserWithUsername(username: String) :LiveData<UserInfo> {
         return Transformations.map(userDao.getUserWithUsername(username)) {

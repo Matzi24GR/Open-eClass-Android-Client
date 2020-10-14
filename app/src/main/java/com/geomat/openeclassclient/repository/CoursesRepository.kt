@@ -11,8 +11,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.await
 import timber.log.Timber
+import javax.inject.Inject
 
-class CoursesRepository(private val coursesDao: CoursesDao ) {
+class CoursesRepository @Inject constructor(private val coursesDao: CoursesDao ) {
 
     val allCourses: LiveData<List<Course>> = Transformations.map(coursesDao.getAllCourses()){
         it.asDomainModel()

@@ -5,11 +5,13 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
+@HiltAndroidApp
 class EClassApplication : Application() {
 
     private val applicationScope = CoroutineScope(Dispatchers.Default)

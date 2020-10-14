@@ -20,20 +20,27 @@ import com.geomat.openeclassclient.database.DatabaseCalendarSyncId
 import com.geomat.openeclassclient.database.EClassDatabase
 import com.geomat.openeclassclient.databinding.CalendarSelectBottomSheetBinding
 import com.geomat.openeclassclient.databinding.FragmentCalendarBinding
+import com.geomat.openeclassclient.repository.AnnouncementRepository
 import com.geomat.openeclassclient.repository.CalendarEventRepository
 import com.geomat.openeclassclient.util.asSyncAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CalendarFragment : Fragment() {
 
     //TODO Add a notice when no events returned
+    //TODO Ask for calendar permissions
+    //TODO Courses must be refreshed for calendar to refresh
 
     private lateinit var binding: FragmentCalendarBinding
+    @Inject lateinit var repo: CalendarEventRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,13 +55,11 @@ class CalendarFragment : Fragment() {
 
         val token = requireContext().getSharedPreferences("login", Context.MODE_PRIVATE).getString("token",null)
 
-        val repository = CalendarEventRepository(EClassDatabase.getInstance(requireContext()).calendarEventDao)
-
-        val data = repository.allEvents
+        val data = repo.allEvents
         val adapter = CalendarEventAdapter()
         binding.calendarRecyclerView.adapter = adapter
 
-        GlobalScope.launch { repository.refreshData(token!!) }
+        GlobalScope.launch { repo.refreshData(token!!) }
         data.observe(viewLifecycleOwner, Observer {
             if (data.value != null) {
                 adapter.submitList(data.value)
@@ -69,8 +74,8 @@ class CalendarFragment : Fragment() {
                     Timber.i(it.toString())
                     val deleteUri: Uri =
                         ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, it)
-                    val uri = asSyncAdapter(deleteUri, "matzi24gr@gmail.com", "com.google")
-                    val rows: Int = requireContext().contentResolver.delete(uri, null, null)
+                    val rows: Int = requireContext().contentResolver.delete(deleteUri, null, null)
+                    Timber.i("Rows deleted: $rows")
                 }
             }
         }

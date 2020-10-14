@@ -24,17 +24,25 @@ import com.geomat.openeclassclient.repository.AnnouncementRepository
 import com.geomat.openeclassclient.repository.CalendarEventRepository
 import com.geomat.openeclassclient.repository.CoursesRepository
 import com.geomat.openeclassclient.repository.UserInfoRepository
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.awaitResponse
 import timber.log.Timber
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var appBarConfiguration: AppBarConfiguration
+
+    @Inject lateinit var announcementRepo: AnnouncementRepository
+    @Inject lateinit var calendarRepo: CalendarEventRepository
+    @Inject lateinit var courseRepo: CoursesRepository
+    @Inject lateinit var userInfoRepo: UserInfoRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,11 +121,6 @@ class MainActivity : AppCompatActivity() {
                 findNavController(R.id.fragment).navigate(
                     R.id.mainActivity
                 )
-                val database = EClassDatabase.getInstance(this)
-                val userInfoRepo = UserInfoRepository(database.userInfoDao)
-                val courseRepo = CoursesRepository(database.coursesDao)
-                val announcementRepo = AnnouncementRepository(database)
-                val calendarRepo = CalendarEventRepository(database.calendarEventDao)
                 GlobalScope.launch {
                     userInfoRepo.clear()
                     courseRepo.clear()
@@ -127,11 +130,6 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.deleteButton-> {
-                val database = EClassDatabase.getInstance(this)
-                val userInfoRepo = UserInfoRepository(database.userInfoDao)
-                val courseRepo = CoursesRepository(database.coursesDao)
-                val announcementRepo = AnnouncementRepository(database)
-                val calendarRepo = CalendarEventRepository(database.calendarEventDao)
                 GlobalScope.launch {
                     userInfoRepo.clear()
                     courseRepo.clear()
