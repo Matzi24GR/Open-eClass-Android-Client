@@ -33,5 +33,7 @@
     <string name="delete">Delete</string>
     <string name="choose_server">Choose Server</string>
     <string name="server_list">Server List</string>
+    <string name="choose_from_included_servers">Choose from included servers</string>
+    <string name="or_manually_insert_an_url">Didn\'t find your server?\nInsert the url manually here</string>
 
 </resources>
