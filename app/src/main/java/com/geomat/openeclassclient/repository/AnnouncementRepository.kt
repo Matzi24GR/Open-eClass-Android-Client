@@ -2,9 +2,7 @@ package com.geomat.openeclassclient.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import com.geomat.openeclassclient.database.EClassDatabase
-import com.geomat.openeclassclient.database.DatabaseFeedUrl
-import com.geomat.openeclassclient.database.asDomainModel
+import com.geomat.openeclassclient.database.*
 import com.geomat.openeclassclient.domain.Announcement
 import com.geomat.openeclassclient.network.DataTransferObjects.asDatabaseModel
 import com.geomat.openeclassclient.network.EclassApi
@@ -14,11 +12,10 @@ import org.jsoup.Jsoup
 import retrofit2.await
 import timber.log.Timber
 import java.lang.Exception
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class AnnouncementRepository(database: EClassDatabase) {
-
-    private val courseDao = database.coursesDao
-    private val announcementDao = database.announcementDao
+class AnnouncementRepository @Inject constructor(private val courseDao: CoursesDao, private val announcementDao: AnnouncementDao) {
 
     val allAnnouncements: LiveData<List<Announcement>> = Transformations.map(announcementDao.getAllAnnouncementsWithCourseNames()){
         it.asDomainModel()

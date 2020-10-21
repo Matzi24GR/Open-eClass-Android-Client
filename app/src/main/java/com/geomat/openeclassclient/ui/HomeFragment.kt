@@ -14,12 +14,17 @@ import com.geomat.openeclassclient.databinding.FragmentHomeBinding
 import com.geomat.openeclassclient.repository.AnnouncementRepository
 import com.geomat.openeclassclient.repository.UserInfoRepository
 import com.geomat.openeclassclient.ui.Announcements.AnnouncementAdapter
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
+    @Inject lateinit var userRepo: UserInfoRepository
+    @Inject lateinit var announcementRepo: AnnouncementRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,11 +41,8 @@ class HomeFragment : Fragment() {
         val url = requireContext().getSharedPreferences("login", Context.MODE_PRIVATE).getString("url",null)
         val username = requireContext().getSharedPreferences("login", Context.MODE_PRIVATE).getString("username",null)
 
-        val database = EClassDatabase.getInstance(requireContext())
-        val repo = UserInfoRepository(database.userInfoDao)
-
-        GlobalScope.launch { repo.refreshData(token!!) }
-        repo.getUserWithUsername(username!!).observe(viewLifecycleOwner, Observer {
+        GlobalScope.launch { userRepo.refreshData(token!!) }
+        userRepo.getUserWithUsername(username!!).observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 binding.usernameText.text = it.username
                 binding.fullNameText.text = it.fullName
@@ -49,10 +51,7 @@ class HomeFragment : Fragment() {
                 Glide.with(binding.imageView.context).load(imageUrl).into(binding.imageView)
             }
         })
-
-        val announcementRepo = AnnouncementRepository(database)
         val announcements = announcementRepo.allAnnouncements
-
         val adapter = AnnouncementAdapter() {}
         binding.homeAnnouncementRecyclerView.adapter = adapter
         announcements.observe(viewLifecycleOwner, Observer {

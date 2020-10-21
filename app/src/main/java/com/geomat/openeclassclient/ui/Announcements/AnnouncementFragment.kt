@@ -13,18 +13,21 @@ import com.geomat.openeclassclient.databinding.BottomSheetAnnouncementFullBindin
 import com.geomat.openeclassclient.databinding.FragmentAnnouncementBinding
 import com.geomat.openeclassclient.repository.AnnouncementRepository
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_announcement.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.lang.AssertionError
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AnnouncementFragment : Fragment() {
 
     //TODO Add a notice when no announcements returned
 
     private lateinit var binding: FragmentAnnouncementBinding
-    private lateinit var repo: AnnouncementRepository
+    @Inject lateinit var repo: AnnouncementRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,8 +40,6 @@ class AnnouncementFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        repo = AnnouncementRepository(EClassDatabase.getInstance(requireContext()))
 
         val data = repo.allAnnouncements
         val adapter = AnnouncementAdapter() {

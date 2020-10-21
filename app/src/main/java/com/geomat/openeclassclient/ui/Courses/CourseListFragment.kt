@@ -10,16 +10,20 @@ import androidx.lifecycle.Observer
 import com.geomat.openeclassclient.database.EClassDatabase
 import com.geomat.openeclassclient.databinding.FragmentCourseListBinding
 import com.geomat.openeclassclient.repository.CoursesRepository
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.lang.AssertionError
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CourseListFragment : Fragment() {
 
     //TODO Add a notice when no courses returned
 
     private lateinit var binding: FragmentCourseListBinding
+    @Inject lateinit var repo: CoursesRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +36,7 @@ class CourseListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val repo = CoursesRepository(EClassDatabase.getInstance(requireContext()).coursesDao)
+        //val repo = CoursesRepository(EClassDatabase.getInstance(requireContext()).coursesDao)
 
         val adapter = CourseListAdapter()
         binding.courseRecyclerView.adapter = adapter

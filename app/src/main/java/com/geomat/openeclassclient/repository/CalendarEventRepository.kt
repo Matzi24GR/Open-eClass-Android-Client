@@ -12,8 +12,9 @@ import kotlinx.coroutines.withContext
 import retrofit2.await
 import timber.log.Timber
 import java.lang.Exception
+import javax.inject.Inject
 
-class CalendarEventRepository(private val calendarEventDao: CalendarEventDao) {
+class CalendarEventRepository @Inject constructor(private val calendarEventDao: CalendarEventDao) {
 
     val allEvents: LiveData<List<CalendarEvent>> = Transformations.map(calendarEventDao.getAllEvents()){
         it.asDomainModel()
