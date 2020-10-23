@@ -44,7 +44,7 @@ class AnnouncementFragment : Fragment() {
             val dialogBinding = BottomSheetAnnouncementFullBinding.inflate(layoutInflater, binding.root, false)
             val bottomSheetDialog = BottomSheetDialog(requireContext())
             bottomSheetDialog.setContentView(dialogBinding.root)
-            dialogBinding.announcementContentText.text = it.description.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).trim()
+            dialogBinding.announcementContentText.text = it.description.parseAsHtml(HtmlCompat.FROM_HTML_MODE_LEGACY).trim()
             bottomSheetDialog.show()
         }, {
             GlobalScope.launch { repo.setRead(it) }

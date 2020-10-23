@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
 
         announcementRepo.unreadCount.observe(this) {
             badge.number = it
-            badge.isVisible = it != 0
+            badge.isVisible = it > 0
         }
 
     }

@@ -44,7 +44,7 @@ class AnnouncementAdapter(private val itemClick: (Announcement) -> Unit, private
                 dateText.text = SimpleDateFormat.getDateTimeInstance().format(announcement.date)
                 titleText.text = announcement.title
                 descriptionText.maxLines = 5
-                descriptionText.text = announcement.description.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).trim()
+                descriptionText.text = announcement.description.parseAsHtml(HtmlCompat.FROM_HTML_MODE_LEGACY).trim()
 
                 layout.setOnClickListener { itemClick(announcement) }
                 descriptionText.setOnClickListener { itemClick(announcement) }
