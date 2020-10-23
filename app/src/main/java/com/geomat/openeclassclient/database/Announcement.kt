@@ -34,7 +34,25 @@ data class DatabaseAnnouncementWithCourseName(
     var title: String,               // ex.  ΠΑΡΑΤΑΣΗ ΗΛΕΚΤΡΟΝΙΚΗΣ ΑΞΙΟΛΟΓΗΣΗΣ ΔΙΔΑΚΤΙΚΟΥ ΕΡΓΟΥ ΕΑΡΙΝΟΥ ΕΞΑΜΗΝΟΥ 2019-2020
     var link: String,                // ex.  https://openeclass.uom.gr/modules/announcements/main_ann.php?aid=15
     var description: String,         // ex.  Σας ενημερώνουμε ότι η ηλεκτρονική αξιολόγηση διδακτικού έργου για το ....
-    var date: Long                   // ex.  1591786714000
+    var date: Long,                  // ex.  1591786714000
+    var isRead: Boolean
+
+)
+
+@Entity(tableName = "announcement_read_table",
+    foreignKeys = [
+        ForeignKey(
+            entity = DatabaseAnnouncement::class,
+            parentColumns = arrayOf("id"),
+            childColumns = arrayOf("id"),
+            onDelete = ForeignKey.CASCADE)
+    ]
+)
+data class DatabaseAnnouncementReadStatus(
+
+    @PrimaryKey
+    var id: String,                  // ex.  15 or s15 for system announcements
+    var isRead: Boolean = false
 
 )
 
@@ -47,7 +65,8 @@ fun List<DatabaseAnnouncementWithCourseName>.asDomainModel(): List<Announcement>
             title = it.title,
             link = it.link,
             description = it.description,
-            date = it.date
+            date = it.date,
+            isRead = it.isRead
         )
     }
 }

@@ -52,7 +52,7 @@ class HomeFragment : Fragment() {
             }
         })
         val announcements = announcementRepo.allAnnouncements
-        val adapter = AnnouncementAdapter() {}
+        val adapter = AnnouncementAdapter({}, {})
         binding.homeAnnouncementRecyclerView.adapter = adapter
         announcements.observe(viewLifecycleOwner, Observer {
             if (it != null) {

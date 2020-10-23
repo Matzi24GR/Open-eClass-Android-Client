@@ -13,13 +13,14 @@ import retrofit2.await
 import timber.log.Timber
 import java.lang.Exception
 import javax.inject.Inject
-import javax.inject.Singleton
 
 class AnnouncementRepository @Inject constructor(private val courseDao: CoursesDao, private val announcementDao: AnnouncementDao) {
 
     val allAnnouncements: LiveData<List<Announcement>> = Transformations.map(announcementDao.getAllAnnouncementsWithCourseNames()){
         it.asDomainModel()
     }
+
+    val unreadCount = announcementDao.getUnreadCount()
 
     suspend fun updateAllAnnouncements() {
         withContext(Dispatchers.IO) {
@@ -29,6 +30,10 @@ class AnnouncementRepository @Inject constructor(private val courseDao: CoursesD
                 try {
                     val announcements = EclassApi.MobileApi.getRssFeed(currentFeed).await()
                     announcementDao.insertAll(announcements.asDatabaseModel())
+                    val readStatusList = announcements.asDatabaseModel().map {
+                        return@map DatabaseAnnouncementReadStatus(it.id)
+                    }
+                    announcementDao.insertAllReadStatus(readStatusList)
                 } catch (e: Exception) {
                     Timber.i(e)
                 }
@@ -59,6 +64,12 @@ class AnnouncementRepository @Inject constructor(private val courseDao: CoursesD
                 Timber.i(e)
             }
 
+        }
+    }
+
+    suspend fun setRead(announcement: Announcement) {
+        withContext(Dispatchers.IO) {
+            announcementDao.updateReadStatus(announcement.id, true)
         }
     }
 

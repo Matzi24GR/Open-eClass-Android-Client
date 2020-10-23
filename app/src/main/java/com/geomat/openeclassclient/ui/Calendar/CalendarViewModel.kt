@@ -9,14 +9,5 @@ import com.geomat.openeclassclient.repository.CalendarEventRepository
 
 class CalendarViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository: CalendarEventRepository
-
-    val allEvents: LiveData<List<CalendarEvent>>
-
-    init {
-        val calendarEventDao = EClassDatabase.getInstance(application).calendarEventDao
-        repository = CalendarEventRepository(calendarEventDao)
-        allEvents = repository.allEvents
-    }
 
 }

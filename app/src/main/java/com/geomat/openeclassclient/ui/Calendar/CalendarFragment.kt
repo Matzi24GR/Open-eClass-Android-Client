@@ -68,9 +68,8 @@ class CalendarFragment : Fragment() {
 
         binding.button2.setOnClickListener {
             GlobalScope.launch(Dispatchers.IO) {
-                val syncedIds =
-                    EClassDatabase.getInstance(requireContext()).calendarEventDao.getAllSyncedEventsIds()
-                syncedIds.forEach {
+                val syncedIds = repo.syncedIDs.value
+                syncedIds?.forEach {
                     Timber.i(it.toString())
                     val deleteUri: Uri =
                         ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, it)
@@ -154,8 +153,8 @@ class CalendarFragment : Fragment() {
 
                         val selectedCal = array[position].id
                         GlobalScope.launch(Dispatchers.IO) {
-                            val EventsThatNeedSyncing = EClassDatabase.getInstance(requireContext()).calendarEventDao.getEventsThatAreNotSynced()
-                            EventsThatNeedSyncing.forEach {
+                            val EventsThatNeedSyncing = repo.notSyncedEvents.value
+                            EventsThatNeedSyncing?.forEach {
                                 val values = ContentValues().apply {
                                     put(CalendarContract.Events.DTSTART, it.start)
                                     put(CalendarContract.Events.DTEND, it.end)
@@ -171,7 +170,7 @@ class CalendarFragment : Fragment() {
 
                                 val eventID: Long? = EventUri.lastPathSegment?.toLong()
                                 if (eventID != null) {
-                                    EClassDatabase.getInstance(requireContext()).calendarEventDao.insertSyncedEvent(DatabaseCalendarSyncId(eventID, it.id))
+                                    repo.insertSyncedEvent(eventID, it.id)
                                 }
 
                             }

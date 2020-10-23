@@ -18,7 +18,7 @@ interface CoursesDao {
     @Query("SELECT * FROM courses_table ORDER BY `title` ASC")
     fun getAllCoursesNonLive(): List<DatabaseCourse>
 
-    @Query("DELETE FROM  courses_table")
+    @Query("DELETE FROM courses_table")
     fun clear()
 
     @Query("SELECT COUNT(*) FROM courses_table")

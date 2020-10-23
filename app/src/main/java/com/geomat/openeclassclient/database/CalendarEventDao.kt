@@ -12,7 +12,7 @@ interface CalendarEventDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(event: DatabaseCalendarEvent)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertAll(events: List<DatabaseCalendarEvent>)
 
     @Query("SELECT * FROM calendar_event_table ORDER BY `end` DESC")
@@ -22,12 +22,12 @@ interface CalendarEventDao {
     fun clear()
 
     @Query("SELECT * FROM calendar_event_table c WHERE NOT EXISTS ( SELECT * FROM calendar_sync_table s WHERE c.id = s.databaseId)")
-    fun getEventsThatAreNotSynced(): List<DatabaseCalendarEvent>
+    fun getEventsThatAreNotSynced(): LiveData<List<DatabaseCalendarEvent>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertSyncedEvent(syncedEvent: DatabaseCalendarSyncId)
 
     @Query("SELECT calendarSyncId FROM calendar_sync_table")
-    fun getAllSyncedEventsIds(): List<Long>
+    fun getAllSyncedEventsIds(): LiveData<List<Long>>
 
 }

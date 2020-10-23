@@ -3,6 +3,7 @@ package com.geomat.openeclassclient.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.geomat.openeclassclient.database.CalendarEventDao
+import com.geomat.openeclassclient.database.DatabaseCalendarSyncId
 import com.geomat.openeclassclient.database.asDomainModel
 import com.geomat.openeclassclient.domain.CalendarEvent
 import com.geomat.openeclassclient.network.DataTransferObjects.asDatabaseModel
@@ -18,6 +19,15 @@ class CalendarEventRepository @Inject constructor(private val calendarEventDao: 
 
     val allEvents: LiveData<List<CalendarEvent>> = Transformations.map(calendarEventDao.getAllEvents()){
         it.asDomainModel()
+    }
+
+    val syncedIDs = calendarEventDao.getAllSyncedEventsIds()
+    val notSyncedEvents = calendarEventDao.getEventsThatAreNotSynced()
+
+    suspend fun insertSyncedEvent(calendarId: Long, databaseId:Long){
+        withContext(Dispatchers.IO) {
+            calendarEventDao.insertSyncedEvent(DatabaseCalendarSyncId(calendarId, databaseId))
+        }
     }
 
     suspend fun clear() {

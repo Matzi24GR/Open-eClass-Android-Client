@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -25,6 +26,7 @@ import com.geomat.openeclassclient.repository.CalendarEventRepository
 import com.geomat.openeclassclient.repository.CoursesRepository
 import com.geomat.openeclassclient.repository.UserInfoRepository
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -102,6 +104,12 @@ class MainActivity : AppCompatActivity() {
             navController.navigate(MainActivityDirections.actionGlobalServerSelectFragment())
         }
 
+        var badge = bottom_nav.getOrCreateBadge(bottom_nav.menu.getItem(1).itemId)
+
+        announcementRepo.unreadCount.observe(this) {
+            badge.number = it
+            badge.isVisible = it != 0
+        }
 
     }
 
@@ -131,10 +139,14 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.deleteButton-> {
                 GlobalScope.launch {
-                    userInfoRepo.clear()
-                    courseRepo.clear()
-                    announcementRepo.clear()
-                    calendarRepo.clear()
+                    try {
+                        userInfoRepo.clear()
+                        courseRepo.clear()
+                        announcementRepo.clear()
+                        calendarRepo.clear()
+                    } catch (e: java.lang.Exception) {
+                        Timber.e(e)
+                    }
                 }
                 true
             }

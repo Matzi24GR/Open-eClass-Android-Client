@@ -12,16 +12,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.geomat.openeclassclient.databinding.AnnouncementListItemBinding
 import com.geomat.openeclassclient.databinding.BottomSheetAnnouncementFullBinding
 import com.geomat.openeclassclient.domain.Announcement
+import com.geomat.openeclassclient.repository.AnnouncementRepository
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.text.SimpleDateFormat
+import javax.inject.Inject
 
-class AnnouncementAdapter(private val itemClick: (Announcement) -> Unit) : ListAdapter<Announcement, AnnouncementAdapter.ViewHolder>(AnnouncementDiffCallback()) {
+class AnnouncementAdapter(private val itemClick: (Announcement) -> Unit, private val itemSeen: (Announcement) -> Unit) : ListAdapter<Announcement, AnnouncementAdapter.ViewHolder>(AnnouncementDiffCallback()) {
 
     //TODO handle images in announcement content
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item, itemClick)
+        holder.bind(item, itemClick, itemSeen)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,7 +34,7 @@ class AnnouncementAdapter(private val itemClick: (Announcement) -> Unit) : ListA
 
     class ViewHolder private constructor(private val binding: AnnouncementListItemBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(announcement: Announcement, itemClick: (Announcement) -> Unit) {
+        fun bind(announcement: Announcement, itemClick: (Announcement) -> Unit, itemSeen: (Announcement) -> Unit) {
             with(binding) {
                 if (announcement.courseName.isNullOrBlank()) {
                     courseNameText.text = "System"
@@ -57,6 +61,14 @@ class AnnouncementAdapter(private val itemClick: (Announcement) -> Unit) : ListA
                         readMoreText.visibility = View.INVISIBLE
                     }
                 })
+
+                if (!announcement.isRead) {
+                    newTag.visibility = View.VISIBLE
+                    announcement.isRead = true
+                    itemSeen(announcement)
+                } else {
+                    newTag.visibility = View.INVISIBLE
+                }
             }
         }
 

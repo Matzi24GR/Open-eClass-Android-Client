@@ -14,7 +14,9 @@ import com.geomat.openeclassclient.databinding.FragmentAnnouncementBinding
 import com.geomat.openeclassclient.repository.AnnouncementRepository
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_announcement.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -42,13 +44,16 @@ class AnnouncementFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val data = repo.allAnnouncements
-        val adapter = AnnouncementAdapter() {
+        val adapter = AnnouncementAdapter ({
             val dialogBinding = BottomSheetAnnouncementFullBinding.inflate(layoutInflater, binding.root, false)
             val bottomSheetDialog = BottomSheetDialog(requireContext())
             bottomSheetDialog.setContentView(dialogBinding.root)
             dialogBinding.announcementContentText.text = it.description.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).trim()
             bottomSheetDialog.show()
-        }
+        }, {
+
+            GlobalScope.launch { repo.setRead(it) }
+        })
         binding.announcementRecyclerView.adapter = adapter
 
         data.observe(viewLifecycleOwner, Observer {
