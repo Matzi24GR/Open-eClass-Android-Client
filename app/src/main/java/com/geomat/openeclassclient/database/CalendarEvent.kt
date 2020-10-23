@@ -1,5 +1,6 @@
 package com.geomat.openeclassclient.database
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -18,6 +19,8 @@ data class DatabaseCalendarEvent(
 
     @PrimaryKey
     val id: Long,                   // ex. 18
+    @ColumnInfo(index = true)
+    var courseCode: String?,        // ex.  "DAI104" or null for user events
 
     var title: String,              // ex.  "Βάσεις Δεδομένων: Εργασία 1"
     var start: Long = 0L,           // ex.  1586811540000
@@ -26,7 +29,6 @@ data class DatabaseCalendarEvent(
     var event_group: String,        // ex.  "deadline"
     var Class: String,              // ex.  "event-important"
     var event_type: String,         // ex.  "assignment"
-    var courseCode: String?,        // ex.  "DAI104" or null for user events
     var url: String                 // ex.  "https://openeclass.uom.gr/modules/work/index.php?id=18&course=DAI104"
 )
 
@@ -43,8 +45,9 @@ data class DatabaseCalendarSyncId(
 
     @PrimaryKey
     var calendarSyncId: Long,
-
+    @ColumnInfo(index = true)
     var databaseId: Long
+
 )
 
 fun List<DatabaseCalendarEvent>.asDomainModel(): List<CalendarEvent> {

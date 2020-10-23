@@ -104,7 +104,7 @@ interface HtmlParserService {
 
     @GET("/modules/announcements/")
     fun getAnnouncementPage(@Header("Cookie")token: String,
-                            @Query("course")course: String
+                            @Query("course")courseId: String
     ): Call<String>
 }
 

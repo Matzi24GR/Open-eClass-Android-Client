@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
     @Inject lateinit var userInfoRepo: UserInfoRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

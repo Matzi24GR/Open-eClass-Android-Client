@@ -1,16 +1,16 @@
 package com.geomat.openeclassclient.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface UserInfoDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(userInfo: DatabaseUserInfo)
+    @Update
+    fun update(userInfo: DatabaseUserInfo)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insert(userInfo: DatabaseUserInfo): Long
 
     @Query("SELECT * FROM user_info_table")
     fun getAllUsers(): LiveData<List<DatabaseUserInfo>>

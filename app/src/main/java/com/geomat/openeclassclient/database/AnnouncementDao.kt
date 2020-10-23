@@ -6,11 +6,11 @@ import androidx.room.*
 @Dao
 interface AnnouncementDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(databaseAnnouncement: DatabaseAnnouncement)
+    @Update
+    fun updateAll(courses: List<DatabaseAnnouncement>)
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun insertAll(databaseAnnouncements: List<DatabaseAnnouncement>)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertAll(announcements: List<DatabaseAnnouncement>): List<Long>
 
     @Query("SELECT * FROM announcements_table ORDER BY `date` DESC")
     fun getAllAnnouncements(): LiveData<List<DatabaseAnnouncement>>
@@ -18,16 +18,19 @@ interface AnnouncementDao {
     @Query("SELECT a.* , c.title courseName, r.isRead FROM announcements_table a left join courses_table c on a.courseId = c.id natural join announcement_read_table r ORDER BY `date` DESC")
     fun getAllAnnouncementsWithCourseNames(): LiveData<List<DatabaseAnnouncementWithCourseName>>
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAllReadStatus(readStatus: List<DatabaseAnnouncementReadStatus>)
 
-    @Query("UPDATE announcement_read_table SET isRead = :status WHERE id = :id")
-    fun updateReadStatus(id: String, status: Boolean)
+    @Update
+    fun updateReadStatus(readStatus: DatabaseAnnouncementReadStatus)
 
     @Query("SELECT COUNT(id) FROM announcement_read_table WHERE isRead = 0")
     fun getUnreadCount(): LiveData<Int>
 
     @Query("DELETE FROM  announcements_table")
     fun clear()
+
+    @Query("DELETE FROM announcements_table WHERE id NOT IN (:ids)")
+    fun clearNotInList(ids: List<String>)
 
 }

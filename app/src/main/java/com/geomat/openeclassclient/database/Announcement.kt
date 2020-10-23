@@ -1,5 +1,6 @@
 package com.geomat.openeclassclient.database
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -18,6 +19,7 @@ data class DatabaseAnnouncement(
 
     @PrimaryKey
     var id: String,                  // ex.  15 or s15 for system announcements
+    @ColumnInfo(index = true)
     var courseId: String?,           // ex.  DAI104 or null for system announcements
 
     var title: String,               // ex.  ΠΑΡΑΤΑΣΗ ΗΛΕΚΤΡΟΝΙΚΗΣ ΑΞΙΟΛΟΓΗΣΗΣ ΔΙΔΑΚΤΙΚΟΥ ΕΡΓΟΥ ΕΑΡΙΝΟΥ ΕΞΑΜΗΝΟΥ 2019-2020

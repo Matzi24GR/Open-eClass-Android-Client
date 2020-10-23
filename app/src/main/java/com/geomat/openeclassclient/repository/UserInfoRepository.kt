@@ -28,8 +28,13 @@ class UserInfoRepository @Inject constructor(private val userDao: UserInfoDao) {
     suspend fun refreshData(token: String) {
         withContext(Dispatchers.IO) {
             try {
+                //Get UserInfo
                 val response = EclassApi.HtmlParser.getMainPage("PHPSESSID=$token").await()
-                userDao.insert(UserInfoResponse(response).asDatabaseModel())
+                val userInfo = UserInfoResponse(response).asDatabaseModel()
+                //Insert UserInfo
+                val result = userDao.insert(userInfo)
+                //Update UserInfo if failed to Insert
+                if (result == -1L) { userDao.update(userInfo) }
             } catch (e: Exception) {
                 Timber.i(e)
             }

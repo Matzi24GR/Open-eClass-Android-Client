@@ -6,11 +6,11 @@ import androidx.room.*
 @Dao
 interface CoursesDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(course: DatabaseCourse)
+    @Update
+    fun updateAll(courses: List<DatabaseCourse>)
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun insertAll(courses: List<DatabaseCourse>)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertAll(courses: List<DatabaseCourse>): List<Long>
 
     @Query("SELECT * FROM courses_table ORDER BY `title` ASC")
     fun getAllCourses(): LiveData<List<DatabaseCourse>>
@@ -20,6 +20,9 @@ interface CoursesDao {
 
     @Query("DELETE FROM courses_table")
     fun clear()
+
+    @Query("DELETE FROM courses_table WHERE id NOT IN (:ids)")
+    fun clearNotInList(ids: List<String>)
 
     @Query("SELECT COUNT(*) FROM courses_table")
     fun getNumberOfCourses(): Int

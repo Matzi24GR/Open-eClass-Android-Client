@@ -15,14 +15,16 @@ data class DatabaseCourse(
     var desc: String                 // ex.  ""
 )
 
+fun DatabaseCourse.asDomainModel(): Course {
+    return Course(
+        id = id,
+        title = title,
+        desc = desc
+    )
+}
+
 fun List<DatabaseCourse>.asDomainModel(): List<Course> {
-    return map {
-        Course(
-            id = it.id,
-            title = it.title,
-            desc = it.desc
-        )
-    }
+    return map { it.asDomainModel() }
 }
 
 @Entity(tableName = "feed_urls_table",
@@ -39,5 +41,7 @@ data class DatabaseFeedUrl(
     @PrimaryKey
     var announcementFeedUrl: String,
 
+    @ColumnInfo(index = true)
     var courseId: String
+
 )

@@ -8,15 +8,11 @@ import androidx.core.text.parseAsHtml
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.geomat.openeclassclient.R
-import com.geomat.openeclassclient.database.EClassDatabase
 import com.geomat.openeclassclient.databinding.BottomSheetAnnouncementFullBinding
 import com.geomat.openeclassclient.databinding.FragmentAnnouncementBinding
 import com.geomat.openeclassclient.repository.AnnouncementRepository
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_announcement.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -51,7 +47,6 @@ class AnnouncementFragment : Fragment() {
             dialogBinding.announcementContentText.text = it.description.parseAsHtml(HtmlCompat.FROM_HTML_MODE_COMPACT).trim()
             bottomSheetDialog.show()
         }, {
-
             GlobalScope.launch { repo.setRead(it) }
         })
         binding.announcementRecyclerView.adapter = adapter
@@ -86,11 +81,9 @@ class AnnouncementFragment : Fragment() {
     }
 
     fun refreshData() {
-        val token = requireContext().getSharedPreferences("login", Context.MODE_PRIVATE).getString("token",null)
         GlobalScope.launch {
             try {
-                repo.fillInFeedUrls(token!!)
-                repo.updateAllAnnouncements()
+                repo.refreshData()
             } catch (e: AssertionError) {
                 Timber.i(e)
             }

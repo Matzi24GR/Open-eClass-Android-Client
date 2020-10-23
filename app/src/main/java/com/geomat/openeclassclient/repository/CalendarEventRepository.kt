@@ -2,9 +2,7 @@ package com.geomat.openeclassclient.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import com.geomat.openeclassclient.database.CalendarEventDao
-import com.geomat.openeclassclient.database.DatabaseCalendarSyncId
-import com.geomat.openeclassclient.database.asDomainModel
+import com.geomat.openeclassclient.database.*
 import com.geomat.openeclassclient.domain.CalendarEvent
 import com.geomat.openeclassclient.network.DataTransferObjects.asDatabaseModel
 import com.geomat.openeclassclient.network.EclassApi
@@ -39,8 +37,22 @@ class CalendarEventRepository @Inject constructor(private val calendarEventDao: 
     suspend fun refreshData(token: String) {
         withContext(Dispatchers.IO) {
             try {
+                //Get Events
                 val calendar = EclassApi.JsonApi.getCalendar("PHPSESSID=$token").await()
-                calendarEventDao.insertAll(calendar.asDatabaseModel())
+                val events = calendar.asDatabaseModel()
+                //Insert Events
+                val result = calendarEventDao.insertAll(events)
+                //Update events that failed to insert
+                val toUpdate = mutableListOf<DatabaseCalendarEvent>()
+                for (i in result.indices) {
+                    if (result[i] == -1L) {
+                        toUpdate.add(events[i])
+                    }
+                }
+                calendarEventDao.updateAll(toUpdate)
+                //Remove Deleted Events
+                val toRetain = events.map {it.id}
+                calendarEventDao.clearNotInList(toRetain)
             } catch (e: Exception) {
                 Timber.i(e)
             }
