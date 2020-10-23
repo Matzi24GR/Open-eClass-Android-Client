@@ -24,4 +24,8 @@
         <item name="cornerSizeBottomLeft">0dp</item>
     </style>
 
+    <style name="AppTheme.Launcher" >
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+    </style>
+
 </resources>
