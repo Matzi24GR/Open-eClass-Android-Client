@@ -22,12 +22,15 @@ interface CalendarEventDao {
     fun clearNotInList(ids: List<Long>)
 
     @Query("SELECT * FROM calendar_event_table c WHERE NOT EXISTS ( SELECT * FROM calendar_sync_table s WHERE c.id = s.databaseId)")
-    fun getEventsThatAreNotSynced(): LiveData<List<DatabaseCalendarEvent>>
+    fun getEventsThatAreNotSynced(): List<DatabaseCalendarEvent>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertSyncedEvent(syncedEvent: DatabaseCalendarSyncId)
 
+    @Query("DELETE FROM calendar_sync_table WHERE calendarSyncId = :syncedId")
+    fun removeSyncedEvent(syncedId: Long)
+
     @Query("SELECT calendarSyncId FROM calendar_sync_table")
-    fun getAllSyncedEventsIds(): LiveData<List<Long>>
+    fun getAllSyncedEventsIds(): List<Long>
 
 }
