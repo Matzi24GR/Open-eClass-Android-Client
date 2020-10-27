@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.databinding.AuthMethodBottomSheetBinding
+import com.geomat.openeclassclient.databinding.FragmentAnnouncementBinding
 import com.geomat.openeclassclient.databinding.FragmentServerSelectBinding
 import com.geomat.openeclassclient.network.DataTransferObjects.ServerInfoResponse
 import com.geomat.openeclassclient.network.EclassApi
@@ -27,7 +28,8 @@ import timber.log.Timber
 
 class ServerSelectFragment : Fragment() {
 
-    private lateinit var binding: FragmentServerSelectBinding
+    private var _binding: FragmentServerSelectBinding? = null
+    private val binding get() = _binding!!
     private lateinit var viewModel: ServerSelectViewModel
 
     override fun onCreateView(
@@ -35,7 +37,7 @@ class ServerSelectFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         viewModel = ViewModelProvider(this).get(ServerSelectViewModel::class.java)
-        binding = FragmentServerSelectBinding.inflate(inflater)
+        _binding = FragmentServerSelectBinding.inflate(inflater)
         return binding.root
     }
 
@@ -158,5 +160,10 @@ class ServerSelectFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         viewModel.resetSelectedServer()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

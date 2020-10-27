@@ -7,6 +7,7 @@ import androidx.core.text.HtmlCompat
 import androidx.core.text.parseAsHtml
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.databinding.BottomSheetAnnouncementFullBinding
 import com.geomat.openeclassclient.databinding.FragmentAnnouncementBinding
@@ -24,15 +25,16 @@ class AnnouncementFragment : Fragment() {
 
     //TODO Add a notice when no announcements returned
 
-    private lateinit var binding: FragmentAnnouncementBinding
+    private var _binding: FragmentAnnouncementBinding? = null
+    private val binding get() = _binding!!
     @Inject lateinit var repo: AnnouncementRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        _binding = FragmentAnnouncementBinding.inflate(inflater)
         setHasOptionsMenu(true)
-        binding = FragmentAnnouncementBinding.inflate(inflater)
         return binding.root
     }
 
@@ -81,7 +83,7 @@ class AnnouncementFragment : Fragment() {
     }
 
     fun refreshData() {
-        GlobalScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             try {
                 repo.refreshData()
             } catch (e: AssertionError) {
@@ -89,5 +91,10 @@ class AnnouncementFragment : Fragment() {
             }
             binding.swipeRefresh.isRefreshing = false
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.geomat.openeclassclient.databinding.FragmentAnnouncementBinding
 import com.geomat.openeclassclient.databinding.FragmentInternalAuthBinding
 import com.geomat.openeclassclient.ui.Login.ServerSelect.Server
 import com.google.android.material.snackbar.Snackbar
@@ -18,7 +19,8 @@ class InternalAuthFragment : Fragment() {
 
 
     val args: InternalAuthFragmentArgs by navArgs()
-    private lateinit var binding: FragmentInternalAuthBinding
+    private var _binding: FragmentInternalAuthBinding? = null
+    private val binding get() = _binding!!
     private lateinit var viewModel: InternalAuthViewModel
 
     override fun onCreateView(
@@ -26,7 +28,7 @@ class InternalAuthFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         viewModel = ViewModelProvider(this).get(InternalAuthViewModel::class.java)
-        binding = FragmentInternalAuthBinding.inflate(inflater)
+        _binding = FragmentInternalAuthBinding.inflate(inflater)
         if (args.authName.isNotBlank()) (activity as AppCompatActivity).supportActionBar?.title = args.authName
         return binding.root
     }
@@ -62,5 +64,10 @@ class InternalAuthFragment : Fragment() {
             viewModel.login(username,password)
         }
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

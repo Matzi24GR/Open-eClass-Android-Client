@@ -23,6 +23,7 @@ import com.geomat.openeclassclient.database.DatabaseCalendarSyncId
 import com.geomat.openeclassclient.database.EClassDatabase
 import com.geomat.openeclassclient.database.asDomainModel
 import com.geomat.openeclassclient.databinding.CalendarSelectBottomSheetBinding
+import com.geomat.openeclassclient.databinding.FragmentAnnouncementBinding
 import com.geomat.openeclassclient.databinding.FragmentCalendarBinding
 import com.geomat.openeclassclient.repository.AnnouncementRepository
 import com.geomat.openeclassclient.repository.CalendarEventRepository
@@ -43,7 +44,8 @@ class CalendarFragment : Fragment() {
     //TODO Ask for calendar permissions
     //TODO Courses must be refreshed for calendar to refresh
 
-    private lateinit var binding: FragmentCalendarBinding
+    private var _binding: FragmentCalendarBinding? = null
+    private val binding get() = _binding!!
     private val viewModel: CalendarViewModel by viewModels()
     @Inject
     lateinit var repo: CalendarEventRepository
@@ -52,7 +54,7 @@ class CalendarFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentCalendarBinding.inflate(inflater)
+        _binding = FragmentCalendarBinding.inflate(inflater)
         return binding.root
     }
 
@@ -117,6 +119,11 @@ class CalendarFragment : Fragment() {
                 }
         }
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

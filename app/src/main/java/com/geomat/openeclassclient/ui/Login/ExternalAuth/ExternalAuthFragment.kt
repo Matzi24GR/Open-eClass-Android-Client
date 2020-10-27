@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.geomat.openeclassclient.databinding.FragmentAnnouncementBinding
 import com.geomat.openeclassclient.databinding.FragmentExternalAuthBinding
 import timber.log.Timber
 
@@ -20,14 +21,15 @@ import timber.log.Timber
 class ExternalAuthFragment : Fragment() {
 
     val args: ExternalAuthFragmentArgs by navArgs()
-    private lateinit var binding: FragmentExternalAuthBinding
+    private var _binding: FragmentExternalAuthBinding? = null
+    private val binding get() = _binding!!
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentExternalAuthBinding.inflate(inflater)
+        _binding = FragmentExternalAuthBinding.inflate(inflater)
         if (args.authName.isNotBlank()) (activity as AppCompatActivity).supportActionBar?.title = args.authName
         return binding.root
     }
@@ -75,5 +77,10 @@ class ExternalAuthFragment : Fragment() {
         binding.webView.loadUrl(args.url)
 
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.geomat.openeclassclient.database.EClassDatabase
+import com.geomat.openeclassclient.databinding.FragmentAnnouncementBinding
 import com.geomat.openeclassclient.databinding.FragmentCourseListBinding
 import com.geomat.openeclassclient.repository.CoursesRepository
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,14 +23,15 @@ class CourseListFragment : Fragment() {
 
     //TODO Add a notice when no courses returned
 
-    private lateinit var binding: FragmentCourseListBinding
+    private var _binding: FragmentCourseListBinding? = null
+    private val binding get() = _binding!!
     @Inject lateinit var repo: CoursesRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentCourseListBinding.inflate(inflater)
+        _binding = FragmentCourseListBinding.inflate(inflater)
         return binding.root
     }
 
@@ -59,5 +61,10 @@ class CourseListFragment : Fragment() {
             }
         }
         //GlobalScope.launch { repo.refreshData(token!!) }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
