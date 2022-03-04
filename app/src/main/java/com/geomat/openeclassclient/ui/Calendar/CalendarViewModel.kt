@@ -1,30 +1,24 @@
 package com.geomat.openeclassclient.ui.Calendar
 
-import android.app.Application
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 import android.provider.CalendarContract
-import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.geomat.openeclassclient.database.DatabaseCourse
-import com.geomat.openeclassclient.database.EClassDatabase
 import com.geomat.openeclassclient.domain.CalendarEvent
 import com.geomat.openeclassclient.repository.CalendarEventRepository
+import dagger.hilt.android.scopes.ViewScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
-class CalendarViewModel @ViewModelInject constructor(private val repo: CalendarEventRepository): ViewModel() {
+@ViewScoped
+class CalendarViewModel @Inject constructor(private val repo: CalendarEventRepository): ViewModel() {
 
     data class Calendar(
         val id: Long,

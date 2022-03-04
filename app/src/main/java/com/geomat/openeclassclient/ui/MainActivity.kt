@@ -1,23 +1,18 @@
 package com.geomat.openeclassclient.ui
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import androidx.lifecycle.LifecycleOwner
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
-import androidx.work.ListenableWorker
 import com.geomat.openeclassclient.BuildConfig
 import com.geomat.openeclassclient.R
-import com.geomat.openeclassclient.database.EClassDatabase
 import com.geomat.openeclassclient.databinding.ActivityMainBinding
 import com.geomat.openeclassclient.network.EclassApi
 import com.geomat.openeclassclient.network.interceptor
@@ -26,11 +21,8 @@ import com.geomat.openeclassclient.repository.CalendarEventRepository
 import com.geomat.openeclassclient.repository.CoursesRepository
 import com.geomat.openeclassclient.repository.UserInfoRepository
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.awaitResponse
 import timber.log.Timber
 import javax.inject.Inject
@@ -105,7 +97,7 @@ class MainActivity : AppCompatActivity() {
             navController.navigate(MainActivityDirections.actionGlobalServerSelectFragment())
         }
 
-        var badge = bottom_nav.getOrCreateBadge(bottom_nav.menu.getItem(1).itemId)
+        var badge = binding.bottomNav.getOrCreateBadge(binding.bottomNav.menu.getItem(1).itemId)
 
         announcementRepo.unreadCount.observe(this) {
             badge.number = it

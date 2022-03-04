@@ -8,11 +8,11 @@ buildscript {
         
     }
     dependencies {
-        def nav_version = "2.3.0"
-        def hilt_version = '2.28-alpha'
+        def nav_version = '2.4.1'
+        def hilt_version = '2.40.5'
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
-        classpath 'com.android.tools.build:gradle:4.1.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10"
+        classpath 'com.android.tools.build:gradle:7.1.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
 
 
