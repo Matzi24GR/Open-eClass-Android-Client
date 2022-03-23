@@ -12,8 +12,11 @@ interface CalendarEventDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(events: List<DatabaseCalendarEvent>): List<Long>
 
-    @Query("SELECT * FROM calendar_event_table ORDER BY `end` DESC")
+    @Query("SELECT * FROM calendar_event_table ORDER BY `start` ASC")
     fun getAllEvents(): LiveData<List<DatabaseCalendarEvent>>
+
+    @Query("SELECT * FROM calendar_event_table WHERE start >= :currentTime ORDER BY `start` ASC LIMIT 1")
+    fun getNextEvent(currentTime: Long): LiveData<DatabaseCalendarEvent>
 
     @Query("DELETE FROM  calendar_event_table")
     fun clear()

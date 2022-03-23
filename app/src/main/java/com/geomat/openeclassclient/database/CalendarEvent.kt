@@ -7,13 +7,13 @@ import androidx.room.PrimaryKey
 import com.geomat.openeclassclient.domain.CalendarEvent
 
 @Entity(tableName = "calendar_event_table",
-    foreignKeys = [
-        ForeignKey(
-            entity = DatabaseCourse::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("courseCode"),
-            onDelete = ForeignKey.CASCADE)
-    ]
+//    foreignKeys = [
+//        ForeignKey(
+//            entity = DatabaseCourse::class,
+//            parentColumns = arrayOf("id"),
+//            childColumns = arrayOf("courseCode"),
+//            onDelete = ForeignKey.CASCADE)
+//    ]
 )
 data class DatabaseCalendarEvent(
 

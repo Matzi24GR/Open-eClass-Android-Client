@@ -1,75 +1,50 @@
 package com.geomat.openeclassclient.ui.Login.InternalAuth
 
-import android.app.Application
-import android.content.Context
-import androidx.lifecycle.AndroidViewModel
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.geomat.openeclassclient.network.EclassApi
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.geomat.openeclassclient.repository.Credentials
+import com.geomat.openeclassclient.repository.CredentialsRepository
 import com.geomat.openeclassclient.ui.Login.ServerSelect.Server
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import timber.log.Timber
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class InternalAuthViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val context = getApplication<Application>().applicationContext
+@HiltViewModel
+class InternalAuthViewModel @Inject constructor(private val repo: CredentialsRepository) : ViewModel() {
 
     // Selected Server
-    private val _selectedServer =  MutableLiveData<Server>(
+    private val _selectedServer =  MutableLiveData(
         Server("", "")
     )
     val selectedServer: LiveData<Server>
         get() = _selectedServer
 
-    // Login Success Event
-    private val _loginSuccessful = MutableLiveData<Boolean>(false)
-    val loginSuccessful: LiveData<Boolean>
-        get() = _loginSuccessful
-    fun resetLoginSuccessful(){
-        _loginSuccessful.value = false
-    }
-
-    // Show SnackBar Event
-    private var _showSnackbarString = MutableLiveData<String?>()
-    val showSnackBarString: LiveData<String?>
-        get() = _showSnackbarString
-    fun resetSnackbarString() {
-        _showSnackbarString.value = null
-    }
+    val success = mutableStateOf(false)
+    val wrongCredentials = mutableStateOf(false)
+    val connectionError = mutableStateOf(false)
+    val notEnabled = mutableStateOf(false)
 
     fun updateSelectedServer(server: Server) {
         _selectedServer.value = server
     }
 
     fun login(username: String, password: String) {
+        val credentials = Credentials(username = username, password = password, serverUrl = selectedServer.value!!.url)
+        viewModelScope.launch {
+            try {
+                repo.login(credentials)
+                success.value = true
+            } catch (e: Exception) {
+                when (e.message) {
+                    "FAILED" -> wrongCredentials.value = true
+                    "NOTENABLED" -> notEnabled.value = true
+                    "RESPONSE" -> connectionError.value = true
+                }
+            }
 
-        if (_selectedServer.value!!.url.isNotBlank()) {
-
-            EclassApi.MobileApi.getToken(username, password)
-                .enqueue(object : Callback<String> {
-                    override fun onFailure(call: Call<String>, t: Throwable) {
-                        _showSnackbarString.value = "Check your Connection"
-                    }
-                    override fun onResponse(call: Call<String>, response: Response<String>) {
-                        val token = response.body()
-                        when (token) {
-                            "FAILED" -> _showSnackbarString.value = "Wrong username/password"
-                            "NOTENABLED" -> _showSnackbarString.value = "Απενεργοποιημένος από τους διαχειριστές"
-                            else -> {
-                                Timber.i("Login Response: ${response.body()}")
-                                context.getSharedPreferences("login", Context.MODE_PRIVATE).edit()
-                                    .putString("username", username).apply()
-                                context.getSharedPreferences("login", Context.MODE_PRIVATE).edit()
-                                    .putBoolean("hasLoggedIn", true).apply()
-                                context.getSharedPreferences("login", Context.MODE_PRIVATE).edit()
-                                    .putString("token", token).apply()
-                                _loginSuccessful.value = true
-                            }
-                        }
-                    }
-                })
         }
     }
 }

@@ -1,7 +1,5 @@
 package com.geomat.openeclassclient.domain
 
-import com.geomat.openeclassclient.database.DatabaseAnnouncement
-
 data class Announcement(
     var id: String,                  // ex.  15 or s15 for system announcements
     var courseId: String?,           // ex.  DAI104 or null for system announcements

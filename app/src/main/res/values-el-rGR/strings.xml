@@ -35,4 +35,11 @@
     <string name="server_list">Λίστα Server</string>
     <string name="choose_from_included_servers">Επιλέξτε από την ενσωματωμένη λίστα</string>
     <string name="or_manually_insert_an_url">Δεν βρήκες την επιλογή που έψαχες;\\nΠληκρολόγησε χειροκίνητα την διεύθυνση εδώ</string>
+    <string name="wrong_url">Λάθος Διεύθυνση</string>
+    <string name="no_results_found">Δεν Βρέθηκαν Αποτελέσματα</string>
+    <string name="wrong_username_password">Λάθος όνομα χρήστη ή/και κωδικός</string>
+    <string name="server_not_enabled">Ο σέρβερ είναι απενεργοποιήμενος από τους διαχειριστές του</string>
+    <string name="connection_error">Σφάλμα Σύνδεσης</string>
+    <string name="newTag">Νέο</string>
+    <string name="about">Σχετικά με την εφαρμογή</string>
 </resources>

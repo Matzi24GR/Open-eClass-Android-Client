@@ -1,154 +1,189 @@
 package com.geomat.openeclassclient.ui
 
+import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupWithNavController
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.geomat.openeclassclient.BuildConfig
 import com.geomat.openeclassclient.R
-import com.geomat.openeclassclient.databinding.ActivityMainBinding
-import com.geomat.openeclassclient.network.EclassApi
-import com.geomat.openeclassclient.network.interceptor
-import com.geomat.openeclassclient.repository.AnnouncementRepository
-import com.geomat.openeclassclient.repository.CalendarEventRepository
-import com.geomat.openeclassclient.repository.CoursesRepository
-import com.geomat.openeclassclient.repository.UserInfoRepository
+import com.geomat.openeclassclient.repository.Credentials
+import com.geomat.openeclassclient.repository.CredentialsRepository
+import com.geomat.openeclassclient.ui.Login.ServerSelect.AuthTypeParcel
+import com.geomat.openeclassclient.ui.destinations.*
+import com.geomat.openeclassclient.ui.theme.OpenEclassClientTheme
+import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.navigateTo
+import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import retrofit2.awaitResponse
-import timber.log.Timber
 import javax.inject.Inject
 
+const val LOGIN_NAV_GRAPH = "login"
+lateinit var clipboardManager: ClipboardManager
+
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
 
-    private lateinit var binding: ActivityMainBinding
-    private lateinit var appBarConfiguration: AppBarConfiguration
-
-    @Inject lateinit var announcementRepo: AnnouncementRepository
-    @Inject lateinit var calendarRepo: CalendarEventRepository
-    @Inject lateinit var courseRepo: CoursesRepository
-    @Inject lateinit var userInfoRepo: UserInfoRepository
+    @Inject
+    lateinit var credentialsRepository: CredentialsRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContent { OpenEclassClientTheme { OpenEclassApp(credentialsRepository) } }
 
-        val url = getSharedPreferences("login", Context.MODE_PRIVATE).getString("url","localhost")
-        if (url != null ) {
-            Timber.i("Got Url: $url")
-            interceptor.setHost(url)
+        val scope = CoroutineScope(Job() + Dispatchers.IO)
+        scope.launch {
+            credentialsRepository.setInterceptor()
+            credentialsRepository.checkTokenStatus()
         }
-
-        // Finding the Navigation Controller
-        val navController = findNavController(R.id.fragment)
-
-        // Setting Navigation Controller with the BottomNavigationView
-        binding.bottomNav.setupWithNavController(navController)
-        val topLevelDestinations = setOf(
-            R.id.serverSelectFragment,
-            R.id.homeFragment,
-            R.id.announcementFragment,
-            R.id.courseListFragment,
-            R.id.calendarFragment
-        )
-        appBarConfiguration = AppBarConfiguration(topLevelDestinations)
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
-
-
-
-        val hasLoggedIn: Boolean = getSharedPreferences("login", Context.MODE_PRIVATE).getBoolean("hasLoggedIn", false)
-
-        if ( !hasLoggedIn ) {
-            binding.bottomNav.visibility = View.GONE
-            navController.navigate(MainActivityDirections.actionGlobalServerSelectFragment())
-        }
-
-        val token = applicationContext.getSharedPreferences("login", Context.MODE_PRIVATE).getString("token", null)
-
-
-        GlobalScope.launch{
-            try {
-                val result = EclassApi.MobileApi.checkTokenStatus(token!!).awaitResponse()
-                if (result.body() == "EXPIRED") {
-                    binding.TokenExpiredBanner.visibility = View.VISIBLE
-                } else {
-                    binding.TokenExpiredBanner.visibility = View.GONE
-                }
-            } catch (e: Exception) {
-                Timber.i(e)
-            }
-        }
-        binding.DismissBanner.setOnClickListener {
-            binding.TokenExpiredBanner.visibility = View.GONE
-        }
-        binding.ReLogIn.setOnClickListener {
-            binding.TokenExpiredBanner.visibility = View.GONE
-            navController.navigate(MainActivityDirections.actionGlobalServerSelectFragment())
-        }
-
-        var badge = binding.bottomNav.getOrCreateBadge(binding.bottomNav.menu.getItem(1).itemId)
-
-        announcementRepo.unreadCount.observe(this) {
-            badge.number = it
-            badge.isVisible = it > 0
-        }
+        clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.options_menu, menu)
-        if (BuildConfig.DEBUG) {
-            menu.findItem(R.id.deleteButton).isVisible = true
-        }
-        return true
-    }
+}
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.logOutButton -> {
-                getSharedPreferences("login", Context.MODE_PRIVATE).edit().putBoolean("hasLoggedIn", false).apply()
-                findNavController(R.id.fragment).navigate(
-                    R.id.mainActivity
-                )
-                GlobalScope.launch {
-                    userInfoRepo.clear()
-                    courseRepo.clear()
-                    announcementRepo.clear()
-                    calendarRepo.clear()
-                }
-                true
+@Composable
+fun OpenEclassApp(repository: CredentialsRepository) {
+    val credentials = repository.credentialsFlow.collectAsState(initial = Credentials())
+
+    val navController = rememberNavController()
+    val showBottomBar = remember {
+        mutableStateOf(false)
+    }
+    Scaffold(
+        bottomBar = { if (showBottomBar.value) BottomNav(navController = navController) }
+    ) {
+        DestinationsNavHost(navGraph = NavGraphs.root, navController = navController, modifier = Modifier.padding(it))
+        LaunchedEffect(Unit) {
+            if (!credentials.value.isLoggedIn) {
+                navController.navigateTo(NavGraphs.login)
             }
-            R.id.deleteButton-> {
-                GlobalScope.launch {
-                    try {
-                        userInfoRepo.clear()
-                        courseRepo.clear()
-                        announcementRepo.clear()
-                        calendarRepo.clear()
-                    } catch (e: java.lang.Exception) {
-                        Timber.e(e)
-                    }
-                }
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
         }
     }
-
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = this.findNavController(R.id.fragment)
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
+    val currentDestination: Destination? = navController.currentBackStackEntryAsState().value?.navDestination
+    val bottomBarDestinations = remember {
+        BottomBarDestination.values().map {
+            it.direction.route
+        }
+    }
+    if (currentDestination != null) {
+        showBottomBar.value = bottomBarDestinations.contains(currentDestination.route)
     }
 }
+
+@Composable
+fun OpenEclassTopBar(title: String, navigator: DestinationsNavigator, navigateBack: Boolean = true, viewModel: MainViewModel = hiltViewModel()) {
+    var showMenu by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+
+    val actions: @Composable RowScope.() -> Unit  = {
+            IconButton(onClick = {
+                scope.launch {
+                    viewModel.logout()
+                }
+                navigator.navigate(NavGraphs.login)
+            }) {
+                Icon(Icons.Default.Logout, "")
+            }
+            IconButton(onClick = { showMenu = !showMenu }) {
+                Icon(Icons.Default.MoreVert, "")
+            }
+            DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
+                DropdownMenuItem(onClick = {navigator.navigate(AboutScreenDestination)}) {
+                    Text(text = stringResource(id = R.string.about))
+                }
+                if (BuildConfig.DEBUG) {
+                    DropdownMenuItem(onClick = {navigator.navigate(DebugScreenDestination)}) {
+                        Text(text = "DEBUG")
+                    }
+                }
+            }
+    }
+
+    if (navigateBack) {
+        TopAppBar(
+            title = { Text(text = title) },
+            actions = actions,
+            navigationIcon = {
+                if (navigateBack)
+                    IconButton(onClick = {navigator.popBackStack()}) {
+                        Icon(Icons.Default.ArrowBack, "")
+                    }
+            }
+        )
+    } else {
+        TopAppBar(
+            title = { Text(text = title) },
+            actions = actions
+        )
+    }
+
+}
+
+@Composable
+fun TokenExpirationBanner(navigator: DestinationsNavigator, credentials: Credentials) {
+    Surface(modifier = Modifier.fillMaxWidth()) {
+        Row(Modifier.padding(12.dp), Arrangement.SpaceBetween) {
+            Text(text = "Token Expired, Please Sign in Again")
+            OutlinedButton(modifier = Modifier, onClick = {
+                navigator.navigate(ExternalAuthScreenDestination(AuthTypeParcel(name = credentials.selectedAuthName, url = credentials.selectedAuthUrl)))
+            }) {
+                Text(text = "Login")
+            }
+        }
+    }
+
+}
+
+@Composable
+fun BottomNav(
+    navController: NavController
+) {
+    val currentDestination: Destination? = navController.currentBackStackEntryAsState().value?.navDestination
+
+    BottomNavigation {
+        BottomBarDestination.values().forEach { destination ->
+            BottomNavigationItem(
+                selected = currentDestination == destination.direction,
+                onClick ={
+                    navController.navigateTo(destination.direction) {
+                        launchSingleTop = true
+                    }
+                },
+                icon = { Icon(destination.icon, stringResource(id = destination.label)) },
+                label = { Text(stringResource(id = destination.label))}
+            )
+        }
+    }
+}
+
+enum class BottomBarDestination(
+    val direction: DirectionDestinationSpec,
+    val icon: ImageVector,
+    @StringRes val label: Int
+) {
+    Home(HomeScreenDestination(), Icons.Default.Home, R.string.home_tab),
+    Announcements(AnnouncementScreenDestination(), Icons.Default.Announcement, R.string.announcements_tab),
+    Courses(CourseListScreenDestination(), Icons.Default.ViewList, R.string.courses_tab),
+    Calendar(CalendarScreenDestination(), Icons.Default.Event, R.string.calendar_tab)
+}
+

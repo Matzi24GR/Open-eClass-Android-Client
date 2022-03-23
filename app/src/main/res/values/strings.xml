@@ -34,6 +34,13 @@
     <string name="choose_server">Choose Server</string>
     <string name="server_list">Server List</string>
     <string name="choose_from_included_servers">Choose from included servers</string>
-    <string name="or_manually_insert_an_url">Didn\'t find your server?\nInsert the url manually here</string>
+    <string name="or_manually_insert_an_url">Didn\'t find your server? Insert the url manually here</string>
+    <string name="wrong_url">Wrong Url</string>
+    <string name="no_results_found">No Results Found</string>
+    <string name="wrong_username_password">Wrong Username And/Or Password</string>
+    <string name="server_not_enabled">Server is disabled by its administrators</string>
+    <string name="connection_error">Connection Error</string>
+    <string name="newTag">New</string>
+    <string name="about">About</string>
 
 </resources>

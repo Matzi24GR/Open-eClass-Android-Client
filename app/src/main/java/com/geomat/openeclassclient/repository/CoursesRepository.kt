@@ -29,7 +29,6 @@ class CoursesRepository @Inject constructor(private val coursesDao: CoursesDao) 
     }
 
     suspend fun refreshData(token: String) {
-
         withContext(Dispatchers.IO) {
             try {
                 //Get Courses

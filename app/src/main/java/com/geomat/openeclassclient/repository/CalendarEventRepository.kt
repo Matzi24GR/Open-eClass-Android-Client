@@ -2,7 +2,10 @@ package com.geomat.openeclassclient.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import com.geomat.openeclassclient.database.*
+import com.geomat.openeclassclient.database.CalendarEventDao
+import com.geomat.openeclassclient.database.DatabaseCalendarEvent
+import com.geomat.openeclassclient.database.DatabaseCalendarSyncId
+import com.geomat.openeclassclient.database.asDomainModel
 import com.geomat.openeclassclient.domain.CalendarEvent
 import com.geomat.openeclassclient.network.DataTransferObjects.asDatabaseModel
 import com.geomat.openeclassclient.network.EclassApi
@@ -10,13 +13,30 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.await
 import timber.log.Timber
-import java.lang.Exception
 import javax.inject.Inject
 
 class CalendarEventRepository @Inject constructor(private val calendarEventDao: CalendarEventDao) {
 
     val allEvents: LiveData<List<CalendarEvent>> = Transformations.map(calendarEventDao.getAllEvents()){
         it.asDomainModel()
+    }
+
+    val nextEvent: LiveData<CalendarEvent?> = Transformations.map(calendarEventDao.getNextEvent(System.currentTimeMillis()*1000)) {
+        if (it != null) {
+            return@map CalendarEvent(
+                id = it.id,
+                title = it.title,
+                start = it.start,
+                end = it.end,
+                content = it.content,
+                event_group = it.event_group,
+                Class = it.Class,
+                event_type = it.event_type,
+                courseCode = it.courseCode,
+                url = it.url
+            )
+        }
+        return@map null
     }
 
     suspend fun getSyncedIds(): List<Long> {

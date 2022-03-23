@@ -80,6 +80,11 @@ interface  MobileApiService {
     @GET
     fun getRssFeed(@Url url: String):
             Call<RssResponse>
+
+    @FormUrlEncoded
+    @POST("/modules/mobile/mlogin.php?logout")
+    fun logout(@Field("token")token: String):
+            Call<String>
 }
 
 interface JsonApiService {

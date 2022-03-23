@@ -2,7 +2,6 @@ package com.geomat.openeclassclient.network.DataTransferObjects
 
 import com.geomat.openeclassclient.database.DatabaseUserInfo
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
 import timber.log.Timber
 
 class UserInfoResponse (page: String) {
@@ -24,8 +23,12 @@ class UserInfoResponse (page: String) {
             val imgUrlElement = infoBox.select("img")
 
             username = usernameElement.text()
-            fullName = fullNameElement.text()
-            category = categoryElement.text()
+            if (fullNameElement != null) {
+                fullName = fullNameElement.text()
+            }
+            if (categoryElement != null) {
+                category = categoryElement.text()
+            }
             imgUrl = imgUrlElement.attr("src")
         } catch (e: Exception) {
             Timber.i(e)

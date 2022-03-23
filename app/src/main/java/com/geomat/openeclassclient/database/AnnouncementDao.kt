@@ -27,7 +27,7 @@ interface AnnouncementDao {
     @Query("SELECT COUNT(id) FROM announcement_read_table WHERE isRead = 0")
     fun getUnreadCount(): LiveData<Int>
 
-    @Query("DELETE FROM  announcements_table")
+    @Query("DELETE FROM announcements_table")
     fun clear()
 
     @Query("DELETE FROM announcements_table WHERE id NOT IN (:ids)")
