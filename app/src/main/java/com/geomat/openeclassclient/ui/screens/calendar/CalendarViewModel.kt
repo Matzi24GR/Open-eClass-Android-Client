@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.ui.calendar
+package com.geomat.openeclassclient.ui.screens.calendar
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,11 +9,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CalendarViewModel @Inject constructor(private val calendarEventRepository: CalendarEventRepository, private val credentialsRepository: CredentialsRepository) : ViewModel() {
+class CalendarViewModel @Inject constructor(
+    private val calendarEventRepository: CalendarEventRepository,
+    private val credentialsRepository: CredentialsRepository
+) : ViewModel() {
 
     val calendarEvents = calendarEventRepository.allEvents
-
-    val nextEventIndex = calendarEventRepository.nextEvent
 
     fun refresh() {
         viewModelScope.launch {

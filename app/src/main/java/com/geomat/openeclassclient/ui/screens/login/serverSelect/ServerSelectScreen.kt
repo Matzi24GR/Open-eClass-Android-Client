@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.ui.Login.ServerSelect
+package com.geomat.openeclassclient.ui.screens.login.serverSelect
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
@@ -24,9 +24,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.network.DataTransferObjects.AuthType
-import com.geomat.openeclassclient.ui.LOGIN_NAV_GRAPH
-import com.geomat.openeclassclient.ui.OpenEclassTopBar
-import com.geomat.openeclassclient.ui.destinations.ServerSelectScreenDestination
+import com.geomat.openeclassclient.ui.screens.destinations.ServerSelectScreenDestination
+import com.geomat.openeclassclient.ui.screens.main.LOGIN_NAV_GRAPH
+import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
@@ -36,31 +36,43 @@ import java.net.UnknownHostException
 @OptIn(ExperimentalMaterialApi::class)
 @Destination(navGraph = LOGIN_NAV_GRAPH, start = true)
 @Composable
-fun ServerSelectScreen(navigator: DestinationsNavigator, viewModel: ServerSelectViewModel = hiltViewModel()) {
+fun ServerSelectScreen(
+    navigator: DestinationsNavigator,
+    viewModel: ServerSelectViewModel = hiltViewModel()
+) {
     navigator.clearBackStack(ServerSelectScreenDestination)
-    val modalBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val modalBottomSheetState =
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
-    Scaffold(topBar = { OpenEclassTopBar(title = "Open Eclass Client", navigator = navigator, navigateBack = false)}) {
+    Scaffold(topBar = {
+        OpenEclassTopBar(
+            title = "Open Eclass Client",
+            navigator = navigator,
+            navigateBack = false
+        )
+    }) {
         ModalBottomSheetLayout(
             sheetContent = { BottomSheet(bottomSheetState = modalBottomSheetState) },
             sheetState = modalBottomSheetState,
         ) {
             Column {
-                builtInServerCard(
+                BuiltInServerCard(
                     modalBottomSheetState = modalBottomSheetState,
                     elevation = 12.dp,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(12.dp)
                 )
-                ManualServerCard(elevation = 12.dp,
+                ManualServerCard(
+                    elevation = 12.dp,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(12.dp))
+                        .padding(12.dp)
+                )
             }
         }
         with(viewModel.currentDirection.value) {
-            if (this != ServerSelectScreenDestination ) {
+            if (this != ServerSelectScreenDestination) {
                 viewModel.currentDirection.value = ServerSelectScreenDestination()
                 val scope = rememberCoroutineScope()
                 scope.launch { modalBottomSheetState.hide() }
@@ -72,7 +84,12 @@ fun ServerSelectScreen(navigator: DestinationsNavigator, viewModel: ServerSelect
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun builtInServerCard(modalBottomSheetState: ModalBottomSheetState,elevation: Dp, modifier: Modifier, viewModel: ServerSelectViewModel = hiltViewModel()) {
+private fun BuiltInServerCard(
+    modalBottomSheetState: ModalBottomSheetState,
+    elevation: Dp,
+    modifier: Modifier,
+    viewModel: ServerSelectViewModel = hiltViewModel()
+) {
     val scope = rememberCoroutineScope()
     val authTypes: MutableState<List<AuthType>> = remember { mutableStateOf(listOf()) }
     val schString = stringResource(id = R.string.schServer)
@@ -85,26 +102,33 @@ private fun builtInServerCard(modalBottomSheetState: ModalBottomSheetState,eleva
         ) {
             Text(text = stringResource(id = R.string.choose_from_included_servers))
             Row(Modifier.padding(top = 8.dp)) {
-                Button(onClick = { scope.launch { modalBottomSheetState.show() } },
+                Button(
+                    onClick = { scope.launch { modalBottomSheetState.show() } },
                     Modifier
                         .weight(0.5F)
                         .padding(end = 4.dp)
-                        .fillMaxHeight()) {
+                        .fillMaxHeight()
+                ) {
                     Text(text = stringResource(id = R.string.server_list))
                 }
-                Button(onClick = {
-                    scope.launch {
-                        val types = viewModel.getAuthTypes(schServer)
-                        if (types.isEmpty()) viewModel.setDestination()
-                        if (types.size == 1) viewModel.setDestination(types[0])
-                        if (types.size > 1) authTypes.value = types
-                    }
-                },
+                Button(
+                    onClick = {
+                        scope.launch {
+                            val types = viewModel.getAuthTypes(schServer)
+                            if (types.isEmpty()) viewModel.setDestination()
+                            if (types.size == 1) viewModel.setDestination(types[0])
+                            if (types.size > 1) authTypes.value = types
+                        }
+                    },
                     Modifier
                         .weight(0.5F)
                         .padding(start = 4.dp)
-                        .fillMaxHeight()) {
-                    Image(painter = painterResource(id = R.drawable.ic_e_taxi_logo1), contentDescription = "")
+                        .fillMaxHeight()
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_e_taxi_logo1),
+                        contentDescription = ""
+                    )
                 }
             }
         }
@@ -112,7 +136,11 @@ private fun builtInServerCard(modalBottomSheetState: ModalBottomSheetState,eleva
 }
 
 @Composable
-private fun ManualServerCard(elevation: Dp, modifier: Modifier, viewModel: ServerSelectViewModel = hiltViewModel()) {
+private fun ManualServerCard(
+    elevation: Dp,
+    modifier: Modifier,
+    viewModel: ServerSelectViewModel = hiltViewModel()
+) {
     val scope = rememberCoroutineScope()
     var address by rememberSaveable { mutableStateOf("") }
     var loading by remember { mutableStateOf(false) }
@@ -127,7 +155,7 @@ private fun ManualServerCard(elevation: Dp, modifier: Modifier, viewModel: Serve
             Text(text = stringResource(id = R.string.or_manually_insert_an_url))
             OutlinedTextField(
                 value = address,
-                onValueChange = {address = it},
+                onValueChange = { address = it },
                 Modifier.fillMaxWidth(),
                 label = { Text(text = stringResource(id = R.string.server_url)) },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
@@ -142,7 +170,7 @@ private fun ManualServerCard(elevation: Dp, modifier: Modifier, viewModel: Serve
                         val types: List<AuthType>
                         try {
                             types = viewModel.getAuthTypes(server)
-                        }catch (e: UnknownHostException) {
+                        } catch (e: UnknownHostException) {
                             Timber.e(e)
                             loading = false
                             errored.value = true
@@ -163,7 +191,8 @@ private fun ManualServerCard(elevation: Dp, modifier: Modifier, viewModel: Serve
                 LinearProgressIndicator(
                     Modifier
                         .fillMaxWidth()
-                        .height(2.dp))
+                        .height(2.dp)
+                )
             }
             if (authTypes.value.isNotEmpty()) {
                 Column(modifier = Modifier.padding(4.dp)) {
@@ -186,14 +215,22 @@ private fun ManualServerCard(elevation: Dp, modifier: Modifier, viewModel: Serve
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun BottomSheet(viewModel: ServerSelectViewModel = hiltViewModel(), bottomSheetState: ModalBottomSheetState) {
+private fun BottomSheet(
+    viewModel: ServerSelectViewModel = hiltViewModel(),
+    bottomSheetState: ModalBottomSheetState
+) {
     var searchText by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
     TextField(
         value = searchText,
-        onValueChange = {searchText = it},
+        onValueChange = { searchText = it },
         label = { Text(text = stringResource(id = R.string.search_server)) },
-        leadingIcon = { Icon(imageVector = Icons.Default.Search, contentDescription = stringResource(id = R.string.search_server)) },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = stringResource(id = R.string.search_server)
+            )
+        },
         modifier = Modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
@@ -204,12 +241,18 @@ private fun BottomSheet(viewModel: ServerSelectViewModel = hiltViewModel(), bott
     )
     viewModel.getFilteredServerList(searchText).let {
         if (it.isEmpty()) {
-            Icon(imageVector = Icons.Default.SentimentDissatisfied, contentDescription = "", modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp))
-            Text(text = stringResource(R.string.no_results_found), modifier = Modifier
-                .fillMaxWidth()
-                .padding(4.dp), fontSize = 24.sp, textAlign = TextAlign.Center)
+            Icon(
+                imageVector = Icons.Default.SentimentDissatisfied,
+                contentDescription = "",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp)
+            )
+            Text(
+                text = stringResource(R.string.no_results_found), modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp), fontSize = 24.sp, textAlign = TextAlign.Center
+            )
         }
         LazyColumn(Modifier.fillMaxHeight()) {
             items(
@@ -231,7 +274,7 @@ private fun ServerRow(server: State<Server>, viewModel: ServerSelectViewModel) {
     var loading by remember { mutableStateOf(false) }
     val authTypes: MutableState<List<AuthType>> = remember { mutableStateOf(listOf()) }
     val serverStatus = remember { viewModel.serverStatusMap[server.value] }
-    
+
     Column(
         Modifier
             .animateContentSize()
@@ -249,8 +292,8 @@ private fun ServerRow(server: State<Server>, viewModel: ServerSelectViewModel) {
             .fillMaxWidth()
     ) {
         Text(text = server.value.name)
-        Row() {
-            when(serverStatus!!.value) {
+        Row {
+            when (serverStatus!!.value) {
                 ServerStatus.CHECKING -> Icon(
                     imageVector = Icons.Default.Autorenew,
                     contentDescription = "Checking"
@@ -275,7 +318,8 @@ private fun ServerRow(server: State<Server>, viewModel: ServerSelectViewModel) {
             LinearProgressIndicator(
                 Modifier
                     .fillMaxWidth()
-                    .height(2.dp))
+                    .height(2.dp)
+            )
         }
         if (authTypes.value.isNotEmpty()) {
             Column(modifier = Modifier.padding(4.dp)) {

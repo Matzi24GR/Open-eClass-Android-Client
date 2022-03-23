@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.ui.Courses
+package com.geomat.openeclassclient.ui.screens.courses
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,7 +11,10 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class CourseListViewModel @Inject constructor(val repo: CoursesRepository, private val credentials: Flow<Credentials>): ViewModel() {
+class CourseListViewModel @Inject constructor(
+    val repo: CoursesRepository,
+    private val credentials: Flow<Credentials>
+) : ViewModel() {
 
     val courses = repo.allCourses
 
@@ -21,9 +24,10 @@ class CourseListViewModel @Inject constructor(val repo: CoursesRepository, priva
                 credentials.collect {
                     repo.refreshData(it.token)
                 }
-            } catch (e: AssertionError){
+            } catch (e: AssertionError) {
                 Timber.i(e)
             }
         }
     }
+
 }

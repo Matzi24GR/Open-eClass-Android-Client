@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.ui
+package com.geomat.openeclassclient.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import com.geomat.openeclassclient.R
+import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -15,8 +16,16 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 fun AboutScreen(navigator: DestinationsNavigator) {
 
-    Scaffold(topBar = { OpenEclassTopBar(title = stringResource(id = R.string.about), navigator = navigator)}) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceEvenly) {
+    Scaffold(topBar = {
+        OpenEclassTopBar(
+            title = stringResource(id = R.string.about),
+            navigator = navigator
+        )
+    }) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly
+        ) {
             Text(text = "Links")
             Text(text = "Github")
             Text(text = "https://github.com/Matzi24GR/Open-eClass-Android-Client")

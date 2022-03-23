@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.ui
+package com.geomat.openeclassclient.ui.screens.main
 
 import android.content.ClipboardManager
 import android.content.Context
@@ -23,8 +23,10 @@ import com.geomat.openeclassclient.BuildConfig
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.repository.Credentials
 import com.geomat.openeclassclient.repository.CredentialsRepository
-import com.geomat.openeclassclient.ui.Login.ServerSelect.AuthTypeParcel
-import com.geomat.openeclassclient.ui.destinations.*
+import com.geomat.openeclassclient.ui.screens.NavGraphs
+import com.geomat.openeclassclient.ui.screens.destinations.*
+import com.geomat.openeclassclient.ui.screens.login.serverSelect.AuthTypeParcel
+import com.geomat.openeclassclient.ui.screens.navDestination
 import com.geomat.openeclassclient.ui.theme.OpenEclassClientTheme
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -72,14 +74,19 @@ fun OpenEclassApp(repository: CredentialsRepository) {
     Scaffold(
         bottomBar = { if (showBottomBar.value) BottomNav(navController = navController) }
     ) {
-        DestinationsNavHost(navGraph = NavGraphs.root, navController = navController, modifier = Modifier.padding(it))
+        DestinationsNavHost(
+            navGraph = NavGraphs.root,
+            navController = navController,
+            modifier = Modifier.padding(it)
+        )
         LaunchedEffect(Unit) {
             if (!credentials.value.isLoggedIn) {
                 navController.navigateTo(NavGraphs.login)
             }
         }
     }
-    val currentDestination: Destination? = navController.currentBackStackEntryAsState().value?.navDestination
+    val currentDestination: Destination? =
+        navController.currentBackStackEntryAsState().value?.navDestination
     val bottomBarDestinations = remember {
         BottomBarDestination.values().map {
             it.direction.route
@@ -91,32 +98,37 @@ fun OpenEclassApp(repository: CredentialsRepository) {
 }
 
 @Composable
-fun OpenEclassTopBar(title: String, navigator: DestinationsNavigator, navigateBack: Boolean = true, viewModel: MainViewModel = hiltViewModel()) {
+fun OpenEclassTopBar(
+    title: String,
+    navigator: DestinationsNavigator,
+    navigateBack: Boolean = true,
+    viewModel: MainViewModel = hiltViewModel()
+) {
     var showMenu by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    val actions: @Composable RowScope.() -> Unit  = {
-            IconButton(onClick = {
-                scope.launch {
-                    viewModel.logout()
-                }
-                navigator.navigate(NavGraphs.login)
-            }) {
-                Icon(Icons.Default.Logout, "")
+    val actions: @Composable RowScope.() -> Unit = {
+        IconButton(onClick = {
+            scope.launch {
+                viewModel.logout()
             }
-            IconButton(onClick = { showMenu = !showMenu }) {
-                Icon(Icons.Default.MoreVert, "")
+            navigator.navigate(NavGraphs.login)
+        }) {
+            Icon(Icons.Default.Logout, "")
+        }
+        IconButton(onClick = { showMenu = !showMenu }) {
+            Icon(Icons.Default.MoreVert, "")
+        }
+        DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
+            DropdownMenuItem(onClick = { navigator.navigate(AboutScreenDestination) }) {
+                Text(text = stringResource(id = R.string.about))
             }
-            DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
-                DropdownMenuItem(onClick = {navigator.navigate(AboutScreenDestination)}) {
-                    Text(text = stringResource(id = R.string.about))
-                }
-                if (BuildConfig.DEBUG) {
-                    DropdownMenuItem(onClick = {navigator.navigate(DebugScreenDestination)}) {
-                        Text(text = "DEBUG")
-                    }
+            if (BuildConfig.DEBUG) {
+                DropdownMenuItem(onClick = { navigator.navigate(DebugScreenDestination) }) {
+                    Text(text = "DEBUG")
                 }
             }
+        }
     }
 
     if (navigateBack) {
@@ -125,7 +137,7 @@ fun OpenEclassTopBar(title: String, navigator: DestinationsNavigator, navigateBa
             actions = actions,
             navigationIcon = {
                 if (navigateBack)
-                    IconButton(onClick = {navigator.popBackStack()}) {
+                    IconButton(onClick = { navigator.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, "")
                     }
             }
@@ -145,7 +157,14 @@ fun TokenExpirationBanner(navigator: DestinationsNavigator, credentials: Credent
         Row(Modifier.padding(12.dp), Arrangement.SpaceBetween) {
             Text(text = "Token Expired, Please Sign in Again")
             OutlinedButton(modifier = Modifier, onClick = {
-                navigator.navigate(ExternalAuthScreenDestination(AuthTypeParcel(name = credentials.selectedAuthName, url = credentials.selectedAuthUrl)))
+                navigator.navigate(
+                    ExternalAuthScreenDestination(
+                        AuthTypeParcel(
+                            name = credentials.selectedAuthName,
+                            url = credentials.selectedAuthUrl
+                        )
+                    )
+                )
             }) {
                 Text(text = "Login")
             }
@@ -158,19 +177,20 @@ fun TokenExpirationBanner(navigator: DestinationsNavigator, credentials: Credent
 fun BottomNav(
     navController: NavController
 ) {
-    val currentDestination: Destination? = navController.currentBackStackEntryAsState().value?.navDestination
+    val currentDestination: Destination? =
+        navController.currentBackStackEntryAsState().value?.navDestination
 
     BottomNavigation {
         BottomBarDestination.values().forEach { destination ->
             BottomNavigationItem(
                 selected = currentDestination == destination.direction,
-                onClick ={
+                onClick = {
                     navController.navigateTo(destination.direction) {
                         launchSingleTop = true
                     }
                 },
                 icon = { Icon(destination.icon, stringResource(id = destination.label)) },
-                label = { Text(stringResource(id = destination.label))}
+                label = { Text(stringResource(id = destination.label)) }
             )
         }
     }
@@ -182,7 +202,11 @@ enum class BottomBarDestination(
     @StringRes val label: Int
 ) {
     Home(HomeScreenDestination(), Icons.Default.Home, R.string.home_tab),
-    Announcements(AnnouncementScreenDestination(), Icons.Default.Announcement, R.string.announcements_tab),
+    Announcements(
+        AnnouncementScreenDestination(),
+        Icons.Default.Announcement,
+        R.string.announcements_tab
+    ),
     Courses(CourseListScreenDestination(), Icons.Default.ViewList, R.string.courses_tab),
     Calendar(CalendarScreenDestination(), Icons.Default.Event, R.string.calendar_tab)
 }

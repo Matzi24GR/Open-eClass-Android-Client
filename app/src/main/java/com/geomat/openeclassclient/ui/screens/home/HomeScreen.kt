@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.ui.Home
+package com.geomat.openeclassclient.ui.screens.home
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
@@ -18,15 +18,21 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.domain.UserInfo
 import com.geomat.openeclassclient.repository.Credentials
-import com.geomat.openeclassclient.ui.OpenEclassTopBar
-import com.geomat.openeclassclient.ui.TokenExpirationBanner
+import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
+import com.geomat.openeclassclient.ui.screens.main.TokenExpirationBanner
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination(start = true)
 @Composable
 fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = hiltViewModel()) {
-    Scaffold(topBar = { OpenEclassTopBar(title = stringResource(id = R.string.home_tab), navigator = navigator, navigateBack = false) }) {
+    Scaffold(topBar = {
+        OpenEclassTopBar(
+            title = stringResource(id = R.string.home_tab),
+            navigator = navigator,
+            navigateBack = false
+        )
+    }) {
         val userInfo = viewModel.userInfo.observeAsState()
         val credentials = viewModel.credentialFlow.collectAsState(initial = Credentials())
         Column(Modifier.animateContentSize()) {
@@ -34,27 +40,33 @@ fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = hilt
             Column(
                 Modifier
                     .padding(12.dp)
-                    .animateContentSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-            UserInfoCard(userInfo)
-        }
+                    .animateContentSize(), horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                UserInfoCard(userInfo)
+            }
         }
 
         viewModel.refresh()
     }
 
 }
+
 @Composable
 private fun UserInfoCard(userInfo: State<UserInfo?>) {
     Card(elevation = 8.dp, modifier = Modifier.fillMaxWidth()) {
-        Column() {
-            Row() {
-                Image(painter = painterResource(id = R.drawable.ic_default_user), contentDescription = "", Modifier.size(80.dp))
-                Column() {
-                    Text(text = userInfo.value?.fullName?: "error")
-                    Text(text = userInfo.value?.username?: "error")
+        Column {
+            Row {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_default_user),
+                    contentDescription = "",
+                    Modifier.size(80.dp)
+                )
+                Column {
+                    Text(text = userInfo.value?.fullName ?: "error")
+                    Text(text = userInfo.value?.username ?: "error")
                 }
             }
-            Text(text = userInfo.value?.category?: "error")
+            Text(text = userInfo.value?.category ?: "error")
         }
     }
 }
@@ -62,14 +74,16 @@ private fun UserInfoCard(userInfo: State<UserInfo?>) {
 @Preview(showSystemUi = true)
 @Composable
 private fun Preview() {
-    val userInfo = remember { mutableStateOf(
-        UserInfo(
-            "xyz2068",
-            "John Smith",
-            "Undergraduate » Comp Sci",
-            "/template/default/img/default_256.png"
+    val userInfo = remember {
+        mutableStateOf(
+            UserInfo(
+                "xyz2068",
+                "John Smith",
+                "Undergraduate » Comp Sci",
+                "/template/default/img/default_256.png"
+            )
         )
-    ) }
+    }
     Column(Modifier.padding(12.dp)) {
         UserInfoCard(userInfo)
     }

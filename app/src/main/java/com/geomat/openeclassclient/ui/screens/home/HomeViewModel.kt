@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.ui.Home
+package com.geomat.openeclassclient.ui.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,7 +11,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(val repo: UserInfoRepository, private val credentials: Flow<Credentials>) : ViewModel() {
+class HomeViewModel @Inject constructor(
+    val repo: UserInfoRepository,
+    private val credentials: Flow<Credentials>
+) : ViewModel() {
 
     lateinit var username: String
 

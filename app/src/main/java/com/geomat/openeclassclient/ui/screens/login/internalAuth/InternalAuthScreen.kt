@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.ui.Login.InternalAuth
+package com.geomat.openeclassclient.ui.screens.login.internalAuth
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,10 +23,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.geomat.openeclassclient.R
-import com.geomat.openeclassclient.ui.LOGIN_NAV_GRAPH
-import com.geomat.openeclassclient.ui.Login.ServerSelect.Server
-import com.geomat.openeclassclient.ui.NavGraphs
-import com.geomat.openeclassclient.ui.OpenEclassTopBar
+import com.geomat.openeclassclient.ui.screens.NavGraphs
+import com.geomat.openeclassclient.ui.screens.login.serverSelect.Server
+import com.geomat.openeclassclient.ui.screens.main.LOGIN_NAV_GRAPH
+import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
@@ -35,11 +35,21 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalComposeUiApi::class)
 @Destination(navGraph = LOGIN_NAV_GRAPH)
 @Composable
-fun InternalAuthScreen(server: Server, authName: String = "", viewModel: InternalAuthViewModel = hiltViewModel(), navigator: DestinationsNavigator) {
+fun InternalAuthScreen(
+    server: Server,
+    authName: String = "",
+    viewModel: InternalAuthViewModel = hiltViewModel(),
+    navigator: DestinationsNavigator
+) {
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     Scaffold(
-        topBar = { OpenEclassTopBar(title = authName.ifBlank { server.name }, navigator = navigator)},
+        topBar = {
+            OpenEclassTopBar(
+                title = authName.ifBlank { server.name },
+                navigator = navigator
+            )
+        },
         scaffoldState = scaffoldState
     ) {
 
@@ -47,7 +57,8 @@ fun InternalAuthScreen(server: Server, authName: String = "", viewModel: Interna
         Column(
             Modifier
                 .fillMaxSize()
-                .padding(top = 200.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                .padding(top = 200.dp), horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
             val username = remember {
                 mutableStateOf("")
@@ -63,7 +74,7 @@ fun InternalAuthScreen(server: Server, authName: String = "", viewModel: Interna
             val loading = remember { mutableStateOf(false) }
 
             UsernameText(username = username, wrongCredentials = wrongCredentials)
-            PaswordText(password = password, wrongCredentials = wrongCredentials)
+            PasswordText(password = password, wrongCredentials = wrongCredentials)
 
             Button(
                 onClick = {
@@ -126,7 +137,7 @@ fun InternalAuthScreen(server: Server, authName: String = "", viewModel: Interna
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun UsernameText(username: MutableState<String>, wrongCredentials:MutableState<Boolean>) {
+fun UsernameText(username: MutableState<String>, wrongCredentials: MutableState<Boolean>) {
     val usernameNode = AutofillNode(
         autofillTypes = listOf(AutofillType.Username),
         onFill = { username.value = it }
@@ -135,7 +146,7 @@ fun UsernameText(username: MutableState<String>, wrongCredentials:MutableState<B
     LocalAutofillTree.current += usernameNode
     OutlinedTextField(
         value = username.value,
-        onValueChange = {username.value = it; wrongCredentials.value = false },
+        onValueChange = { username.value = it; wrongCredentials.value = false },
         label = { Text(text = stringResource(id = R.string.username)) },
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
         isError = wrongCredentials.value,
@@ -157,7 +168,7 @@ fun UsernameText(username: MutableState<String>, wrongCredentials:MutableState<B
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun PaswordText(password: MutableState<String>, wrongCredentials:MutableState<Boolean>) {
+fun PasswordText(password: MutableState<String>, wrongCredentials: MutableState<Boolean>) {
     val passwordNode = AutofillNode(
         autofillTypes = listOf(AutofillType.Password),
         onFill = { password.value = it }
@@ -191,5 +202,8 @@ fun PaswordText(password: MutableState<String>, wrongCredentials:MutableState<Bo
 @Preview(showSystemUi = true)
 @Composable
 private fun Preview() {
-    InternalAuthScreen(server = Server("Server","openeclass.com"), navigator = EmptyDestinationsNavigator)
+    InternalAuthScreen(
+        server = Server("Server", "openeclass.com"),
+        navigator = EmptyDestinationsNavigator
+    )
 }

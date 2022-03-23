@@ -94,9 +94,10 @@ class CredentialsRepository @Inject constructor(private val dataStore: DataStore
                     val result = EclassApi.MobileApi.checkTokenStatus(it.token).awaitResponse()
                     Timber.i("TokenStatus: ${result.body()}")
                     if (result.body().toString().contains("EXPIRED")) {
-                        login(it)
-                        if (it.tokenExpired) {
+                        if (it.usesExternalAuth) {
                             setTokenExpired()
+                        } else {
+                            login(it)
                         }
                     }
                 }

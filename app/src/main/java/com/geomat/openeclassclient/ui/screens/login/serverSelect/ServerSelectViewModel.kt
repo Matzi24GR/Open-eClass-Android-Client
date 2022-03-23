@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.ui.Login.ServerSelect
+package com.geomat.openeclassclient.ui.screens.login.serverSelect
 
 import android.app.Application
 import android.content.Context
@@ -11,9 +11,9 @@ import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.network.DataTransferObjects.AuthType
 import com.geomat.openeclassclient.network.EclassApi
 import com.geomat.openeclassclient.network.interceptor
-import com.geomat.openeclassclient.ui.destinations.ExternalAuthScreenDestination
-import com.geomat.openeclassclient.ui.destinations.InternalAuthScreenDestination
-import com.geomat.openeclassclient.ui.destinations.ServerSelectScreenDestination
+import com.geomat.openeclassclient.ui.screens.destinations.ExternalAuthScreenDestination
+import com.geomat.openeclassclient.ui.screens.destinations.InternalAuthScreenDestination
+import com.geomat.openeclassclient.ui.screens.destinations.ServerSelectScreenDestination
 import com.ramcosta.composedestinations.spec.Direction
 import kotlinx.parcelize.Parcelize
 import retrofit2.Call
@@ -28,10 +28,11 @@ data class Server(var name: String = "", var url: String) : Parcelable
 enum class ServerStatus {
     ENABLED, DISABLED, UNKNOWN, CHECKING
 }
+
 @Parcelize
 data class AuthTypeParcel(val name: String, val url: String) : Parcelable
 
-class ServerSelectViewModel(application: Application): AndroidViewModel(application) {
+class ServerSelectViewModel(application: Application) : AndroidViewModel(application) {
 
     // TODO possible split with a server repository
 
@@ -43,12 +44,12 @@ class ServerSelectViewModel(application: Application): AndroidViewModel(applicat
     val currentDirection: MutableState<Direction> = mutableStateOf(ServerSelectScreenDestination())
 
     // Selected Server
-    val selectedServer =  mutableStateOf(Server("", ""))
+    val selectedServer = mutableStateOf(Server("", ""))
 
     val serverStatusMap = hashMapOf<Server, MutableState<ServerStatus>>()
 
     fun resetSelectedServer() {
-        selectedServer.value = Server("","")
+        selectedServer.value = Server("", "")
     }
 
     init {
@@ -72,9 +73,9 @@ class ServerSelectViewModel(application: Application): AndroidViewModel(applicat
                 .enqueue(object : Callback<String> {
                     override fun onFailure(call: Call<String>, t: Throwable) {}
                     override fun onResponse(call: Call<String>, response: Response<String>) {
-                        when(response.body()){
-                            "FAILED"-> serverStatusMap[server]?.value = ServerStatus.ENABLED
-                            "NOTENABLED"-> serverStatusMap[server]?.value = ServerStatus.DISABLED
+                        when (response.body()) {
+                            "FAILED" -> serverStatusMap[server]?.value = ServerStatus.ENABLED
+                            "NOTENABLED" -> serverStatusMap[server]?.value = ServerStatus.DISABLED
                             else -> serverStatusMap[server]?.value = ServerStatus.UNKNOWN
                         }
                     }
@@ -83,9 +84,12 @@ class ServerSelectViewModel(application: Application): AndroidViewModel(applicat
     }
 
     fun setDestination(authType: AuthType = AuthType()) {
-        if (authType.title.isBlank() && authType.url.isBlank()) currentDirection.value = InternalAuthScreenDestination(server = selectedServer.value)
-        else if (authType.url.isBlank()) currentDirection.value = InternalAuthScreenDestination(server = selectedServer.value, authName = authType.title)
-        else currentDirection.value = ExternalAuthScreenDestination(authType = AuthTypeParcel(authType.title, authType.url))
+        if (authType.title.isBlank() && authType.url.isBlank()) currentDirection.value =
+            InternalAuthScreenDestination(server = selectedServer.value)
+        else if (authType.url.isBlank()) currentDirection.value =
+            InternalAuthScreenDestination(server = selectedServer.value, authName = authType.title)
+        else currentDirection.value =
+            ExternalAuthScreenDestination(authType = AuthTypeParcel(authType.title, authType.url))
     }
 
     suspend fun getAuthTypes(server: State<Server>): List<AuthType> {
@@ -116,18 +120,20 @@ class ServerSelectViewModel(application: Application): AndroidViewModel(applicat
         interceptor.setHost(server.url)
         selectedServer.value = server
         Timber.i("Set Url: ${server.url}")
-        context.getSharedPreferences("login", Context.MODE_PRIVATE).edit().putString("url",server.url).apply()
+        context.getSharedPreferences("login", Context.MODE_PRIVATE).edit()
+            .putString("url", server.url).apply()
     }
 
     fun splitServerString(string: String): Server {
         val split = string.split("||")
-        return Server(split[0],split[1])
+        return Server(split[0], split[1])
     }
 
     fun getFilteredServerList(searchText: String): List<State<Server>> {
         if (searchText.isBlank()) return serverList
-        val result =  serverList.filter {
-            it.value.name.lowercase().contains(searchText.lowercase()) || it.value.url.lowercase().contains(searchText.lowercase())
+        val result = serverList.filter {
+            it.value.name.lowercase().contains(searchText.lowercase()) || it.value.url.lowercase()
+                .contains(searchText.lowercase())
         }
         Timber.i(result.toString())
         return result

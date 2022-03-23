@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.ui.calendar
+package com.geomat.openeclassclient.ui.screens.calendar
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.animateContentSize
@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.geomat.openeclassclient.domain.CalendarEvent
-import com.geomat.openeclassclient.ui.Announcements.HtmlText
+import com.geomat.openeclassclient.ui.components.HtmlText
 import com.ramcosta.composedestinations.annotation.Destination
 import kotlinx.coroutines.launch
 import java.text.DateFormat
@@ -39,27 +39,32 @@ private fun ScreenContent(data: State<List<CalendarEvent>?>) {
     val nextEvent = remember { mutableStateOf(-1) }
     val scope = rememberCoroutineScope()
 
+    // Event List
     data.value?.let {
         LazyColumn(Modifier.animateContentSize(), state = listState) {
             itemsIndexed(it) { index, item ->
                 if (index == nextEvent.value) {
                     Row(Modifier.fillMaxWidth()) {
-                        Divider(color = Color.Red, thickness = 4.dp, modifier = Modifier.padding(8.dp))
+                        Divider(
+                            color = Color.Red,
+                            thickness = 4.dp,
+                            modifier = Modifier.padding(8.dp)
+                        )
                     }
                 }
                 CalendarItem(item = item)
             }
         }
     }
+    // Auto scroll to current
     data.value?.let {
         nextEvent.value = getNextEventIndex(it)
     }
-
     nextEvent.value.let {
         if (it != -1) {
             LaunchedEffect(it) {
                 scope.launch {
-                    listState.scrollToItem(it,-100)
+                    listState.scrollToItem(it, -100)
                 }
             }
         }
@@ -67,7 +72,7 @@ private fun ScreenContent(data: State<List<CalendarEvent>?>) {
 
 }
 
-fun getNextEventIndex(list: List<CalendarEvent>) : Int {
+fun getNextEventIndex(list: List<CalendarEvent>): Int {
     val time = System.currentTimeMillis()
     list.forEachIndexed { index, event ->
         if (event.start >= time) {
@@ -80,24 +85,38 @@ fun getNextEventIndex(list: List<CalendarEvent>) : Int {
 @SuppressLint("SimpleDateFormat")
 @Composable
 private fun CalendarItem(item: CalendarEvent) {
-    Row(modifier = Modifier
-        .padding(12.dp)
-        .fillMaxWidth()
+    Row(
+        modifier = Modifier
+            .padding(12.dp)
+            .fillMaxWidth()
     ) {
+        // Time Card
         Card(
             modifier = Modifier
                 .padding(end = 4.dp)
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
-                .padding(2.dp)) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
+                    .padding(2.dp)
+            ) {
                 val yearFormat = SimpleDateFormat("y")
                 val monthFormat = SimpleDateFormat("MMM")
                 val dayNameFormat = SimpleDateFormat("E")
                 val dayFormat = SimpleDateFormat("d")
                 Text(text = dayNameFormat.format(item.start))
-                Surface(shape = CircleShape, color = MaterialTheme.colors.primary, modifier = Modifier.size(32.dp)) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-                        Text(text = dayFormat.format(item.start), style = TextStyle(fontSize = 22.sp))
+                Surface(
+                    shape = CircleShape,
+                    color = MaterialTheme.colors.primary,
+                    modifier = Modifier.size(32.dp)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = dayFormat.format(item.start),
+                            style = TextStyle(fontSize = 22.sp)
+                        )
                     }
                 }
                 Text(text = monthFormat.format(item.start))
@@ -110,9 +129,9 @@ private fun CalendarItem(item: CalendarEvent) {
                     Divider(Modifier.width(20.dp))
                     Text(text = SimpleDateFormat.getTimeInstance(DateFormat.SHORT).format(item.end))
                 }
+            }
         }
-        }
-
+        // Content Card
         Card {
             Column(Modifier.padding(8.dp)) {
                 Text(text = item.title)
@@ -123,10 +142,10 @@ private fun CalendarItem(item: CalendarEvent) {
 //                Text(text = item.url)
 //                Text(text = item.courseCode.toString())
 //                Text(text = item.id.toString())
-    
+
             }
         }
-        
+
     }
 }
 
@@ -142,7 +161,8 @@ private fun Preview() {
             Class = "class",
             event_type = "type",
             url = "url",
-            courseCode = "code"
+            courseCode = "code",
+            end = 2L
         )
     )
     val data = remember {

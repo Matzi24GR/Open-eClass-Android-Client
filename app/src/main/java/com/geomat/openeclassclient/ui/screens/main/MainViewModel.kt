@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.ui
+package com.geomat.openeclassclient.ui.screens.main
 
 import androidx.lifecycle.ViewModel
 import com.geomat.openeclassclient.repository.*
@@ -14,7 +14,7 @@ class MainViewModel @Inject constructor(
     private val userInfoRepository: UserInfoRepository,
     private val calendarEventRepository: CalendarEventRepository,
     private val credentialsRepository: CredentialsRepository
-    ) : ViewModel() {
+) : ViewModel() {
 
     suspend fun logout() {
         withContext(Dispatchers.IO) {

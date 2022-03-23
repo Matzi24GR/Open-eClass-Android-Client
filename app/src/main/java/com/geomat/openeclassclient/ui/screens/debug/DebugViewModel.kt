@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.ui.Debug
+package com.geomat.openeclassclient.ui.screens.debug
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,6 +15,12 @@ class DebugViewModel @Inject constructor(val repository: CredentialsRepository) 
     fun logout() {
         viewModelScope.launch {
             repository.logout()
+        }
+    }
+
+    fun refresh() {
+        viewModelScope.launch {
+            repository.checkTokenStatus()
         }
     }
 
