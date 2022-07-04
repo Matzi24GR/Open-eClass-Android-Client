@@ -14,23 +14,35 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.domain.CalendarEvent
 import com.geomat.openeclassclient.ui.components.HtmlText
+import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
 @Destination
 @Composable
-fun CalendarScreen(viewModel: CalendarViewModel = hiltViewModel()) {
+fun CalendarScreen(navigator: DestinationsNavigator, viewModel: CalendarViewModel = hiltViewModel()) {
     viewModel.refresh()
-    ScreenContent(data = viewModel.calendarEvents.observeAsState())
+    Scaffold(topBar = {
+        OpenEclassTopBar(
+            title = stringResource(id = R.string.calendar_tab),
+            navigator = navigator,
+            navigateBack = false
+        )
+    }) {
+        ScreenContent(data = viewModel.calendarEvents.observeAsState())
+    }
 }
 
 @Composable
