@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,6 +23,8 @@ import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
 import com.geomat.openeclassclient.ui.screens.main.TokenExpirationBanner
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.skydoves.landscapist.CircularReveal
+import com.skydoves.landscapist.glide.GlideImage
 
 @Destination(start = true)
 @Composable
@@ -56,11 +59,17 @@ private fun UserInfoCard(userInfo: State<UserInfo?>) {
     Card(elevation = 8.dp, modifier = Modifier.fillMaxWidth()) {
         Column {
             Row {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_default_user),
-                    contentDescription = "",
-                    Modifier.size(80.dp)
-                )
+                userInfo.value?.let {
+                    GlideImage(
+                        imageModel = it.imageUrl,
+                        contentScale = ContentScale.Crop,
+                        circularReveal = CircularReveal(),
+                        modifier = Modifier
+                            .width(80.dp)
+                            .height(80.dp)
+                            .padding(PaddingValues(0.dp, 0.dp, 8.dp, 8.dp)),
+                        failure = { Image(painter = painterResource(id = R.drawable.ic_default_user), contentDescription = "") }
+                    ) }
                 Column {
                     Text(text = userInfo.value?.fullName ?: "error")
                     Text(text = userInfo.value?.username ?: "error")
