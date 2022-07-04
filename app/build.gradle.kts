@@ -34,11 +34,11 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.1.1"
     }
-    compileSdk = 31
+    compileSdk = 32
     defaultConfig {
         applicationId = "com.geomat.openeclassclient"
         minSdk = 21
-        targetSdk = 31
+        targetSdk = 32
         versionCode = 11
         versionName = "0.7.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -56,6 +56,7 @@ android {
             applicationIdSuffix = ".debug"
         }
     }
+    namespace = "com.geomat.openeclassclient"
     buildFeatures {
         viewBinding = true
     }
@@ -79,7 +80,7 @@ dependencies {
     implementation("com.jakewharton.timber:timber:5.0.1")
 
     //Material
-    implementation("com.google.android.material:material:1.5.0")
+    implementation("com.google.android.material:material:1.6.1")
 
     //Retrofit
     implementation("com.squareup.retrofit2:retrofit:$retrofit")
@@ -101,13 +102,13 @@ dependencies {
     kapt("com.tickaroo.tikxml:processor:$tikXml")
 
     // Glide
-    implementation("com.github.skydoves:landscapist-glide:1.1.7")
+    implementation("com.github.skydoves:landscapist-glide:1.5.2")
 
     // JSoup
     implementation("org.jsoup:jsoup:1.14.3")
 
     // Android KTX
-    implementation("androidx.core:core-ktx:1.7.0")
+    implementation("androidx.core:core-ktx:1.8.0")
 
     // Room and Lifecycle dependencies
     implementation("androidx.room:room-runtime:$room")
@@ -140,13 +141,13 @@ dependencies {
     kapt("androidx.hilt:hilt-compiler:1.0.0")
 
     // Jetpack Compose
-    implementation("androidx.activity:activity-compose:1.4.0")
+    implementation("androidx.activity:activity-compose:1.5.0")
     implementation("androidx.compose.material:material:1.1.1")
     implementation("androidx.compose.animation:animation:1.1.1")
     implementation("androidx.compose.ui:ui-tooling:1.1.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0")
     androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.1.1")
-    implementation("androidx.appcompat:appcompat:1.4.1")
+    implementation("androidx.appcompat:appcompat:1.4.2")
     implementation("androidx.compose.runtime:runtime-livedata:$compose")
     implementation("androidx.compose.material:material-icons-extended:$compose")
 
