@@ -77,7 +77,7 @@ dependencies {
     val work = "1.0.1"
     val compose = "1.1.1"
     val hilt = "2.41"
-    val destinations = "1.3.3-beta"
+    val destinations = "1.5.13-beta"
 
 //    implementation fileTree(dir: "libs", include: ["*.jar"])
 
