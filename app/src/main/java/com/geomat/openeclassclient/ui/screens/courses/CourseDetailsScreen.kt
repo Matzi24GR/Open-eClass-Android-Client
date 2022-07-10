@@ -65,7 +65,9 @@ private fun CourseDetailsScreenContent(uiState: MutableState<CourseDetailsState>
                 infoCard(uiState)
             }
             items(it) {
-                ToolRow(name = it.name)
+                if (it.name.isNotBlank()) {
+                    ToolRow(name = it.name)
+                }
             }
         }
     }
