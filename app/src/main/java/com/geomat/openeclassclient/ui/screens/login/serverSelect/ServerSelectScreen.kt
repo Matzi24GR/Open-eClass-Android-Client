@@ -326,7 +326,9 @@ private fun ServerRow(server: State<Server>, viewModel: ServerSelectViewModel) {
                 authTypes.value.forEach {
                     Button(onClick = {
                         viewModel.setDestination(authType = it)
-                    }) {
+                    },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
                         Text(text = it.title)
                     }
                 }

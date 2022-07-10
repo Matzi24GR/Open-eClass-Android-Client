@@ -1,8 +1,6 @@
 package com.geomat.openeclassclient.ui.screens.login.internalAuth
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -81,7 +79,8 @@ fun InternalAuthScreen(
                     loading.value = true
                     connectionError.value = false
                     viewModel.login(username.value, password.value)
-                }
+                },
+                Modifier.padding(vertical = 64.dp).height(50.dp).fillMaxWidth(0.8f)
             ) {
                 Text(text = stringResource(id = R.string.login))
             }
@@ -163,6 +162,7 @@ fun UsernameText(username: MutableState<String>, wrongCredentials: MutableState<
                     }
                 }
             }
+            .padding(vertical = 8.dp).fillMaxWidth(0.8f)
     )
 }
 
@@ -195,7 +195,7 @@ fun PasswordText(password: MutableState<String>, wrongCredentials: MutableState<
                     }
                 }
             }
-
+            .fillMaxWidth(0.8f)
     )
 }
 

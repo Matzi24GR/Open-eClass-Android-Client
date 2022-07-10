@@ -3,18 +3,22 @@ package com.geomat.openeclassclient.ui.screens.home
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.domain.UserInfo
@@ -56,7 +60,7 @@ fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = hilt
 
 @Composable
 private fun UserInfoCard(userInfo: State<UserInfo?>) {
-    Card(elevation = 8.dp, modifier = Modifier.fillMaxWidth()) {
+    Surface(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)), elevation = 8.dp) {
         Column {
             Row {
                 userInfo.value?.let {
@@ -70,12 +74,12 @@ private fun UserInfoCard(userInfo: State<UserInfo?>) {
                             .padding(PaddingValues(0.dp, 0.dp, 8.dp, 8.dp)),
                         failure = { Image(painter = painterResource(id = R.drawable.ic_default_user), contentDescription = "") }
                     ) }
-                Column {
-                    Text(text = userInfo.value?.fullName ?: "error")
-                    Text(text = userInfo.value?.username ?: "error")
+                Column(Modifier.padding(start = 8.dp, top = 4.dp)) {
+                    Text(text = userInfo.value?.fullName ?: "error", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                    Text(text = userInfo.value?.username ?: "error", )
                 }
             }
-            Text(text = userInfo.value?.category ?: "error")
+            Text(text = userInfo.value?.category?.replace(" » ","\n") ?: "error", Modifier.padding(8.dp))
         }
     }
 }

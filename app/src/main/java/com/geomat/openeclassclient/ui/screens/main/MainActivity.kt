@@ -147,7 +147,7 @@ fun OpenEclassTopBar(
 
     if (navigateBack) {
         TopAppBar(
-            title = { Text(text = title) },
+            title = { Text(text = title, maxLines = 1, softWrap = false, overflow = TextOverflow.Ellipsis) },
             actions = actions,
             navigationIcon = {
                 if (navigateBack)
