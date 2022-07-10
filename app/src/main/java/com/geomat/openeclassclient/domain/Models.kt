@@ -1,5 +1,8 @@
 package com.geomat.openeclassclient.domain
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 data class Announcement(
     var id: String,                  // ex.  15 or s15 for system announcements
     var courseId: String?,           // ex.  DAI104 or null for system announcements
@@ -27,13 +30,16 @@ data class CalendarEvent(
     var url: String                 // ex.  "https://openeclass.uom.gr/modules/work/index.php?id=18&course=DAI104"
 )
 
+@Parcelize
 data class Course(
 
     val id: String,                 // ex. DAI107
 
     var title: String,              // ex.  Βάσεις Δεδομένων ΙΙ - ΠΛ0601
-    var desc: String                // ex.  ""
-)
+    var desc: String,               // ex.  ""
+    var imageUrl: String,
+    var tools: List<Tool>
+) : Parcelable
 
 data class UserInfo(
     var username: String,           // ex.  xyz2068
@@ -41,3 +47,9 @@ data class UserInfo(
     var category: String,           // ex.  Undergraduate » Comp Sci
     var imageUrl: String            // ex.  /template/default/img/default_256.png
 )
+
+@Parcelize
+data class Tool (
+    var isHandled: Boolean,
+    var name: String
+) : Parcelable

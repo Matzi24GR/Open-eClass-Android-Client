@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [DatabaseCalendarEvent::class,DatabaseCalendarSyncId::class,DatabaseCourse::class,DatabaseFeedUrl::class,DatabaseUserInfo::class,DatabaseAnnouncement::class,DatabaseAnnouncementReadStatus::class], version = 23,  exportSchema = false)
+@Database(entities = [DatabaseCalendarEvent::class,DatabaseCalendarSyncId::class,DatabaseCourse::class,DatabaseFeedUrl::class,DatabaseUserInfo::class,DatabaseAnnouncement::class,DatabaseAnnouncementReadStatus::class], version = 24,  exportSchema = true)
 abstract class EClassDatabase: RoomDatabase () {
 
     abstract val calendarEventDao: CalendarEventDao
@@ -28,7 +28,6 @@ abstract class EClassDatabase: RoomDatabase () {
                         EClassDatabase::class.java,
                         "eClass_database"
                     )
-                        .fallbackToDestructiveMigration()
                         .build()
                     INSTANCE = instance
                 }

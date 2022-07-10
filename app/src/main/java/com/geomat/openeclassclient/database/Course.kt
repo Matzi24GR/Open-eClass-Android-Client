@@ -1,9 +1,11 @@
 package com.geomat.openeclassclient.database
 
-import androidx.annotation.Nullable
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
 import com.geomat.openeclassclient.domain.Course
-
+import com.geomat.openeclassclient.domain.Tool
 
 @Entity(tableName = "courses_table")
 data class DatabaseCourse(
@@ -12,14 +14,21 @@ data class DatabaseCourse(
     val id: String,                  // ex. DAI107
 
     var title: String,               // ex.  Βάσεις Δεδομένων ΙΙ - ΠΛ0601
-    var desc: String                 // ex.  ""
+    var desc: String,                // ex.  ""
+
+    var imageUrl: String,
+    var tools: String
+
 )
 
 fun DatabaseCourse.asDomainModel(): Course {
+    val toolStrings = tools.split(";").toList()
     return Course(
         id = id,
         title = title,
-        desc = desc
+        desc = desc,
+        imageUrl = imageUrl,
+        tools = toolStrings.map { Tool(isHandled = false, name = it) }
     )
 }
 

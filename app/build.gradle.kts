@@ -42,6 +42,11 @@ android {
         versionCode = 11
         versionName = "0.7.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas".toString())
+            }
+        }
     }
     buildTypes {
         release {
@@ -113,6 +118,7 @@ dependencies {
     // Room and Lifecycle dependencies
     implementation("androidx.room:room-runtime:$room")
     kapt("androidx.room:room-compiler:$room")
+    implementation ("androidx.room:room-ktx:$room")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
 
     // WorkManager
