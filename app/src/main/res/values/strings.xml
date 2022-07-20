@@ -60,5 +60,10 @@
     <string name="tool_forum">Forum</string>
     <string name="tool_links">Links</string>
     <string name="tool_fa_list">Wall</string>
+    <string name="tool_conference">Chat</string>
+    <string name="tool_fa_commenting">Chat</string>
+    <string name="tool_lp">Learn Path</string>
+    <string name="tool_ebook">eBook</string>
+    <string name="tool_wiki">Wiki</string>
 
 </resources>

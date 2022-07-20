@@ -1,6 +1,7 @@
 package com.geomat.openeclassclient.domain
 
 import android.os.Parcelable
+import com.geomat.openeclassclient.R
 import kotlinx.parcelize.Parcelize
 
 data class Announcement(
@@ -49,7 +50,37 @@ data class UserInfo(
 )
 
 @Parcelize
-data class Tool (
-    var isHandled: Boolean,
-    var name: String
+data class Tool(
+    var isHandled: Boolean = false,
+    var name: String,
 ) : Parcelable
+
+enum class Tools(val value: String, val isHandled: Boolean, val path: String, val stringResource: Int) {
+    DOCUMENTS       ("docs",            false, "document", R.string.tool_docs),
+    ANNOUNCEMENTS   ("announcements",   false, "announcements", R.string.announcements_tab),
+    EXERCISES       ("exercise",        false, "exercise", R.string.tool_exercise),
+    GRADEBOOK       ("gradebook",       false, "gradebook", R.string.tool_gradebook),
+    GLOSSARY        ("glossary",        false, "glossary", R.string.tool_glossary),
+    LEARN_PATH      ("lp",              false, "learnPath", R.string.tool_lp),
+    MIND_MAP        ("mindmap",         false, "mindmap", R.string.tool_mindmap),
+    ASSIGNMENTS     ("assignments",     false, "work", R.string.tool_assignments),
+    QUESTIONNAIRES  ("questionnaire",   false, "questionnaire", R.string.tool_questionnaire),
+    EBOOK           ("ebook",           false, "ebook", R.string.tool_ebook),
+    CONFERENCE      ("conference",      false, "chat", R.string.tool_conference),
+    CALENDAR        ("calendar",        false, "agenda", R.string.calendar_tab),
+    BLOG            ("blog",            false, "blog", R.string.tool_blog),
+    MESSAGES        ("dropbox",         false, "message", R.string.tool_dropbox),
+    GROUPS          ("groups",          false, "group", R.string.tool_groups),
+    ATTENDANCE      ("attendance",      false, "attendance", R.string.tool_attendance),
+    MEDIA           ("videos",          false, "video", R.string.tool_videos),
+    PROGRESS        ("fa-trophy",       false, "progress", R.string.tool_fa_trophy),
+    FORUM           ("forum",           false, "forum", R.string.tool_forum),
+    LINKS           ("links",           false, "link", R.string.tool_links),
+    WALL            ("fa-list",         false, "wall", R.string.tool_fa_list),
+    CHAT            ("fa-commenting",   false, "chat", R.string.tool_fa_commenting),
+    WIKI            ("wiki",            false, "wiki", R.string.tool_wiki);
+
+    companion object {
+        fun from(s: String): Tools? = values().find { it.value == s }
+    }
+}

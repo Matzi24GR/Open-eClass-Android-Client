@@ -22,10 +22,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.domain.Course
 import com.geomat.openeclassclient.domain.Tool
+import com.geomat.openeclassclient.domain.Tools
 import com.geomat.openeclassclient.ui.components.HtmlText
+import com.geomat.openeclassclient.ui.screens.destinations.WebViewScreenDestination
 import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -49,24 +50,27 @@ fun CourseDetailsScreen(
         }
     ) {
         viewModel.refresh(course)
-        CourseDetailsScreenContent(viewModel.uiState)
+        CourseDetailsScreenContent(uiState = viewModel.uiState) {
+            navigator.navigate(WebViewScreenDestination(it, course))
+        }
     }
-
 }
 
 @Composable
-private fun CourseDetailsScreenContent(uiState: MutableState<CourseDetailsState>) {
+private fun CourseDetailsScreenContent(uiState: MutableState<CourseDetailsState>, onClick: (tool: String) -> Unit = {}) {
     if (uiState.value.loading) LinearProgressIndicator(Modifier.fillMaxWidth())
     uiState.value.course.tools.let {
         LazyColumn (modifier = Modifier
             .padding(8.dp)
             .animateContentSize()) {
             item {
-                infoCard(uiState)
+                InfoCard(uiState)
             }
             items(it) {
                 if (it.name.isNotBlank()) {
-                    ToolRow(name = it.name)
+                    ToolRow(name = it.name) {
+                        onClick(it.name)
+                    }
                 }
             }
         }
@@ -74,70 +78,55 @@ private fun CourseDetailsScreenContent(uiState: MutableState<CourseDetailsState>
 }
 
 @Composable
-private fun infoCard(uiState: MutableState<CourseDetailsState>) {
+private fun InfoCard(uiState: MutableState<CourseDetailsState>) {
     var expanded by remember { mutableStateOf(false) }
-    Surface(
-        Modifier
-            .padding(4.dp)
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .clickable { }
-            .animateContentSize()
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
+    if (uiState.value.course.desc.isNotEmpty() || uiState.value.course.desc.isNotEmpty()) {
+        Surface(
+            Modifier
                 .padding(4.dp)
-                .animateContentSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween,
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(8.dp))
+                .clickable { }
+                .animateContentSize()
         ) {
-            if (uiState.value.course.imageUrl.isNotBlank()) {
-                GlideImage(
-                    imageModel = uiState.value.course.imageUrl,
-                    contentScale = ContentScale.Crop,
-                    circularReveal = CircularReveal(),
-                )
-                HtmlText(html = uiState.value.course.desc,
-                    Modifier
-                        .padding(4.dp)
-                        .heightIn(0.dp, if (expanded) Int.MAX_VALUE.dp else 80.dp), isSystemInDarkTheme(), enableLinks = true)
-                IconButton(
-                    enabled = true,
-                    onClick = {expanded = !expanded},
-                    content = { if (expanded) Icon(Icons.Filled.KeyboardArrowUp,"") else Icon(Icons.Filled.KeyboardArrowDown,"")},
-                    modifier = Modifier.fillMaxWidth()
-                )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp)
+                    .animateContentSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween,
+            ) {
+                if (uiState.value.course.imageUrl.isNotBlank()) {
+                    GlideImage(
+                        imageModel = uiState.value.course.imageUrl,
+                        contentScale = ContentScale.Crop,
+                        circularReveal = CircularReveal(),
+                    )
+
+                    if (uiState.value.course.desc.isNotBlank()) {
+                        HtmlText(html = uiState.value.course.desc,
+                            Modifier
+                                .padding(4.dp)
+                                .heightIn(0.dp, if (expanded) Int.MAX_VALUE.dp else 80.dp), isSystemInDarkTheme(), enableLinks = true)
+                        IconButton(
+                            enabled = true,
+                            onClick = {expanded = !expanded},
+                            content = { if (expanded) Icon(Icons.Filled.KeyboardArrowUp,"") else Icon(Icons.Filled.KeyboardArrowDown,"")},
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+
+                }
             }
         }
     }
+
 }
 
 @Composable
 private fun ToolRow(name: String, onClick: () -> Unit = {}) {
-    val textId = remember {
-        when (name) {
-            "docs" -> R.string.tool_docs
-            "announcements" -> R.string.announcements_tab
-            "exercise" -> R.string.tool_exercise
-            "gradebook" -> R.string.tool_gradebook
-            "glossary" -> R.string.tool_glossary
-            "mindmap" -> R.string.tool_mindmap
-            "assignments" -> R.string.tool_assignments
-            "questionnaire" -> R.string.tool_questionnaire
-            "calendar" -> R.string.calendar_tab
-            "blog" -> R.string.tool_blog
-            "dropbox" -> R.string.tool_dropbox
-            "groups" -> R.string.tool_groups
-            "attendance" -> R.string.tool_attendance
-            "videos" -> R.string.tool_videos
-            "fa-trophy" -> R.string.tool_fa_trophy
-            "forum" -> R.string.tool_forum
-            "links" -> R.string.tool_links
-            "fa-list" -> R.string.tool_fa_list
-            else -> null
-        }
-    }
+    val tool: Tools? = Tools.from(name)
     Surface(
         Modifier
             .padding(4.dp, 2.dp)
@@ -153,9 +142,7 @@ private fun ToolRow(name: String, onClick: () -> Unit = {}) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            if (textId != null) {
-                Text(stringResource(id = textId), fontWeight = FontWeight.Bold, modifier = Modifier.width(400.dp))
-            }
+            Text(if (tool==null) name else stringResource(tool.stringResource), fontWeight = FontWeight.Bold, modifier = Modifier.width(400.dp))
         }
     }
 }
@@ -170,13 +157,13 @@ fun CourseDetailScreenPreview() {
         desc = "blah blah",
         imageUrl = "",
         tools = listOf(
-            Tool(false, "docs"),
-            Tool(false, "announcements"),
-            Tool(false, "assignements"),
-            Tool(false, "questionaire"),
-            Tool(false, "conference"),
-            Tool(false, "forum"),
+                Tool(false, "docs"),
+                Tool(false, "announcements"),
+                Tool(false, "assignments"),
+                Tool(false, "questionnaire"),
+                Tool(false, "conference"),
+                Tool(false, "forum"),
+            )
         )
-    )
     )))
 }

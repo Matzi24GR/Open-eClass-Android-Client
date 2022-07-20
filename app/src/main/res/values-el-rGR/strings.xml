@@ -60,4 +60,9 @@
     <string name="tool_forum">Συζητήσεις</string>
     <string name="tool_links">Σύνδεσμοι</string>
     <string name="tool_fa_list">Τοίχος</string>
+    <string name="tool_conference">Κουβεντούλα</string>
+    <string name="tool_fa_commenting">Συνομιλία</string>
+    <string name="tool_lp">Γραμμή μάθησης</string>
+    <string name="tool_ebook">Ηλεκτρονικό βιβλίο</string>
+    <string name="tool_wiki">"Σύστημα Wiki "</string>
 </resources>
