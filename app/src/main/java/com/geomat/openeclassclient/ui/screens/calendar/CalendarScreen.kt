@@ -145,7 +145,7 @@ private fun CalendarItem(item: CalendarEvent) {
         }
         // Content Card
         Card {
-            Column(Modifier.padding(8.dp)) {
+            Column(Modifier.padding(8.dp).fillMaxWidth()) {
                 Text(text = item.title)
                 HtmlText(html = item.content, darkThemeEnabled = isSystemInDarkTheme())
 //                Text(text = item.Class)

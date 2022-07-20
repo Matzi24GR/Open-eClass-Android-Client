@@ -6,11 +6,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -19,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.geomat.openeclassclient.BuildConfig
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.repository.Credentials
@@ -29,7 +30,11 @@ import com.geomat.openeclassclient.ui.screens.destinations.*
 import com.geomat.openeclassclient.ui.screens.login.serverSelect.AuthTypeParcel
 import com.geomat.openeclassclient.ui.screens.navDestination
 import com.geomat.openeclassclient.ui.theme.OpenEclassClientTheme
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
+import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.navigateTo
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
@@ -64,21 +69,29 @@ class MainActivity : ComponentActivity() {
 
 }
 
+@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialNavigationApi::class)
 @Composable
 fun OpenEclassApp(repository: CredentialsRepository) {
     val credentials = repository.credentialsFlow.collectAsState(initial = Credentials())
 
-    val navController = rememberNavController()
+    val navController = rememberAnimatedNavController()
     val showBottomBar = remember {
         mutableStateOf(false)
     }
+
+    val navHostEngine = rememberAnimatedNavHostEngine(
+        navHostContentAlignment = Alignment.TopCenter,
+        rootDefaultAnimations = RootNavGraphDefaultAnimations.ACCOMPANIST_FADING,
+    )
+
     Scaffold(
         bottomBar = { if (showBottomBar.value) BottomNav(navController = navController) }
     ) {
         DestinationsNavHost(
             navGraph = NavGraphs.root,
             navController = navController,
-            modifier = Modifier.padding(it)
+            modifier = Modifier.padding(it),
+            engine = navHostEngine
         )
         LaunchedEffect(Unit) {
             if (!credentials.value.isLoggedIn) {
@@ -134,7 +147,7 @@ fun OpenEclassTopBar(
 
     if (navigateBack) {
         TopAppBar(
-            title = { Text(text = title) },
+            title = { Text(text = title, maxLines = 1, softWrap = false, overflow = TextOverflow.Ellipsis) },
             actions = actions,
             navigationIcon = {
                 if (navigateBack)

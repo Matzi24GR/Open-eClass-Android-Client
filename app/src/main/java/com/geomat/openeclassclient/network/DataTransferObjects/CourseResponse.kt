@@ -39,7 +39,9 @@ fun CourseResponse.asDatabaseModel(): List<DatabaseCourse> {
         DatabaseCourse(
             id = it.code,
             title = it.title,
-            desc = it.description
+            desc = it.description,
+            imageUrl = "",
+            tools = ""
         )
     }
 }

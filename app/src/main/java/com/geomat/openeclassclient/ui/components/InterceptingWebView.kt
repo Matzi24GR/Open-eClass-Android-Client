@@ -16,9 +16,10 @@ import timber.log.Timber
 fun CustomWebView(url: String, viewModel: ExternalAuthViewModel = hiltViewModel(), navigator: DestinationsNavigator) {
     AndroidView(factory = { context ->
         WebView(context).apply {
+            val domain = url.replace("https://","").replace("http://","").replaceAfter("/","").replace("/","")
             webViewClient = TokenInterceptorWebViewClient(onSuccess = { url ->
                 Timber.i("Login Response: $url")
-                viewModel.setCredentials(url)
+                viewModel.setCredentials(url, domain)
                 navigator.navigate(NavGraphs.root)
             })
             loadUrl(url)

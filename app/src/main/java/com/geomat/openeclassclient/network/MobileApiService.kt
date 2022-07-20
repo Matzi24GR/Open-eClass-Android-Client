@@ -56,6 +56,11 @@ interface  MobileApiService {
             Call<CourseResponse>
 
     @FormUrlEncoded
+    @POST("modules/mobile/mtools.php")
+    fun getTools(@Field("token")token: String, @Query("course")courseId: String):
+            Call<ToolsResponse>
+
+    @FormUrlEncoded
     @POST("/modules/mobile/mlogin.php")
     fun checkTokenStatus(@Field("token")token: String):
             Call<String>
@@ -111,6 +116,9 @@ interface HtmlParserService {
     fun getAnnouncementPage(@Header("Cookie")token: String,
                             @Query("course")courseId: String
     ): Call<String>
+
+    @GET("/courses/{id}/")
+    fun getCoursePage(@Header("Cookie")token: String, @Path("id") courseId: String): Call<String>
 }
 
 object EclassApi {

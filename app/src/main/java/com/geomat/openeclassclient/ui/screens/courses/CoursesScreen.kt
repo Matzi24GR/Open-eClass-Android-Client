@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.domain.Course
+import com.geomat.openeclassclient.ui.screens.destinations.CourseDetailsScreenDestination
 import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -52,7 +53,9 @@ fun CourseListScreen(
         val data = viewModel.courses.observeAsState()
         data.value?.let {
             LazyColumn {
-                items(it) { course -> CourseRow(course = course) }
+                items(it) { course -> CourseRow(course = course) {
+                    navigator.navigate(CourseDetailsScreenDestination(course))
+                } }
             }
             if (it.isEmpty()) {
                 Text(text = stringResource(id = R.string.no_results_found))
@@ -64,13 +67,13 @@ fun CourseListScreen(
 }
 
 @Composable
-private fun CourseRow(course: Course) {
+private fun CourseRow(course: Course, onClick: () -> Unit = {}) {
     Surface(
         Modifier
             .padding(8.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .clickable { }
+            .clickable { onClick() }
 
     ) {
         val expanded by remember { mutableStateOf(false) }
@@ -114,7 +117,9 @@ private fun Preview() {
             Course(
                 "DAI107",
                 "Βάσεις Δεδομένων ΙΙ - ΠΛ0601",
-                ""
+                "",
+                "",
+                emptyList()
             )
         })
     }

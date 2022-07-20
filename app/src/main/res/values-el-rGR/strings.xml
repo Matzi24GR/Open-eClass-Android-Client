@@ -42,4 +42,27 @@
     <string name="connection_error">Σφάλμα Σύνδεσης</string>
     <string name="newTag">Νέο</string>
     <string name="about">Σχετικά με την εφαρμογή</string>
+    <string name="tool_docs">Έγγραφα</string>
+    <string name="tool_announcements">Ανακοινώσεις</string>
+    <string name="tool_exercise">Ασκήσεις</string>
+    <string name="tool_gradebook">Βαθμολόγιο</string>
+    <string name="tool_glossary">Γλωσσάριο</string>
+    <string name="tool_mindmap">Εννοιολογικός χάρτης</string>
+    <string name="tool_assignments">Εργασίες</string>
+    <string name="tool_questionnaire">Ερωτηματολόγια</string>
+    <string name="tool_calendar">Ημερολόγιο</string>
+    <string name="tool_blog">Ιστολόγιο</string>
+    <string name="tool_dropbox">Μηνύματα</string>
+    <string name="tool_groups">Ομάδες Χρηστών</string>
+    <string name="tool_attendance">Παρουσιολόγιο</string>
+    <string name="tool_videos">Πολυμέσα</string>
+    <string name="tool_fa_trophy">Πρόοδος</string>
+    <string name="tool_forum">Συζητήσεις</string>
+    <string name="tool_links">Σύνδεσμοι</string>
+    <string name="tool_fa_list">Τοίχος</string>
+    <string name="tool_conference">Κουβεντούλα</string>
+    <string name="tool_fa_commenting">Συνομιλία</string>
+    <string name="tool_lp">Γραμμή μάθησης</string>
+    <string name="tool_ebook">Ηλεκτρονικό βιβλίο</string>
+    <string name="tool_wiki">"Σύστημα Wiki "</string>
 </resources>

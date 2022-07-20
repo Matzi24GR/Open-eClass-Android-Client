@@ -42,5 +42,28 @@
     <string name="connection_error">Connection Error</string>
     <string name="newTag">New</string>
     <string name="about">About</string>
+    <string name="tool_docs">Documents</string>
+    <string name="tool_announcements">Announcements</string>
+    <string name="tool_exercise">Exercises</string>
+    <string name="tool_gradebook">Grades</string>
+    <string name="tool_glossary">Glossary</string>
+    <string name="tool_mindmap">Mind Map</string>
+    <string name="tool_assignments">Assignments</string>
+    <string name="tool_questionnaire">Questionnaires</string>
+    <string name="tool_calendar">Calendar</string>
+    <string name="tool_blog">Blog</string>
+    <string name="tool_dropbox">Messages</string>
+    <string name="tool_groups">User Groups</string>
+    <string name="tool_attendance">Attendance</string>
+    <string name="tool_videos">Media</string>
+    <string name="tool_fa_trophy">Progress</string>
+    <string name="tool_forum">Forum</string>
+    <string name="tool_links">Links</string>
+    <string name="tool_fa_list">Wall</string>
+    <string name="tool_conference">Chat</string>
+    <string name="tool_fa_commenting">Chat</string>
+    <string name="tool_lp">Learn Path</string>
+    <string name="tool_ebook">eBook</string>
+    <string name="tool_wiki">Wiki</string>
 
 </resources>

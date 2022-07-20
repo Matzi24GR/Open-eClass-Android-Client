@@ -36,8 +36,8 @@ fun DebugScreen(navigator: DestinationsNavigator, viewModel: DebugViewModel = hi
             DropDownCard(text = "Credentials") {
                 Button(onClick = {
                     viewModel.logout()
-                }) {
-                    Text(text = "Logout (KeepData)")
+                }, Modifier.fillMaxWidth()) {
+                    Text(text = "Logout (Delete Credentials)")
                 }
                 Button(onClick = {
                     scope.launch {
@@ -47,16 +47,15 @@ fun DebugScreen(navigator: DestinationsNavigator, viewModel: DebugViewModel = hi
                             } catch (e: CertPathValidatorException) {
                                 Timber.i(e)
                             }
-
                             viewModel.refresh()
                         }
                     }
-                }) {
-                    Text(text = "Logout (KeepAll)")
+                }, Modifier.fillMaxWidth()) {
+                    Text(text = "Logout (Invalidate Token)")
                 }
                 Button(onClick = {
                     viewModel.refresh()
-                }) {
+                }, Modifier.fillMaxWidth()) {
                     Text(text = "Check Token")
                 }
                 CredentialList(credentials = credentials.value)
