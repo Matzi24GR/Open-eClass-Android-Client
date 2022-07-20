@@ -14,7 +14,7 @@ class ExternalAuthViewModel @Inject constructor(val repo: CredentialsRepository)
 
     var authType = AuthTypeParcel("", "")
 
-    fun setCredentials(url: String) {
+    fun setCredentials(url: String, domain: String) {
 
         // Ex eclass-token:a961162%7C28207656262415267923679599
         //    eclass-token:[username]%7C[        token        ]
@@ -29,7 +29,8 @@ class ExternalAuthViewModel @Inject constructor(val repo: CredentialsRepository)
             token = token,
             isLoggedIn = true,
             selectedAuthName = authType.name,
-            selectedAuthUrl = authType.url
+            selectedAuthUrl = authType.url,
+            serverUrl = domain
         )
         viewModelScope.launch {
             repo.updateFullCredentials(credentials)
