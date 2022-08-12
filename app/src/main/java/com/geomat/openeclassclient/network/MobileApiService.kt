@@ -5,12 +5,21 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.tickaroo.tikxml.TikXml
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.*
+import java.io.File
+import java.util.concurrent.TimeUnit
+
 
 private const val BASE_URL = "https://localhost/"
 
@@ -18,6 +27,7 @@ var interceptor = HostSelectionInterceptor()
 
 val okHttpClient: OkHttpClient = OkHttpClient.Builder()
     .addInterceptor(interceptor)
+    .readTimeout(0,TimeUnit.SECONDS)
     .build()
 
 private val moshi = Moshi.Builder()
@@ -119,7 +129,52 @@ interface HtmlParserService {
 
     @GET("/courses/{id}/")
     fun getCoursePage(@Header("Cookie")token: String, @Path("id") courseId: String): Call<String>
+
+    @GET("/modules/document/")
+    fun getDocumentsPage(
+        @Header("Cookie")token: String,
+        @Query("course")courseId:String,
+        @Query("openDir")openDir:String?
+    ): Call<String>
+
+    @Streaming
+    @GET
+    suspend fun downloadFile(@Header("Cookie")token: String, @Url fileUrl: String?): ResponseBody
 }
+
+sealed class Download {
+    data class Progress(val percent: Int) : Download()
+    data class Finished(val file: File) : Download()
+}
+
+fun ResponseBody.downloadToFileWithProgress(directory: File, filename: String): Flow<Download> =
+    flow {
+        emit(Download.Progress(0))
+
+        val file = File(directory, "${filename}.${contentType()?.subtype()}")
+
+        byteStream().use { inputStream ->
+            file.outputStream().use { outputStream ->
+                val totalBytes = contentLength()
+                val data = ByteArray(8_192)
+                var progressBytes = 0L
+
+                while (true) {
+                    val bytes = inputStream.read(data)
+                    if (bytes == -1) {
+                        break
+                    }
+                    outputStream.write(data, 0, bytes)
+                    progressBytes += bytes
+
+                    emit(Download.Progress(percent = ((progressBytes * 100) / totalBytes).toInt()))
+                }
+            }
+        }
+        emit(Download.Finished(file))
+    }
+        .flowOn(Dispatchers.IO)
+        .distinctUntilChanged()
 
 object EclassApi {
     val MobileApi: MobileApiService by lazy {

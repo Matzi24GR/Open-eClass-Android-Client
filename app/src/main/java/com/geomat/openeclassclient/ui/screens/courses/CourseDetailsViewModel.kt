@@ -26,7 +26,7 @@ class CourseDetailsViewModel @Inject constructor(
         uiState.value = CourseDetailsState(true, course)
         viewModelScope.launch {
             try {
-                credentials.collect { it ->
+                credentials.collect {
                     repo.updateCourseDetails(it.token, course)
                     repo.getCourseFlow(course).collect { course ->
                         uiState.value = CourseDetailsState(false, course)

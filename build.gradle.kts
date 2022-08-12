@@ -12,7 +12,7 @@ buildscript {
         val navVersion = "2.4.1"
         val hiltVersion = "2.40.5"
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:$navVersion")
-        classpath("com.android.tools.build:gradle:7.2.1")
+        classpath("com.android.tools.build:gradle:7.2.2")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
         classpath("com.google.dagger:hilt-android-gradle-plugin:$hiltVersion")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")

@@ -34,17 +34,17 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.1.1"
     }
-    compileSdk = 32
+    compileSdk = 33
     defaultConfig {
         applicationId = "com.geomat.openeclassclient"
         minSdk = 21
-        targetSdk = 32
-        versionCode = 12
-        versionName = "0.8.0"
+        targetSdk = 33
+        versionCode = 13
+        versionName = "0.9.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         kapt {
             arguments {
-                arg("room.schemaLocation", "$projectDir/schemas".toString())
+                arg("room.schemaLocation", "$projectDir/schemas")
             }
         }
     }
@@ -59,6 +59,7 @@ android {
         }
         debug {
             applicationIdSuffix = ".debug"
+            versionNameSuffix = ".debug"
         }
     }
     namespace = "com.geomat.openeclassclient"
