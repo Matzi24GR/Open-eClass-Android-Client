@@ -49,7 +49,8 @@ fun ServerSelectScreen(
         OpenEclassTopBar(
             title = "Open Eclass Client",
             navigator = navigator,
-            navigateBack = false
+            navigateBack = false,
+            showMoreButtons = false
         )
     }) {
         ModalBottomSheetLayout(

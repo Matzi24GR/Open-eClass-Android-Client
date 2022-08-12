@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
             credentialsRepository.setInterceptor()
             credentialsRepository.credentialsFlow.collect {
                 runOnUiThread {
-                    setContent { OpenEclassClientTheme { OpenEclassApp(credentialsRepository, it.isLoggedIn) } }
+                    setContent { OpenEclassClientTheme { OpenEclassApp(it.isLoggedIn) } }
                 }
             }
             credentialsRepository.checkTokenStatus()
@@ -78,7 +78,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialNavigationApi::class)
 @Composable
-fun OpenEclassApp(repository: CredentialsRepository, isLoggedIn: Boolean) {
+fun OpenEclassApp(isLoggedIn: Boolean) {
     val navController = rememberAnimatedNavController()
     val showBottomBar = remember {
         mutableStateOf(false)
@@ -111,36 +111,45 @@ fun OpenEclassApp(repository: CredentialsRepository, isLoggedIn: Boolean) {
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun OpenEclassTopBar(
     title: String,
     navigator: DestinationsNavigator,
     navigateBack: Boolean = true,
-    viewModel: MainViewModel = hiltViewModel()
+    viewModel: MainViewModel? = hiltViewModel(),
+    showMoreButtons: Boolean = true
 ) {
     var showMenu by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+    val navController = rememberAnimatedNavController()
 
     val actions: @Composable RowScope.() -> Unit = {
-        IconButton(onClick = {
-            scope.launch {
-                viewModel.logout()
-            }
-            //navigator.navigate(NavGraphs.login)
-        }) {
-            Icon(Icons.Default.Logout, "")
-        }
-        IconButton(onClick = { showMenu = !showMenu }) {
-            Icon(Icons.Default.MoreVert, "")
-        }
-        DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
-            DropdownMenuItem(onClick = { navigator.navigate(AboutScreenDestination) }) {
-                Text(text = stringResource(id = R.string.about))
-            }
-            if (BuildConfig.DEBUG) {
-                DropdownMenuItem(onClick = { navigator.navigate(DebugScreenDestination) }) {
-                    Text(text = "DEBUG")
+        if (showMoreButtons) {
+            IconButton(onClick = {
+                scope.launch {
+                    viewModel?.logout()
                 }
+                //navigator.navigate(NavGraphs.login)
+            }) {
+                Icon(Icons.Default.Logout, "")
+            }
+            IconButton(onClick = { showMenu = !showMenu }) {
+                Icon(Icons.Default.MoreVert, "")
+            }
+            DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
+                DropdownMenuItem(onClick = { navigator.navigate(AboutScreenDestination) }) {
+                    Text(text = stringResource(id = R.string.about))
+                }
+                if (BuildConfig.DEBUG) {
+                    DropdownMenuItem(onClick = { navigator.navigate(DebugScreenDestination) }) {
+                        Text(text = "DEBUG")
+                    }
+                }
+            }
+        } else {
+            IconButton(onClick = { navigator.navigate(AboutScreenLoginDestination) }) {
+                Icon(Icons.Default.Info, "")
             }
         }
     }

@@ -20,7 +20,7 @@ fun ExternalAuthScreen(
     viewModel: ExternalAuthViewModel = hiltViewModel(),
     navigator: DestinationsNavigator
 ) {
-    Scaffold(topBar = { OpenEclassTopBar(title = authType.name, navigator = navigator) }) {
+    Scaffold(topBar = { OpenEclassTopBar(title = authType.name, navigator = navigator, showMoreButtons = false) }) {
         viewModel.authType = authType
         CustomWebView(authType.url, navigator = navigator)
     }

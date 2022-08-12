@@ -46,7 +46,8 @@ fun InternalAuthScreen(
         topBar = {
             OpenEclassTopBar(
                 title = authName.ifBlank { server.name },
-                navigator = navigator
+                navigator = navigator,
+                showMoreButtons = false
             )
         },
         scaffoldState = scaffoldState
