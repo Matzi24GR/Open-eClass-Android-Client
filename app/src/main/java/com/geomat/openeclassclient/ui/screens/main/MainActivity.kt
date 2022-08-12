@@ -20,6 +20,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.geomat.openeclassclient.BuildConfig
 import com.geomat.openeclassclient.R
@@ -28,15 +30,15 @@ import com.geomat.openeclassclient.repository.CredentialsRepository
 import com.geomat.openeclassclient.ui.screens.NavGraphs
 import com.geomat.openeclassclient.ui.screens.destinations.*
 import com.geomat.openeclassclient.ui.screens.login.serverSelect.AuthTypeParcel
-import com.geomat.openeclassclient.ui.screens.navDestination
 import com.geomat.openeclassclient.ui.theme.OpenEclassClientTheme
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
 import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
+import com.ramcosta.composedestinations.annotation.NavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.navigateTo
+import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -44,9 +46,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-const val LOGIN_NAV_GRAPH = "login"
 lateinit var clipboardManager: ClipboardManager
+
+@NavGraph
+annotation class LoginNavGraph(val start: Boolean = false)
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -56,11 +59,15 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { OpenEclassClientTheme { OpenEclassApp(credentialsRepository) } }
 
         val scope = CoroutineScope(Job() + Dispatchers.IO)
         scope.launch {
             credentialsRepository.setInterceptor()
+            credentialsRepository.credentialsFlow.collect {
+                runOnUiThread {
+                    setContent { OpenEclassClientTheme { OpenEclassApp(credentialsRepository, it.isLoggedIn) } }
+                }
+            }
             credentialsRepository.checkTokenStatus()
         }
         clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -71,9 +78,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialNavigationApi::class)
 @Composable
-fun OpenEclassApp(repository: CredentialsRepository) {
-    val credentials = repository.credentialsFlow.collectAsState(initial = Credentials())
-
+fun OpenEclassApp(repository: CredentialsRepository, isLoggedIn: Boolean) {
     val navController = rememberAnimatedNavController()
     val showBottomBar = remember {
         mutableStateOf(false)
@@ -88,19 +93,14 @@ fun OpenEclassApp(repository: CredentialsRepository) {
         bottomBar = { if (showBottomBar.value) BottomNav(navController = navController) }
     ) {
         DestinationsNavHost(
-            navGraph = NavGraphs.root,
+            navGraph = if (isLoggedIn) NavGraphs.root else NavGraphs.login,
             navController = navController,
             modifier = Modifier.padding(it),
             engine = navHostEngine
         )
-        LaunchedEffect(Unit) {
-            if (!credentials.value.isLoggedIn) {
-                navController.navigateTo(NavGraphs.login)
-            }
-        }
     }
-    val currentDestination: Destination? =
-        navController.currentBackStackEntryAsState().value?.navDestination
+    val currentDestination: NavDestination? =
+        navController.currentBackStackEntryAsState().value?.destination
     val bottomBarDestinations = remember {
         BottomBarDestination.values().map {
             it.direction.route
@@ -126,7 +126,7 @@ fun OpenEclassTopBar(
             scope.launch {
                 viewModel.logout()
             }
-            navigator.navigate(NavGraphs.login)
+            //navigator.navigate(NavGraphs.login)
         }) {
             Icon(Icons.Default.Logout, "")
         }
@@ -191,17 +191,17 @@ fun TokenExpirationBanner(navigator: DestinationsNavigator, credentials: Credent
 fun BottomNav(
     navController: NavController
 ) {
-    val currentDestination: Destination? =
-        navController.currentBackStackEntryAsState().value?.navDestination
+    val currentDestination: NavDestination? =
+        navController.currentBackStackEntryAsState().value?.destination
 
     BottomNavigation {
         BottomBarDestination.values().forEach { destination ->
             BottomNavigationItem(
                 selected = currentDestination == destination.direction,
                 onClick = {
-                    navController.navigateTo(destination.direction) {
+                    navController.navigate(destination.direction, fun NavOptionsBuilder.() {
                         launchSingleTop = true
-                    }
+                    })
                 },
                 icon = { Icon(destination.icon, stringResource(id = destination.label)) },
                 label = { Text(stringResource(id = destination.label,), maxLines = 1, overflow = TextOverflow.Ellipsis) }

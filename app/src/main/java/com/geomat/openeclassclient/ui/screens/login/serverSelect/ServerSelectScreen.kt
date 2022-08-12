@@ -25,7 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.network.DataTransferObjects.AuthType
 import com.geomat.openeclassclient.ui.screens.destinations.ServerSelectScreenDestination
-import com.geomat.openeclassclient.ui.screens.main.LOGIN_NAV_GRAPH
+import com.geomat.openeclassclient.ui.screens.main.LoginNavGraph
 import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -34,7 +34,8 @@ import timber.log.Timber
 import java.net.UnknownHostException
 
 @OptIn(ExperimentalMaterialApi::class)
-@Destination(navGraph = LOGIN_NAV_GRAPH, start = true)
+@Destination()
+@LoginNavGraph(start = true)
 @Composable
 fun ServerSelectScreen(
     navigator: DestinationsNavigator,

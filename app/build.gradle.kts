@@ -4,18 +4,7 @@ plugins {
     kotlin("kapt")
     id("kotlin-parcelize")
     id("dagger.hilt.android.plugin")
-    id("com.google.devtools.ksp") version "1.6.10-1.0.4" // Depends on your kotlin version
-}
-
-kotlin {
-    sourceSets {
-        debug {
-            kotlin.srcDir("build/generated/ksp/debug/kotlin")
-        }
-        release {
-            kotlin.srcDir("build/generated/ksp/release/kotlin")
-        }
-    }
+    id("com.google.devtools.ksp") version "1.7.10-1.0.6" // Depends on your kotlin version
 }
 
 android {
@@ -32,7 +21,7 @@ android {
         jvmTarget = "1.8"
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.1.1"
+        kotlinCompilerExtensionVersion = "1.3.0"
     }
     compileSdk = 33
     defaultConfig {
@@ -66,19 +55,26 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    applicationVariants.all {
+        kotlin.sourceSets {
+            getByName(name) {
+                kotlin.srcDir("build/generated/ksp/$name/kotlin")
+            }
+        }
+    }
 }
 
 dependencies {
 
     val tikXml = "0.8.13"
     val moshi = "1.13.0"
-    val coroutines = "1.6.0-native-mt"
-    val room = "2.4.2"
+    val coroutines = "1.6.4"
+    val room = "2.4.3"
     val retrofit = "2.9.0"
     val work = "1.0.1"
-    val compose = "1.1.1"
-    val hilt = "2.41"
-    val destinations = "1.5.13-beta"
+    val compose = "1.2.1"
+    val hilt = "2.43.2"
+    val destinations = "1.6.15-beta"
 
 //    implementation fileTree(dir: "libs", include: ["*.jar"])
 
@@ -108,10 +104,10 @@ dependencies {
     kapt("com.tickaroo.tikxml:processor:$tikXml")
 
     // Glide
-    implementation("com.github.skydoves:landscapist-glide:1.5.2")
+    implementation("com.github.skydoves:landscapist-glide:1.6.1")
 
     // JSoup
-    implementation("org.jsoup:jsoup:1.14.3")
+    implementation("org.jsoup:jsoup:1.15.2")
 
     // Android KTX
     implementation("androidx.core:core-ktx:1.8.0")
@@ -143,18 +139,17 @@ dependencies {
     // Hilt
     implementation("com.google.dagger:hilt-android:$hilt")
     kapt("com.google.dagger:hilt-android-compiler:$hilt")
-    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
     implementation("androidx.hilt:hilt-work:1.0.0")
     kapt("androidx.hilt:hilt-compiler:1.0.0")
 
     // Jetpack Compose
-    implementation("androidx.activity:activity-compose:1.5.0")
-    implementation("androidx.compose.material:material:1.1.1")
-    implementation("androidx.compose.animation:animation:1.1.1")
-    implementation("androidx.compose.ui:ui-tooling:1.1.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0")
-    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.1.1")
-    implementation("androidx.appcompat:appcompat:1.4.2")
+    implementation("androidx.activity:activity-compose:1.5.1")
+    implementation("androidx.compose.material:material:1.2.1")
+    implementation("androidx.compose.animation:animation:1.2.1")
+    implementation("androidx.compose.ui:ui-tooling:1.2.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
+    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.2.1")
+    implementation("androidx.appcompat:appcompat:1.5.0")
     implementation("androidx.compose.runtime:runtime-livedata:$compose")
     implementation("androidx.compose.material:material-icons-extended:$compose")
 
