@@ -31,7 +31,7 @@ val okHttpClient: OkHttpClient = OkHttpClient.Builder()
     .build()
 
 private val moshi = Moshi.Builder()
-    .add(KotlinJsonAdapterFactory())
+    .addLast(KotlinJsonAdapterFactory())
     .build()
 
 private val tikXml = TikXml.Builder().exceptionOnUnreadXml(false).build()

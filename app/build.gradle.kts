@@ -41,7 +41,8 @@ android {
         release {
             // TODO fix crash when true
             // possibly network related (tikxml?)
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
@@ -94,6 +95,7 @@ dependencies {
     // Moshi
     implementation("com.squareup.moshi:moshi:$moshi")
     implementation("com.squareup.moshi:moshi-kotlin:$moshi")
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshi")
 
     //  TikXml
     implementation("com.tickaroo.tikxml:annotation:$tikXml")
