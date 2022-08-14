@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,8 +26,12 @@ class AnnouncementScreenViewModel @Inject constructor(
 
     fun refresh() {
         viewModelScope.launch {
-            coursesRepository.refreshData(credentials.first().token)
-            repo.refreshData()
+            try {
+                coursesRepository.refreshData(credentials.first().token)
+                repo.refreshData()
+            } catch (e: AssertionError) {
+                Timber.e(e)
+            }
         }
     }
 
