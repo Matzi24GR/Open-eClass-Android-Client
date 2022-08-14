@@ -22,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.geomat.openeclassclient.domain.Course
 import com.geomat.openeclassclient.domain.Tools
 import com.geomat.openeclassclient.repository.Credentials
+import com.geomat.openeclassclient.ui.screens.main.MainNavGraph
 import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator

@@ -13,7 +13,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.ui.components.HtmlText
-import com.geomat.openeclassclient.ui.screens.main.LoginNavGraph
 import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -26,22 +25,6 @@ fun AboutScreen(navigator: DestinationsNavigator) {
         OpenEclassTopBar(
             title = stringResource(id = R.string.about),
             navigator = navigator
-        )
-    }) {
-        AboutScreenContent()
-    }
-}
-
-@LoginNavGraph
-@Destination
-@Composable
-fun AboutScreenLogin(navigator: DestinationsNavigator) {
-
-    Scaffold(topBar = {
-        OpenEclassTopBar(
-            title = stringResource(id = R.string.about),
-            navigator = navigator,
-            viewModel = null
         )
     }) {
         AboutScreenContent()

@@ -23,16 +23,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.domain.UserInfo
 import com.geomat.openeclassclient.repository.Credentials
+import com.geomat.openeclassclient.ui.screens.main.MainNavGraph
 import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
 import com.geomat.openeclassclient.ui.screens.main.TokenExpirationBanner
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.skydoves.landscapist.CircularReveal
 import com.skydoves.landscapist.glide.GlideImage
 
 @Destination()
-@RootNavGraph(start = true)
+@MainNavGraph(start = true)
 @Composable
 fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = hiltViewModel()) {
     Scaffold(topBar = {

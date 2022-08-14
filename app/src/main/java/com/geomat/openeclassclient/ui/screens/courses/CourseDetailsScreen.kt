@@ -28,6 +28,7 @@ import com.geomat.openeclassclient.domain.Tools
 import com.geomat.openeclassclient.ui.components.HtmlText
 import com.geomat.openeclassclient.ui.screens.destinations.DocumentScreenDestination
 import com.geomat.openeclassclient.ui.screens.destinations.WebViewScreenDestination
+import com.geomat.openeclassclient.ui.screens.main.MainNavGraph
 import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator

@@ -37,6 +37,7 @@ import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
 import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
 import com.ramcosta.composedestinations.annotation.NavGraph
+import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
@@ -48,8 +49,18 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 lateinit var clipboardManager: ClipboardManager
 
+@RootNavGraph
 @NavGraph
-annotation class LoginNavGraph(val start: Boolean = false)
+annotation class LoginNavGraph(
+    val start: Boolean = false
+)
+
+@RootNavGraph(start = true)
+@NavGraph
+annotation class MainNavGraph(
+    val start: Boolean = false,
+    val default: Boolean = true
+)
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -93,12 +104,18 @@ fun OpenEclassApp(isLoggedIn: Boolean) {
         bottomBar = { if (showBottomBar.value) BottomNav(navController = navController) }
     ) {
         DestinationsNavHost(
-            navGraph = if (isLoggedIn) NavGraphs.root else NavGraphs.login,
+            navGraph = NavGraphs.root,
             navController = navController,
             modifier = Modifier.padding(it),
             engine = navHostEngine
         )
+        LaunchedEffect(Unit) {
+            if (!isLoggedIn) {
+                navController.navigate(NavGraphs.login)
+            }
+        }
     }
+
     val currentDestination: NavDestination? =
         navController.currentBackStackEntryAsState().value?.destination
     val bottomBarDestinations = remember {
@@ -130,7 +147,7 @@ fun OpenEclassTopBar(
                 scope.launch {
                     viewModel?.logout()
                 }
-                //navigator.navigate(NavGraphs.login)
+                navigator.navigate(NavGraphs.login)
             }) {
                 Icon(Icons.Default.Logout, "")
             }
@@ -148,7 +165,7 @@ fun OpenEclassTopBar(
                 }
             }
         } else {
-            IconButton(onClick = { navigator.navigate(AboutScreenLoginDestination) }) {
+            IconButton(onClick = { navigator.navigate(AboutScreenDestination) }) {
                 Icon(Icons.Default.Info, "")
             }
         }
