@@ -29,7 +29,7 @@ class CourseDetailsViewModel @Inject constructor(
                 credentials.collect {
                     repo.updateCourseDetails(it.token, course)
                     repo.getCourseFlow(course).collect { course ->
-                        uiState.value = CourseDetailsState(false, course)
+                        uiState.value = CourseDetailsState(false, course ?: Course("","","","", emptyList()))
                     }
                 }
             } catch (e: AssertionError) {

@@ -139,15 +139,16 @@ fun OpenEclassTopBar(
 ) {
     var showMenu by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
-    val navController = rememberAnimatedNavController()
 
     val actions: @Composable RowScope.() -> Unit = {
         if (showMoreButtons) {
             IconButton(onClick = {
-                scope.launch {
+                navigator.navigate(NavGraphs.login) {
+                    popUpTo(NavGraphs.login.route)
+                }
+                scope.launch(Dispatchers.IO) {
                     viewModel?.logout()
                 }
-                navigator.navigate(NavGraphs.login)
             }) {
                 Icon(Icons.Default.Logout, "")
             }

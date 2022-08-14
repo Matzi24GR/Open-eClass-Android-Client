@@ -52,8 +52,8 @@ class CoursesRepository @Inject constructor(private val coursesDao: CoursesDao, 
         }
     }
 
-    fun getCourseFlow(course: Course) : Flow<Course> {
-        return coursesDao.getCourseWithId(courseId = course.id).map { it.asDomainModel() }
+    fun getCourseFlow(course: Course) : Flow<Course?> {
+        return coursesDao.getCourseWithId(courseId = course.id).map { it?.asDomainModel() }
     }
 
     suspend fun updateCourseDetails(token: String, course: Course) {

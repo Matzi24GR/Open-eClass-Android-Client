@@ -17,7 +17,7 @@ interface CoursesDao {
     fun insertAll(courses: List<DatabaseCourse>): List<Long>
 
     @Query("SELECT * FROM courses_table WHERE id = :courseId")
-    fun getCourseWithId(courseId: String): Flow<DatabaseCourse>
+    fun getCourseWithId(courseId: String): Flow<DatabaseCourse?>
 
     @Query("SELECT * FROM courses_table ORDER BY `title` ASC")
     fun getAllCourses(): LiveData<List<DatabaseCourse>>
