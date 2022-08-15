@@ -100,38 +100,36 @@ private fun BuiltInServerCard(
         Column(
             Modifier
                 .padding(12.dp)
-                .height(100.dp)
         ) {
-            Text(text = stringResource(id = R.string.choose_from_included_servers))
-            Row(Modifier.padding(top = 8.dp)) {
-                Button(
-                    onClick = { scope.launch { modalBottomSheetState.show() } },
-                    Modifier
-                        .weight(0.5F)
-                        .padding(end = 4.dp)
-                        .fillMaxHeight()
-                ) {
-                    Text(text = stringResource(id = R.string.server_list))
-                }
-                Button(
-                    onClick = {
-                        scope.launch {
-                            val types = viewModel.getAuthTypes(schServer)
-                            if (types.isEmpty()) viewModel.setDestination()
-                            if (types.size == 1) viewModel.setDestination(types[0])
-                            if (types.size > 1) authTypes.value = types
-                        }
-                    },
-                    Modifier
-                        .weight(0.5F)
-                        .padding(start = 4.dp)
-                        .fillMaxHeight()
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_e_taxi_logo1),
-                        contentDescription = ""
-                    )
-                }
+            Text(text = stringResource(R.string.select_greek_school_network))
+            Button(
+                onClick = {
+                    scope.launch {
+                        val types = viewModel.getAuthTypes(schServer)
+                        if (types.isEmpty()) viewModel.setDestination()
+                        if (types.size == 1) viewModel.setDestination(types[0])
+                        if (types.size > 1) authTypes.value = types
+                    }
+                },
+                Modifier
+                    .padding(24.dp)
+                    .fillMaxWidth()
+                    .height(80.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_e_taxi_logo1),
+                    contentDescription = ""
+                )
+            }
+            Text(text = stringResource(R.string.select_other_institutions))
+            Button(
+                onClick = { scope.launch { modalBottomSheetState.show() } },
+                Modifier
+                    .padding(24.dp)
+                    .fillMaxWidth()
+                    .height(60.dp)
+            ) {
+                Text(text = stringResource(id = R.string.server_list))
             }
         }
     }
