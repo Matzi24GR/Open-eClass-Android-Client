@@ -42,12 +42,13 @@ fun DocumentScreen(
     viewModel: DocumentsViewModel = hiltViewModel(),
     navigator: DestinationsNavigator,
     course: Course,
-    id: String = ""
+    id: String = "",
+    folderName: String = "",
 ) {
     Scaffold(
         topBar = {
             OpenEclassTopBar(
-                title = stringResource(id = R.string.tool_docs),
+                title = folderName.ifEmpty { stringResource(id = R.string.tool_docs) },
                 navigator = navigator,
                 navigateBack = true
             )
@@ -57,7 +58,7 @@ fun DocumentScreen(
         viewModel.refresh(course, id)
         DocumentsScreenContent(viewModel.uiState) {
             if (it.isDirectory) {
-                navigator.navigate(DocumentScreenDestination(course, it.id))
+                navigator.navigate(DocumentScreenDestination(course, it.id, it.name))
             } else {
                 viewModel.downloadFile(context, it.link, name = it.name)
             }
