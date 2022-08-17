@@ -8,26 +8,26 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class CalendarResponse(
     @Json(name = "success") val success: Int,
-    @Json(name = "result") val result: List<Result>,
-    @Json(name = "cid") val cid: String?
+    @Json(name = "result")  val result:  List<Result>,
+    @Json(name = "cid")     val cid:     String?
 )
 
 @JsonClass(generateAdapter = true)
 data class Result(
-    @Json(name = "id") val id: String,
-    @Json(name = "title") val title: String,
-    @Json(name = "start") val start: String,
-    @Json(name = "startdate") val startdate: String,
-    @Json(name = "duration") val duration: String,
-    @Json(name = "end") val end: String,
-    @Json(name = "content") val content: String,
-    @Json(name = "event_group") val event_group: String,
-    @Json(name = "class") val Class: String,
-    @Json(name = "event_type") val event_type: String,
-    @Json(name = "course") val course: String,
-    @Json(name = "start_hour") val start_hour: String,
-    @Json(name = "end_hour") val end_hour : String,
-    @Json(name = "url") val url: String
+    @Json (name = "id")          val id:          String,
+    @Json (name = "title")       val title:       String,
+    @Json (name = "start")       val start:       String,
+    @Json (name = "startdate")   val startdate:   String,
+    @Json (name = "duration")    val duration:    String,
+    @Json (name = "end")         val end:         String,
+    @Json (name = "content")     val content:     String,
+    @Json (name = "event_group") val event_group: String,
+    @Json (name = "class")       val Class:       String,
+    @Json (name = "event_type")  val event_type:  String,
+    @Json (name = "course")      val course:      String,
+    @Json (name = "start_hour")  val start_hour:  String,
+    @Json (name = "end_hour")    val end_hour:    String,
+    @Json (name = "url")         val url:         String,
 )
 
 fun CalendarResponse.asDatabaseModel(): List<DatabaseCalendarEvent> {
