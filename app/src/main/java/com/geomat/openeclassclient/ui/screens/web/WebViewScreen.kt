@@ -22,7 +22,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.geomat.openeclassclient.domain.Course
 import com.geomat.openeclassclient.domain.Tools
 import com.geomat.openeclassclient.repository.Credentials
-import com.geomat.openeclassclient.ui.screens.main.MainNavGraph
 import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -83,10 +82,37 @@ class WebViewClient(val handler: (url: String) -> Unit, val onFinished: () -> Un
         return false
     }
 
-    override fun onPageFinished(view: WebView?, url: String?) {
-        super.onPageFinished(view, url)
-        view?.loadUrl("javascript:document.getElementsByClassName(\"row title-row margin-top-thin\")[0].setAttribute(\"style\",\"display:none;\");")
-        view?.loadUrl("javascript:document.getElementsByClassName(\"footer\")[0].setAttribute(\"style\",\"display:none;\");")
-        onFinished()
+    private val css = """
+        .add-gutter{
+            padding: 8px;
+        }
+        
+        .title-row {
+            display:none;
+        }
+        
+        .footer {
+            display:none;
+        }
+    """
+
+    override fun onLoadResource(view: WebView?, url: String?) {
+        super.onLoadResource(view, url)
+        loadCSS(css, view)
     }
+
+    private fun loadCSS(css: String, view: WebView?) {
+        val code = """javascript:(function() { 
+            
+                var node = document.createElement('style');
+        
+                node.type = 'text/css';
+                node.innerHTML = '${css}';
+        
+                document.head.appendChild(node);
+             
+            })()"""
+        view?.loadUrl(code)
+    }
+
 }
