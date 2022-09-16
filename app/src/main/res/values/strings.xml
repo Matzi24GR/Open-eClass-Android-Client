@@ -66,5 +66,6 @@
     <string name="tool_wiki">Wiki</string>
     <string name="select_other_institutions">Or select any other institution from the included list below</string>
     <string name="select_greek_school_network">Are you a Greek School Student? Connect to the Greek School Network</string>
+    <string name="EditCourses">Edit Courses</string>
 
 </resources>

@@ -41,6 +41,20 @@ fun WebViewScreen(viewModel: WebViewModel = hiltViewModel(), navigator: Destinat
     }
 }
 
+@Destination
+@Composable
+fun BareWebViewScreen(viewModel: WebViewModel = hiltViewModel(), navigator: DestinationsNavigator, title: String, path: String) {
+    val credentials = viewModel.credentials.collectAsState(initial = Credentials())
+    Scaffold(
+        topBar = { OpenEclassTopBar(title = title, navigator = navigator) }
+    ) {
+        val url = "https://${credentials.value.serverUrl}/modules/${path}"
+        Timber.i("Web Url: $url")
+        WebViewScreenContent(url, credentials.value)
+    }
+}
+
+
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun WebViewScreenContent(url: String, credentials: Credentials) {

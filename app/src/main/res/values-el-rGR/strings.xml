@@ -66,4 +66,5 @@
     <string name="tool_wiki">"Σύστημα Wiki "</string>
     <string name="select_other_institutions">Ή επίλεξε κάποιο αλλο ίδρυμα από την ενσωματωμένη λίστα παρακάτω</string>
     <string name="select_greek_school_network">Είσαι μαθητής; Συνδέσου στο Πανελλήνιο Σχολικό Δίκτυο</string>
+    <string name="EditCourses">Διαχείριση Μαθημάτων</string>
 </resources>

@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.domain.Course
+import com.geomat.openeclassclient.ui.screens.destinations.BareWebViewScreenDestination
 import com.geomat.openeclassclient.ui.screens.destinations.CourseDetailsScreenDestination
 import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
 import com.ramcosta.composedestinations.annotation.Destination
@@ -44,11 +45,19 @@ fun CourseListScreen(
                 navigateBack = false
             )
         },
-//        floatingActionButton = {
-//        ExtendedFloatingActionButton(text = { Text(text = "Add Course") }, onClick = { /*TODO*/ }, icon = {
-//            Icon(Icons.Filled.Add, "add")
-//        })
-//    }
+        floatingActionButton = {
+            val title = stringResource(R.string.EditCourses)
+            ExtendedFloatingActionButton(text = { Text(text = title) }, onClick = {
+                navigator.navigate(
+                    BareWebViewScreenDestination(
+                        title,
+                        "/auth/courses.php"
+                    )
+                )
+            }, icon = {
+                Icon(Icons.Filled.Edit, "edit courses")
+            })
+    }
     ) {
         val data = viewModel.courses.observeAsState()
         data.value?.let {
@@ -125,10 +134,10 @@ private fun Preview() {
     }
     Scaffold(floatingActionButton = {
         ExtendedFloatingActionButton(
-            text = { Text(text = "Add Course") },
+            text = { Text(text = stringResource(R.string.EditCourses)) },
             onClick = { /*TODO*/ },
             icon = {
-                Icon(Icons.Filled.Add, "add")
+                Icon(Icons.Filled.Edit, "add")
             })
     }) {
         data.value.let {
