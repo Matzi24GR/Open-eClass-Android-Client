@@ -28,8 +28,8 @@ android {
         applicationId = "com.geomat.openeclassclient"
         minSdk = 21
         targetSdk = 33
-        versionCode = 16
-        versionName = "0.9.3"
+        versionCode = 17
+        versionName = "0.9.4"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         kapt {
             arguments {
@@ -39,8 +39,6 @@ android {
     }
     buildTypes {
         release {
-            // TODO fix crash when true
-            // possibly network related (tikxml?)
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(

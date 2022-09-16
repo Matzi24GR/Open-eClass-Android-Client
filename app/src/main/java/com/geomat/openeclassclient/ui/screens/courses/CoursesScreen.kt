@@ -47,16 +47,16 @@ fun CourseListScreen(
         },
         floatingActionButton = {
             val title = stringResource(R.string.EditCourses)
-            ExtendedFloatingActionButton(text = { Text(text = title) }, onClick = {
+            FloatingActionButton(onClick = {
                 navigator.navigate(
                     BareWebViewScreenDestination(
                         title,
                         "/auth/courses.php"
                     )
                 )
-            }, icon = {
+            }) {
                 Icon(Icons.Filled.Edit, "edit courses")
-            })
+            }
     }
     ) {
         val data = viewModel.courses.observeAsState()
