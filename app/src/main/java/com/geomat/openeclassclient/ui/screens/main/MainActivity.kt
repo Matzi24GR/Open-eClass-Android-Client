@@ -128,7 +128,6 @@ fun OpenEclassApp(isLoggedIn: Boolean) {
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun OpenEclassTopBar(
     title: String,
