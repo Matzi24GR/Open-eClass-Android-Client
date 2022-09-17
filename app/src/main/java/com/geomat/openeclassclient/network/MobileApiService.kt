@@ -27,7 +27,7 @@ var interceptor = HostSelectionInterceptor()
 
 val okHttpClient: OkHttpClient = OkHttpClient.Builder()
     .addInterceptor(interceptor)
-    .readTimeout(0,TimeUnit.SECONDS)
+    .writeTimeout(0,TimeUnit.SECONDS)
     .build()
 
 private val moshi = Moshi.Builder()
@@ -145,6 +145,7 @@ interface HtmlParserService {
 sealed class Download {
     data class Progress(val percent: Int) : Download()
     data class Finished(val file: File) : Download()
+    data class Cancelled(val msg: String = ""): Download()
 }
 
 fun ResponseBody.downloadToFileWithProgress(directory: File, filename: String): Flow<Download> =

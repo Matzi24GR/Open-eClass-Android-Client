@@ -56,24 +56,31 @@ fun DocumentScreen(
     ) {
         val context = LocalContext.current
         viewModel.refresh(course, id)
-        DocumentsScreenContent(viewModel.uiState) {
-            if (it.isDirectory) {
-                navigator.navigate(DocumentScreenDestination(course, it.id, it.name))
-            } else {
-                viewModel.downloadFile(context, it.link, name = it.name)
+        DocumentsScreenContent(
+            viewModel.uiState, 
+            onClick = {
+                if (it.isDirectory) {
+                    navigator.navigate(DocumentScreenDestination(course, it.id, it.name))
+                } else {
+                    viewModel.downloadFile(context, it.link, name = it.name)
+                }}, 
+            onCancel = {
+                viewModel.cancelDownload()
             }
-        }
+        )
     }
 
 }
 @Composable
-fun DocumentsScreenContent(uiState: MutableState<DocumentsState>, onClick: (document: Document) -> Unit = {}) {
+fun DocumentsScreenContent(uiState: MutableState<DocumentsState>, onClick: (document: Document) -> Unit = {}, onCancel: () -> Unit = {}) {
     val context = LocalContext.current
     if (uiState.value.loading) LinearProgressIndicator(Modifier.fillMaxWidth())
     uiState.value.download.let {
         when (it) {
             is Download.Progress -> {
-                LoadingDialog(percent = it.percent)
+                LoadingDialog(percent = it.percent) {
+                    onCancel()
+                }
             }
             is Download.Finished -> {
                 openFile(context, it.file)
@@ -109,22 +116,27 @@ fun DocumentItem(document: Document, modifier: Modifier) {
 }
 
 @Composable
-fun LoadingDialog(percent: Int) {
+fun LoadingDialog(percent: Int, onClick: () -> Unit) {
     Dialog(
         onDismissRequest = {},
         DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
     ) {
-        Box(
-            contentAlignment = Alignment.Center,
+        Column(
             modifier = Modifier
-                .size(100.dp)
                 .background(
                     MaterialTheme.colors.background,
                     shape = RoundedCornerShape(8.dp)
                 )
+                .padding(horizontal = 36.dp, vertical = 28.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CircularProgressIndicator(progress = percent / 100f, modifier = Modifier.size(80.dp))
-            Text(text = "${percent}%", style = TextStyle(fontSize = 22.sp))
+            Box(contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(progress = percent / 100f, modifier = Modifier.size(160.dp), strokeWidth = 6.dp)
+                Text(text = "${percent}%", style = TextStyle(fontSize = 28.sp))
+            }
+            Button(onClick = onClick, modifier = Modifier.padding(top = 36.dp).width(160.dp)) {
+                Text(text = "Cancel")
+            }
         }
     }
 }
@@ -139,6 +151,6 @@ fun openFile(context: Context, file: File) {
     Timber.i(uri.toString())
     intent.action = Intent.ACTION_VIEW
     intent.data = uri
-    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     context.startActivity(intent)
 }

@@ -13,7 +13,9 @@ import com.geomat.openeclassclient.network.downloadToFileWithProgress
 import com.geomat.openeclassclient.repository.Credentials
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import retrofit2.await
 import timber.log.Timber
@@ -26,6 +28,8 @@ class DocumentsViewModel @Inject constructor(
 
     var uiState: MutableState<DocumentsState> = mutableStateOf(DocumentsState())
         private set
+
+    private var downloadJob: Job = Job()
 
     fun refresh(course: Course, id: String) {
         DocumentsState(loading = true)
@@ -43,18 +47,20 @@ class DocumentsViewModel @Inject constructor(
         }
     }
 
-    fun downloadFile(context: Context, url: String, name: String) {
-        viewModelScope.launch {
-            credentials.collect() {
-                try {
-                    EclassApi.HtmlParser.downloadFile("PHPSESSID=${it.token}", url)
-                        .downloadToFileWithProgress(context.filesDir,name).collect { download ->
-                            uiState.value = DocumentsState(list = uiState.value.list, download = download, loading = false)
-                        }
-                } catch (e: Exception) {
-                    Timber.e(e)
-                }
+    fun cancelDownload() {
+        downloadJob.cancel()
+        uiState.value = DocumentsState(false, uiState.value.list, Download.Cancelled())
+    }
 
+    fun downloadFile(context: Context, url: String, name: String) {
+        downloadJob = viewModelScope.launch {
+            try {
+                EclassApi.HtmlParser.downloadFile("PHPSESSID=${credentials.first().token}", url)
+                    .downloadToFileWithProgress(context.filesDir,name).collect { download ->
+                        uiState.value = DocumentsState(list = uiState.value.list, download = download, loading = false)
+                    }
+            } catch (e: Exception) {
+                Timber.e(e)
             }
         }
     }
