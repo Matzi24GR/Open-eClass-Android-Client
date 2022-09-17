@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.geomat.openeclassclient.repository.CredentialsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,6 +22,12 @@ class DebugViewModel @Inject constructor(val repository: CredentialsRepository) 
     fun refresh() {
         viewModelScope.launch {
             repository.checkTokenStatus()
+        }
+    }
+
+    fun getNewToken() {
+        viewModelScope.launch {
+            repository.login(credentials.first())
         }
     }
 

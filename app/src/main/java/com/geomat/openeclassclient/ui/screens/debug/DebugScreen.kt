@@ -58,6 +58,11 @@ fun DebugScreen(navigator: DestinationsNavigator, viewModel: DebugViewModel = hi
                 }, Modifier.fillMaxWidth()) {
                     Text(text = "Check Token")
                 }
+                Button(onClick = {
+                    viewModel.getNewToken()
+                }, Modifier.fillMaxWidth()) {
+                    Text(text = "Get New Token")
+                }
                 CredentialList(credentials = credentials.value)
             }
         }
