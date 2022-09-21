@@ -17,6 +17,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.*
+import timber.log.Timber
 import java.io.File
 import java.util.concurrent.TimeUnit
 
@@ -154,25 +155,33 @@ fun ResponseBody.downloadToFileWithProgress(directory: File, folder: String, fil
 
         val file = File(directory, "/$folder/${filename}.${contentType()?.subtype()}")
 
-        byteStream().use { inputStream ->
-            file.outputStream().use { outputStream ->
-                val totalBytes = contentLength()
-                val data = ByteArray(8_192)
-                var progressBytes = 0L
+        Timber.i("Cached File: ${file.length()}, ToDownloadFile: ${contentLength()}")
 
-                while (true) {
-                    val bytes = inputStream.read(data)
-                    if (bytes == -1) {
-                        break
+        if (file.length() == contentLength()) {
+            emit(Download.Finished(file))
+            close()
+        } else {
+            byteStream().use { inputStream ->
+                file.outputStream().use { outputStream ->
+                    val totalBytes = contentLength()
+                    val data = ByteArray(8_192)
+                    var progressBytes = 0L
+
+                    while (true) {
+                        val bytes = inputStream.read(data)
+                        if (bytes == -1) {
+                            break
+                        }
+                        outputStream.write(data, 0, bytes)
+                        progressBytes += bytes
+
+                        emit(Download.Progress(percent = ((progressBytes * 100) / totalBytes).toInt()))
                     }
-                    outputStream.write(data, 0, bytes)
-                    progressBytes += bytes
-
-                    emit(Download.Progress(percent = ((progressBytes * 100) / totalBytes).toInt()))
                 }
             }
+            emit(Download.Finished(file))
         }
-        emit(Download.Finished(file))
+
     }
         .flowOn(Dispatchers.IO)
         .distinctUntilChanged()
