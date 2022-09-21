@@ -118,8 +118,8 @@ fun DocumentItem(document: Document, modifier: Modifier) {
 @Composable
 fun LoadingDialog(percent: Int, onClick: () -> Unit) {
     Dialog(
-        onDismissRequest = {},
-        DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+        onDismissRequest = onClick,
+        DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)
     ) {
         Column(
             modifier = Modifier
@@ -134,7 +134,9 @@ fun LoadingDialog(percent: Int, onClick: () -> Unit) {
                 CircularProgressIndicator(progress = percent / 100f, modifier = Modifier.size(160.dp), strokeWidth = 6.dp)
                 Text(text = "${percent}%", style = TextStyle(fontSize = 28.sp))
             }
-            Button(onClick = onClick, modifier = Modifier.padding(top = 36.dp).width(160.dp)) {
+            Button(onClick = onClick, modifier = Modifier
+                .padding(top = 36.dp)
+                .width(160.dp)) {
                 Text(text = "Cancel")
             }
         }
