@@ -46,6 +46,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.io.File
+import java.time.Instant
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 lateinit var clipboardManager: ClipboardManager
 
@@ -83,6 +86,37 @@ class MainActivity : ComponentActivity() {
         }
         clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
+    }
+
+    private fun deleteFiles() {
+        // Cached Files in /temp folder
+        val tempDir = File(filesDir, "/temp")
+        var files = tempDir.listFiles()
+        if (files != null) {
+            for (file: File in files) {
+                if (file.lastModified() < Instant.now().toEpochMilli() - TimeUnit.MINUTES.toMillis(60) )
+                    file.delete()
+            }
+        }
+        // Files download by older versions, TODO: Remove after a while
+        files = filesDir.listFiles()
+        if (files != null) {
+            for (file: File in files) {
+                if (file.isFile) {
+                    file.delete()
+                }
+            }
+        }
+    }
+
+    override fun onStart() {
+        deleteFiles()
+        super.onStart()
+    }
+
+    override fun onDestroy() {
+        deleteFiles()
+        super.onDestroy()
     }
 
 }

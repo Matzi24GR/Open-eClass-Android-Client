@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.io.File
 
 @HiltAndroidApp
 class EClassApplication : Application() {
@@ -25,6 +26,7 @@ class EClassApplication : Application() {
     private fun delayedInit() = applicationScope.launch {
         createNotificationChannel()
         setupRecurringWork()
+        setupFolders()
     }
 
     private fun setupRecurringWork() {
@@ -59,6 +61,13 @@ class EClassApplication : Application() {
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun setupFolders() {
+        val tempFolder = File(applicationContext.filesDir, "temp")
+        if (!tempFolder.exists()) {
+            tempFolder.mkdirs()
         }
     }
 }

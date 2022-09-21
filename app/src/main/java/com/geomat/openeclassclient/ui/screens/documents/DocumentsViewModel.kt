@@ -56,7 +56,7 @@ class DocumentsViewModel @Inject constructor(
         downloadJob = viewModelScope.launch {
             try {
                 EclassApi.HtmlParser.downloadFile("PHPSESSID=${credentials.first().token}", url)
-                    .downloadToFileWithProgress(context.filesDir,name).collect { download ->
+                    .downloadToFileWithProgress(context.filesDir, "temp", name).collect { download ->
                         uiState.value = DocumentsState(list = uiState.value.list, download = download, loading = false)
                     }
             } catch (e: Exception) {

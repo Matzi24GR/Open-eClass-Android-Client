@@ -148,11 +148,11 @@ sealed class Download {
     data class Cancelled(val msg: String = ""): Download()
 }
 
-fun ResponseBody.downloadToFileWithProgress(directory: File, filename: String): Flow<Download> =
+fun ResponseBody.downloadToFileWithProgress(directory: File, folder: String, filename: String): Flow<Download> =
     flow {
         emit(Download.Progress(0))
 
-        val file = File(directory, "${filename}.${contentType()?.subtype()}")
+        val file = File(directory, "/$folder/${filename}.${contentType()?.subtype()}")
 
         byteStream().use { inputStream ->
             file.outputStream().use { outputStream ->
