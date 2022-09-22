@@ -13,6 +13,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -26,6 +27,9 @@ import com.geomat.openeclassclient.repository.Credentials
 import com.geomat.openeclassclient.ui.screens.main.MainNavGraph
 import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
 import com.geomat.openeclassclient.ui.screens.main.TokenExpirationBanner
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.placeholder
+import com.google.accompanist.placeholder.shimmer
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.skydoves.landscapist.animation.circular.CircularRevealPlugin
@@ -46,7 +50,10 @@ fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = hilt
     }) {
         val userInfo = viewModel.userInfo.observeAsState()
         val credentials = viewModel.credentialFlow.collectAsState(initial = Credentials())
-        Column(Modifier.animateContentSize().padding(it)) {
+        Column(
+            Modifier
+                .animateContentSize()
+                .padding(it)) {
             if (credentials.value.tokenExpired) TokenExpirationBanner(navigator, credentials.value)
             Column(
                 Modifier
@@ -64,31 +71,40 @@ fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = hilt
 
 @Composable
 private fun UserInfoCard(userInfo: State<UserInfo?>) {
-    Surface(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)), elevation = 8.dp) {
+    Surface(modifier = Modifier
+        .fillMaxWidth()
+        .clip(RoundedCornerShape(16.dp)), elevation = 8.dp) {
+        val surfaceColor = MaterialTheme.colors.background
+        val highlightColor = Color.Gray
         Column {
             Row {
-                userInfo.value?.let {
-                    val surfaceColor = MaterialTheme.colors.surface
-                    val highlightColor = MaterialTheme.colors.onSurface
-                    GlideImage(
-                        imageModel = it.imageUrl,
-                        component = rememberImageComponent {
-                            CircularRevealPlugin()
-                            +ShimmerPlugin(baseColor = surfaceColor, highlightColor = highlightColor)
-                        },
-                        modifier = Modifier
-                            .width(80.dp)
-                            .height(80.dp)
-                            .padding(PaddingValues(0.dp, 0.dp, 8.dp, 8.dp))
-                            .clip(RoundedCornerShape(bottomEnd = 16.dp)),
-                        failure = { Image(painter = painterResource(id = R.drawable.ic_default_user), contentDescription = "") }
-                    ) }
+                GlideImage(
+                    imageModel = userInfo.value?.imageUrl,
+                    component = rememberImageComponent {
+                        CircularRevealPlugin()
+                        +ShimmerPlugin(baseColor = surfaceColor, highlightColor = highlightColor)
+                    },
+                    modifier = Modifier
+                        .width(80.dp)
+                        .height(80.dp)
+                        .padding(PaddingValues(0.dp, 0.dp, 8.dp, 8.dp))
+                        .clip(RoundedCornerShape(bottomEnd = 16.dp)),
+                    failure = { Image(painter = painterResource(id = R.drawable.ic_default_user), contentDescription = "") }
+                )
                 Column(Modifier.padding(start = 8.dp, top = 4.dp)) {
-                    Text(text = userInfo.value?.fullName ?: "error", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                    Text(text = userInfo.value?.username ?: "error")
+                    Text(text = userInfo.value?.fullName ?: "John Smith", fontWeight = FontWeight.Bold, fontSize = 18.sp, modifier = Modifier.padding(bottom = 4.dp).placeholder(visible = userInfo.value == null, surfaceColor, shape = RoundedCornerShape(4.dp), highlight = PlaceholderHighlight.shimmer(highlightColor)))
+                    Text(text = userInfo.value?.username ?: "xyz2068", Modifier.placeholder(visible = userInfo.value == null, surfaceColor, shape = RoundedCornerShape(4.dp),  highlight = PlaceholderHighlight.shimmer(highlightColor)))
                 }
             }
-            Text(text = userInfo.value?.category?.replace(" » ","\n") ?: "error", Modifier.padding(8.dp))
+            Text(text = userInfo.value?.category?.replace(" » ","\n") ?: "Undergraduate » Comp Sci",
+                Modifier
+                    .padding(8.dp)
+                    .placeholder(
+                        visible = userInfo.value == null,
+                        surfaceColor,
+                        shape = RoundedCornerShape(4.dp),
+                        highlight = PlaceholderHighlight.shimmer(highlightColor)
+                    ))
         }
     }
 }
@@ -101,7 +117,7 @@ private fun Preview() {
             UserInfo(
                 "xyz2068",
                 "John Smith",
-                "Undergraduate » Comp Sci",
+                "Undergraduate Comp Sci",
                 "/template/default/img/default_256.png"
             )
         )

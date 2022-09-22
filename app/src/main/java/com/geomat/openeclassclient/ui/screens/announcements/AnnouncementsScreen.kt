@@ -56,11 +56,11 @@ fun AnnouncementScreen(
             navigator = navigator,
             navigateBack = false
         )
-    }) {
-
+    }) { paddingValues ->
         ModalBottomSheetLayout(
             sheetContent = { BottomSheet(announcement = currentAnnouncement) },
-            sheetState = modalBottomSheetState
+            sheetState = modalBottomSheetState,
+            modifier = Modifier.padding(paddingValues)
         ) {
             // Setup Data
             val data = viewModel.announcements.observeAsState()
@@ -86,6 +86,19 @@ fun AnnouncementScreen(
                 // No results
                 if (it.isEmpty()) {
                     Text(text = stringResource(id = R.string.no_results_found))
+//                    val surfaceColor = MaterialTheme.colors.surface
+//                    val highlightColor = MaterialTheme.colors.onSurface
+//                    Column(modifier = Modifier.padding(paddingValues).padding(8.dp)) {
+//                        for (i in 1..20) {
+//                            Box(
+//                                modifier = Modifier.clip(RoundedCornerShape(16.dp)).padding(8.dp).fillMaxWidth().height(80.dp).placeholder(
+//                                    visible = true,
+//                                    highlight = PlaceholderHighlight.shimmer(highlightColor),
+//                                    color = surfaceColor
+//                                )
+//                            )
+//                        }
+//                    }
                 }
             }
         }
