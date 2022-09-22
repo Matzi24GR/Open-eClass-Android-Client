@@ -4,6 +4,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -12,7 +13,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -28,10 +28,12 @@ import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
 import com.geomat.openeclassclient.ui.screens.main.TokenExpirationBanner
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.skydoves.landscapist.CircularReveal
+import com.skydoves.landscapist.animation.circular.CircularRevealPlugin
+import com.skydoves.landscapist.components.rememberImageComponent
 import com.skydoves.landscapist.glide.GlideImage
+import com.skydoves.landscapist.placeholder.shimmer.ShimmerPlugin
 
-@Destination()
+@Destination
 @MainNavGraph(start = true)
 @Composable
 fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = hiltViewModel()) {
@@ -44,7 +46,7 @@ fun HomeScreen(navigator: DestinationsNavigator, viewModel: HomeViewModel = hilt
     }) {
         val userInfo = viewModel.userInfo.observeAsState()
         val credentials = viewModel.credentialFlow.collectAsState(initial = Credentials())
-        Column(Modifier.animateContentSize()) {
+        Column(Modifier.animateContentSize().padding(it)) {
             if (credentials.value.tokenExpired) TokenExpirationBanner(navigator, credentials.value)
             Column(
                 Modifier
@@ -66,19 +68,24 @@ private fun UserInfoCard(userInfo: State<UserInfo?>) {
         Column {
             Row {
                 userInfo.value?.let {
+                    val surfaceColor = MaterialTheme.colors.surface
+                    val highlightColor = MaterialTheme.colors.onSurface
                     GlideImage(
                         imageModel = it.imageUrl,
-                        contentScale = ContentScale.Crop,
-                        circularReveal = CircularReveal(),
+                        component = rememberImageComponent {
+                            CircularRevealPlugin()
+                            +ShimmerPlugin(baseColor = surfaceColor, highlightColor = highlightColor)
+                        },
                         modifier = Modifier
                             .width(80.dp)
                             .height(80.dp)
-                            .padding(PaddingValues(0.dp, 0.dp, 8.dp, 8.dp)),
+                            .padding(PaddingValues(0.dp, 0.dp, 8.dp, 8.dp))
+                            .clip(RoundedCornerShape(bottomEnd = 16.dp)),
                         failure = { Image(painter = painterResource(id = R.drawable.ic_default_user), contentDescription = "") }
                     ) }
                 Column(Modifier.padding(start = 8.dp, top = 4.dp)) {
                     Text(text = userInfo.value?.fullName ?: "error", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                    Text(text = userInfo.value?.username ?: "error", )
+                    Text(text = userInfo.value?.username ?: "error")
                 }
             }
             Text(text = userInfo.value?.category?.replace(" » ","\n") ?: "error", Modifier.padding(8.dp))

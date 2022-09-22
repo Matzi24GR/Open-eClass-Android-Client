@@ -33,8 +33,11 @@ import com.geomat.openeclassclient.ui.screens.destinations.WebViewScreenDestinat
 import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.skydoves.landscapist.CircularReveal
+import com.skydoves.landscapist.ImageOptions
+import com.skydoves.landscapist.animation.circular.CircularRevealPlugin
+import com.skydoves.landscapist.components.rememberImageComponent
 import com.skydoves.landscapist.glide.GlideImage
+import com.skydoves.landscapist.placeholder.shimmer.ShimmerPlugin
 
 @Destination
 @Composable
@@ -51,9 +54,9 @@ fun CourseDetailsScreen(
                 navigateBack = true
             )
         }
-    ) {
+    ) { paddingValues ->
         viewModel.refresh(course)
-        CourseDetailsScreenContent(uiState = viewModel.uiState) {
+        CourseDetailsScreenContent(uiState = viewModel.uiState, modifier = Modifier.padding(paddingValues)) {
             if (it == Tools.DOCUMENTS.value) {
                 navigator.navigate(DocumentScreenDestination(course))
             } else {
@@ -64,11 +67,11 @@ fun CourseDetailsScreen(
 }
 
 @Composable
-private fun CourseDetailsScreenContent(uiState: MutableState<CourseDetailsState>, onClick: (tool: String) -> Unit = {}) {
+private fun CourseDetailsScreenContent(uiState: MutableState<CourseDetailsState>, modifier: Modifier = Modifier, onClick: (tool: String) -> Unit = {}) {
     if (uiState.value.loading) LinearProgressIndicator(Modifier.fillMaxWidth())
     uiState.value.course.tools.let {
         LazyVerticalGrid(
-            columns = GridCells.Adaptive(minSize = 180.dp), modifier = Modifier
+            columns = GridCells.Adaptive(minSize = 180.dp), modifier = modifier
                 .padding(8.dp)
                 .animateContentSize()
         ) {
@@ -107,10 +110,15 @@ private fun InfoCard(uiState: MutableState<CourseDetailsState>) {
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
                 if (uiState.value.course.imageUrl.isNotBlank()) {
+                    val surfaceColor = MaterialTheme.colors.surface
+                    val highlightColor = MaterialTheme.colors.onSurface
                     GlideImage(
                         imageModel = uiState.value.course.imageUrl,
-                        contentScale = ContentScale.Crop,
-                        circularReveal = CircularReveal(),
+                        imageOptions = ImageOptions(contentScale = ContentScale.Crop),
+                        component = rememberImageComponent {
+                            CircularRevealPlugin()
+                            +ShimmerPlugin(baseColor = surfaceColor, highlightColor = highlightColor)
+                        }
                     )
 
                     if (uiState.value.course.desc.isNotBlank()) {

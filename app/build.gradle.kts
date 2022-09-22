@@ -66,14 +66,15 @@ android {
 dependencies {
 
     val tikXml = "0.8.13"
-    val moshi = "1.13.0"
+    val moshi = "1.14.0"
     val coroutines = "1.6.4"
     val room = "2.4.3"
     val retrofit = "2.9.0"
     val work = "1.0.1"
     val compose = "1.2.1"
-    val hilt = "2.43.2"
+    val hilt = "2.44"
     val destinations = "1.6.15-beta"
+    val glide = "2.0.0"
 
 //    implementation fileTree(dir: "libs", include: ["*.jar"])
 
@@ -104,13 +105,15 @@ dependencies {
     kapt("com.tickaroo.tikxml:processor:$tikXml")
 
     // Glide
-    implementation("com.github.skydoves:landscapist-glide:1.6.1")
+    implementation("com.github.skydoves:landscapist-glide:$glide")
+    implementation("com.github.skydoves:landscapist-animation:$glide")
+    implementation("com.github.skydoves:landscapist-placeholder:$glide")
 
     // JSoup
-    implementation("org.jsoup:jsoup:1.15.2")
+    implementation("org.jsoup:jsoup:1.15.3")
 
     // Android KTX
-    implementation("androidx.core:core-ktx:1.8.0")
+    implementation("androidx.core:core-ktx:1.9.0")
 
     // Room and Lifecycle dependencies
     implementation("androidx.room:room-runtime:$room")
@@ -149,7 +152,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling:1.2.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
     androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.2.1")
-    implementation("androidx.appcompat:appcompat:1.5.0")
+    implementation("androidx.appcompat:appcompat:1.5.1")
     implementation("androidx.compose.runtime:runtime-livedata:$compose")
     implementation("androidx.compose.material:material-icons-extended:$compose")
 
