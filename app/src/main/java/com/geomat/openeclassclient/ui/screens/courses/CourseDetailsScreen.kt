@@ -5,8 +5,10 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -28,7 +30,6 @@ import com.geomat.openeclassclient.domain.Tools
 import com.geomat.openeclassclient.ui.components.HtmlText
 import com.geomat.openeclassclient.ui.screens.destinations.DocumentScreenDestination
 import com.geomat.openeclassclient.ui.screens.destinations.WebViewScreenDestination
-import com.geomat.openeclassclient.ui.screens.main.MainNavGraph
 import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -66,10 +67,12 @@ fun CourseDetailsScreen(
 private fun CourseDetailsScreenContent(uiState: MutableState<CourseDetailsState>, onClick: (tool: String) -> Unit = {}) {
     if (uiState.value.loading) LinearProgressIndicator(Modifier.fillMaxWidth())
     uiState.value.course.tools.let {
-        LazyColumn (modifier = Modifier
-            .padding(8.dp)
-            .animateContentSize()) {
-            item {
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(minSize = 180.dp), modifier = Modifier
+                .padding(8.dp)
+                .animateContentSize()
+        ) {
+            item(span = { GridItemSpan(this.maxLineSpan) }) {
                 InfoCard(uiState)
             }
             items(it) {
@@ -136,14 +139,14 @@ private fun ToolRow(name: String, onClick: () -> Unit = {}) {
     Surface(
         Modifier
             .padding(4.dp, 2.dp)
-            .fillMaxWidth()
             .clip(RoundedCornerShape(4.dp))
+            .width(180.dp)
+            .height(64.dp)
             .clickable { onClick() }
 
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
