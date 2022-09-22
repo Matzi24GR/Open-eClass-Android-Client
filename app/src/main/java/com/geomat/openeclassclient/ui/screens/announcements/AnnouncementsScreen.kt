@@ -1,6 +1,7 @@
 package com.geomat.openeclassclient.ui.screens.announcements
 
 import android.text.format.DateUtils
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ScrollState
@@ -87,6 +88,11 @@ fun AnnouncementScreen(
                     Text(text = stringResource(id = R.string.no_results_found))
                 }
             }
+        }
+    }
+    BackHandler(enabled = modalBottomSheetState.currentValue == ModalBottomSheetValue.Expanded || modalBottomSheetState.currentValue == ModalBottomSheetValue.HalfExpanded) {
+        scope.launch {
+            modalBottomSheetState.hide()
         }
     }
 }
@@ -177,7 +183,10 @@ private fun BottomSheet(announcement: MutableState<Announcement>) {
             .verticalScroll(ScrollState(0))
             .fillMaxHeight()
             .padding(18.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-        Divider(Modifier.width(52.dp).padding(bottom = 24.dp), thickness = 4.dp)
+        Divider(
+            Modifier
+                .width(52.dp)
+                .padding(bottom = 24.dp), thickness = 4.dp)
         Text(text = announcement.value.title, style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.SemiBold), modifier = Modifier.padding(bottom = 8.dp))
         Surface(
             color = MaterialTheme.colors.background,
