@@ -2,11 +2,14 @@ package com.geomat.openeclassclient.ui.screens.web
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.LinearProgressIndicator
@@ -58,35 +61,47 @@ fun BareWebViewScreen(viewModel: WebViewModel = hiltViewModel(), navigator: Dest
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun WebViewScreenContent(url: String, credentials: Credentials) {
-    val loading = remember { mutableStateOf(true) }
-    if (loading.value) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-    if (credentials.serverUrl.isNotBlank()) {
-        AndroidView(factory = { context ->
-            WebView(context).apply {
-                webViewClient = WebViewClient(
-                    handler = { url ->
-                        if (url.contains("file.php")) {
-                            val intent = Intent(Intent.ACTION_VIEW)
-                            val uri = Uri.parse(url)
-                            intent.data = uri
-                            context.startActivity(intent)
-                        }
-                    }, onFinished = {
-                        loading.value = false
-                    })
-                settings.javaScriptEnabled = true
-                CookieManager.getInstance().apply {
-                    setAcceptCookie(true)
-                    setCookie(credentials.serverUrl, "PHPSESSID=${credentials.token}")
+    var webView: WebView? = remember {null}
+    val backHandlerEnabled = remember { mutableStateOf(false) }
+    Column {
+        val loading = remember { mutableStateOf(true) }
+        if (loading.value) LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+        if (credentials.serverUrl.isNotBlank()) {
+            AndroidView(factory = { context ->
+                WebView(context).apply {
+                    webViewClient = WebViewClient(
+                        handler = { url ->
+                            if (url.contains("file.php")) {
+                                val intent = Intent(Intent.ACTION_VIEW)
+                                val uri = Uri.parse(url)
+                                intent.data = uri
+                                context.startActivity(intent)
+                            }
+                        }, onFinished = {
+                            loading.value = false
+                        }, onStart = {
+                            loading.value = true
+                            backHandlerEnabled.value = canGoBack()
+                        })
+                    settings.javaScriptEnabled = true
+                    CookieManager.getInstance().apply {
+                        setAcceptCookie(true)
+                        setCookie(credentials.serverUrl, "PHPSESSID=${credentials.token}")
+                    }
+                    loadUrl(url)
+                    webView = this
                 }
-
-                loadUrl(url)
-            }
-        }, modifier = Modifier.fillMaxSize())
+            }, update = {
+                        webView = it
+            }, modifier = Modifier.fillMaxSize())
+        }
+    }
+    BackHandler(enabled = backHandlerEnabled.value) {
+        webView?.goBack()
     }
 }
 
-class WebViewClient(val handler: (url: String) -> Unit, val onFinished: () -> Unit): WebViewClient() {
+class WebViewClient(val handler: (url: String) -> Unit, val onFinished: () -> Unit, val onStart: () -> Unit): WebViewClient() {
     override fun shouldOverrideUrlLoading(
         view: WebView?,
         request: WebResourceRequest?
@@ -129,4 +144,13 @@ class WebViewClient(val handler: (url: String) -> Unit, val onFinished: () -> Un
         view?.loadUrl(code)
     }
 
+    override fun onPageFinished(view: WebView?, url: String?) {
+        super.onPageFinished(view, url)
+        onFinished()
+    }
+
+    override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+        super.onPageStarted(view, url, favicon)
+        onStart()
+    }
 }
