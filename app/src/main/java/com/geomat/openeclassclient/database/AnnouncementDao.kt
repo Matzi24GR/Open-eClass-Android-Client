@@ -33,4 +33,7 @@ interface AnnouncementDao {
     @Query("DELETE FROM announcements_table WHERE id NOT IN (:ids)")
     fun clearNotInList(ids: List<String>)
 
+    @Query("UPDATE announcement_read_table SET isRead = 1")
+    fun setAllRead()
+
 }

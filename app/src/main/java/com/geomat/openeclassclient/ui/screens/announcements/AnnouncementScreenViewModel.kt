@@ -24,6 +24,8 @@ class AnnouncementScreenViewModel @Inject constructor(
     val announcements = repo.allAnnouncements
     val credentials = credentialsRepository.credentialsFlow
 
+    val unreadCount = repo.unreadCount
+
     fun refresh() {
         viewModelScope.launch {
             try {
@@ -40,6 +42,12 @@ class AnnouncementScreenViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 repo.setRead(announcement)
             }
+        }
+    }
+
+    fun setAllRead() {
+        viewModelScope.launch {
+            repo.setAllRead()
         }
     }
 

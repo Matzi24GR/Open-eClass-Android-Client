@@ -2,8 +2,7 @@ package com.geomat.openeclassclient.ui.screens.announcements
 
 import android.text.format.DateUtils
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.*
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -13,6 +12,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DoneAll
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -37,7 +38,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
 @Destination
 @Composable
 fun AnnouncementScreen(
@@ -57,7 +58,17 @@ fun AnnouncementScreen(
             navigator = navigator,
             navigateBack = false
         )
-    }) { paddingValues ->
+    },
+        floatingActionButton = {
+            val unreadCount by viewModel.unreadCount.observeAsState(0)
+            val fabVisibility by remember(unreadCount) { mutableStateOf(unreadCount>0) }
+            AnimatedVisibility(visible = fabVisibility, enter = scaleIn(), exit = scaleOut()) {
+                FloatingActionButton(onClick = { viewModel.setAllRead() }) {
+                    Icon(imageVector = Icons.Default.DoneAll, contentDescription = "Done All")
+                }
+            }
+        }
+    ) { paddingValues ->
         ModalBottomSheetLayout(
             sheetContent = { BottomSheet(announcement = currentAnnouncement) },
             sheetState = modalBottomSheetState,
@@ -68,7 +79,7 @@ fun AnnouncementScreen(
             viewModel.refresh()
             // Announcement List
             data.value?.let {
-                LazyColumn(Modifier.animateContentSize()) {
+                LazyColumn {
                     items(it) { announcement ->
                         AnnouncementRow(announcement = announcement, modifier = Modifier
                             .padding(8.dp)
@@ -112,7 +123,9 @@ fun AnnouncementScreen(
 
 @Composable
 private fun AnnouncementRow(announcement: Announcement, modifier: Modifier, onClick: ()-> Unit) {
-    Surface(modifier = modifier.clip(RoundedCornerShape(16.dp)).clickable {onClick() }, elevation = 8.dp) {
+    Surface(modifier = modifier
+        .clip(RoundedCornerShape(16.dp))
+        .clickable { onClick() }, elevation = 8.dp) {
         Column(
             Modifier
                 .padding(16.dp)
