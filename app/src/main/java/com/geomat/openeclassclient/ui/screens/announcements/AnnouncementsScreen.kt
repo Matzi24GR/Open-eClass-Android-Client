@@ -18,6 +18,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -72,15 +73,14 @@ fun AnnouncementScreen(
                         AnnouncementRow(announcement = announcement, modifier = Modifier
                             .padding(8.dp)
                             .animateContentSize()
-                            .clickable {
-                                //onClick: setRead and open announcement
-                                viewModel.setRead(announcement)
-                                currentAnnouncement.value = announcement
-                                scope.launch {
-                                    modalBottomSheetState.show()
-                                }
+                        ) {
+                            //onClick: setRead and open announcement
+                            viewModel.setRead(announcement)
+                            currentAnnouncement.value = announcement
+                            scope.launch {
+                                modalBottomSheetState.show()
                             }
-                        )
+                        }
                     }
                 }
                 // No results
@@ -111,8 +111,8 @@ fun AnnouncementScreen(
 }
 
 @Composable
-private fun AnnouncementRow(announcement: Announcement, modifier: Modifier) {
-    Surface(modifier = modifier.clip(RoundedCornerShape(16.dp)), elevation = 8.dp) {
+private fun AnnouncementRow(announcement: Announcement, modifier: Modifier, onClick: ()-> Unit) {
+    Surface(modifier = modifier.clip(RoundedCornerShape(16.dp)).clickable {onClick() }, elevation = 8.dp) {
         Column(
             Modifier
                 .padding(16.dp)
@@ -126,7 +126,7 @@ private fun AnnouncementRow(announcement: Announcement, modifier: Modifier) {
                     .padding(bottom = 8.dp)
             ) {
                 Text(
-                    text = announcement.title, fontWeight = FontWeight.Bold, modifier = Modifier
+                    text = announcement.title, fontWeight = FontWeight.Bold, color = if (announcement.isRead) Color.Gray else MaterialTheme.colors.onSurface, modifier = Modifier
                         .fillMaxWidth(0.9F)
                         .weight(1F)
                 )
@@ -167,7 +167,8 @@ private fun AnnouncementRow(announcement: Announcement, modifier: Modifier) {
                     Text(
                         text = stringResource(id = R.string.Administrators),
                         Modifier.weight(1F),
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
+                        color = if (announcement.isRead) Color.Gray else MaterialTheme.colors.onSurface
                     )
                 } else {
                     Text(
@@ -175,14 +176,17 @@ private fun AnnouncementRow(announcement: Announcement, modifier: Modifier) {
                         Modifier.weight(1F),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
+                        color = if (announcement.isRead) Color.Gray else MaterialTheme.colors.onSurface
                     )
                 }
                 Text(
                     text = DateUtils.getRelativeTimeSpanString(announcement.date).toString(),
                     textAlign = TextAlign.End,
                     maxLines = 1,
-                    modifier = Modifier
+                    modifier = Modifier,
+                    color = if (announcement.isRead) Color.Gray else MaterialTheme.colors.secondary,
+                    fontWeight = if (announcement.isRead) FontWeight.Normal else FontWeight.SemiBold,
                 )
             }
         }
@@ -212,7 +216,8 @@ private fun BottomSheet(announcement: MutableState<Announcement>) {
                 html = announcement.value.description,
                 darkThemeEnabled = isSystemInDarkTheme(),
                 enableLinks = true,
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(8.dp),
+                darkTextColor = Color.White
             )
         }
         Text(text = SimpleDateFormat.getDateTimeInstance().format(announcement.value.date))

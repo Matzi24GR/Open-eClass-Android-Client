@@ -1,11 +1,11 @@
 package com.geomat.openeclassclient.ui.components
 
-import android.graphics.Color
 import android.text.TextUtils
 import android.text.method.LinkMovementMethod
 import android.widget.TextView
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
 import androidx.core.text.parseAsHtml
@@ -16,14 +16,15 @@ fun HtmlText(
     modifier: Modifier = Modifier,
     darkThemeEnabled: Boolean,
     maxLines: Int = Integer.MAX_VALUE,
-    enableLinks: Boolean = false
+    enableLinks: Boolean = false,
+    darkTextColor: androidx.compose.ui.graphics.Color = androidx.compose.ui.graphics.Color.Gray
 ) {
     AndroidView(
         modifier = modifier,
         factory = { context ->
             TextView(context).apply {
                 if (darkThemeEnabled) {
-                    setTextColor(Color.WHITE)
+                    setTextColor(darkTextColor.toArgb())
                 }
                 if (enableLinks) {
                     linksClickable = true
