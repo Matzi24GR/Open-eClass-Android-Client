@@ -18,6 +18,8 @@ class MainViewModel @Inject constructor(
     private val credentialsRepository: CredentialsRepository
 ) : ViewModel() {
 
+    val unreadAnnouncementCount = announcementRepository.unreadCount
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
             credentialsRepository.credentialsFlow.collect {

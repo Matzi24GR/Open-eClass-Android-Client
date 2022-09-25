@@ -12,6 +12,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -248,9 +249,11 @@ fun TokenExpirationBanner(navigator: DestinationsNavigator, credentials: Credent
 
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun BottomNav(
-    navController: NavController
+    navController: NavController,
+    viewModel: MainViewModel = hiltViewModel()
 ) {
     val currentDestination: Destination? = navController.appCurrentDestinationAsState().value
         ?: NavGraphs.root.startAppDestination
@@ -264,7 +267,19 @@ fun BottomNav(
                         launchSingleTop = true
                     })
                 },
-                icon = { Icon(destination.icon, stringResource(id = destination.label)) },
+                icon = {
+                            BadgedBox( badge = {
+                                if (destination == BottomBarDestination.Announcements) {
+                                    val unreadAnnouncementCount by viewModel.unreadAnnouncementCount.observeAsState(0)
+                                    val badgeVisibility by remember(unreadAnnouncementCount) { mutableStateOf(unreadAnnouncementCount>0) }
+                                    if (badgeVisibility) {
+                                        Badge(backgroundColor = MaterialTheme.colors.secondary){Text(unreadAnnouncementCount.toString())}
+                                    }
+                                }
+                            }) {
+                                Icon(destination.icon, stringResource(id = destination.label))
+                            }
+                       },
                 label = { Text(stringResource(id = destination.label,), maxLines = 1, overflow = TextOverflow.Ellipsis) }
             )
         }
