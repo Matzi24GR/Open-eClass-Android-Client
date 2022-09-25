@@ -1,5 +1,6 @@
 package com.geomat.openeclassclient.ui.screens.login.serverSelect
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -269,6 +270,11 @@ private fun BottomSheet(
                 ServerRow(server = server, viewModel = viewModel)
                 viewModel.checkServerStatus(server.value)
             }
+        }
+    }
+    BackHandler(enabled = bottomSheetState.currentValue == ModalBottomSheetValue.Expanded || bottomSheetState.currentValue == ModalBottomSheetValue.HalfExpanded) {
+        scope.launch {
+            bottomSheetState.hide()
         }
     }
 }

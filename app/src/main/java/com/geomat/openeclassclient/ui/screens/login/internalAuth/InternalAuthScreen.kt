@@ -20,6 +20,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.PopUpToBuilder
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.ui.screens.NavGraphs
 import com.geomat.openeclassclient.ui.screens.login.serverSelect.Server
@@ -28,6 +29,7 @@ import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
+import com.ramcosta.composedestinations.navigation.popUpTo
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -129,7 +131,11 @@ fun InternalAuthScreen(
             }
             if (success.value) {
                 loading.value = false
-                navigator.navigate(NavGraphs.root)
+                navigator.navigate(NavGraphs.root) {
+                    popUpTo(NavGraphs.root) {
+                        PopUpToBuilder()
+                    }
+                }
             }
         }
 

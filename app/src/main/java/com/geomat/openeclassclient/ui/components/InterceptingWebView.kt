@@ -12,9 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.PopUpToBuilder
 import com.geomat.openeclassclient.ui.screens.NavGraphs
 import com.geomat.openeclassclient.ui.screens.login.externalAuth.ExternalAuthViewModel
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.popUpTo
 import timber.log.Timber
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -28,7 +30,11 @@ fun CustomWebView(url: String, viewModel: ExternalAuthViewModel = hiltViewModel(
             webViewClient = TokenInterceptorWebViewClient(onSuccess = { url ->
                 Timber.i("Login Response: $url")
                 viewModel.setCredentials(url, domain)
-                navigator.navigate(NavGraphs.root)
+                navigator.navigate(NavGraphs.root) {
+                    popUpTo(NavGraphs.root) {
+                        PopUpToBuilder()
+                    }
+                }
             })
             loadUrl(url)
         }

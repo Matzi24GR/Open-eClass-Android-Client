@@ -23,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavOptionsBuilder
+import androidx.navigation.PopUpToBuilder
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.geomat.openeclassclient.BuildConfig
 import com.geomat.openeclassclient.R
@@ -43,6 +44,7 @@ import com.ramcosta.composedestinations.annotation.NavGraph
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.navigation.popUpTo
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -147,7 +149,11 @@ fun OpenEclassApp(isLoggedIn: Boolean) {
         )
         LaunchedEffect(Unit) {
             if (!isLoggedIn) {
-                navController.navigate(NavGraphs.login)
+                navController.navigate(NavGraphs.login) {
+                    popUpTo(NavGraphs.root) {
+                        PopUpToBuilder()
+                    }
+                }
             }
         }
     }
@@ -179,7 +185,9 @@ fun OpenEclassTopBar(
         if (showMoreButtons) {
             IconButton(onClick = {
                 navigator.navigate(NavGraphs.login) {
-                    popUpTo(NavGraphs.login.route)
+                    popUpTo(NavGraphs.root) {
+                        PopUpToBuilder()
+                    }
                 }
                 scope.launch(Dispatchers.IO) {
                     viewModel?.logout()
