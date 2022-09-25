@@ -28,8 +28,8 @@ android {
         applicationId = "com.geomat.openeclassclient"
         minSdk = 21
         targetSdk = 33
-        versionCode = 18
-        versionName = "0.9.5"
+        versionCode = 19
+        versionName = "0.9.6"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         kapt {
             arguments {
@@ -73,7 +73,7 @@ dependencies {
     val work = "1.0.1"
     val compose = "1.2.1"
     val hilt = "2.44"
-    val destinations = "1.6.15-beta"
+    val destinations = "1.6.20-beta"
     val glide = "2.0.0"
 
 //    implementation fileTree(dir: "libs", include: ["*.jar"])
