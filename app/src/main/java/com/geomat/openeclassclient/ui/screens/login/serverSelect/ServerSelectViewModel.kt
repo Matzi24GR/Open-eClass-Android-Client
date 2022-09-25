@@ -21,6 +21,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.awaitResponse
 import timber.log.Timber
+import java.net.UnknownHostException
 import javax.net.ssl.SSLHandshakeException
 
 @Parcelize
@@ -92,9 +93,8 @@ class ServerSelectViewModel(application: Application) : AndroidViewModel(applica
             ExternalAuthScreenDestination(authType = AuthTypeParcel(authType.title, authType.url))
     }
 
-    suspend fun getAuthTypes(server: State<Server>): List<AuthType> {
+    suspend fun getAuthTypes(server: State<Server>): List<AuthType>? {
         activateSelectedServer(server.value)
-        var list = listOf<AuthType>()
         if (selectedServer.value.url.isNotBlank()) {
 
             try {
@@ -104,16 +104,18 @@ class ServerSelectViewModel(application: Application) : AndroidViewModel(applica
                     selectedServer.value.name = response.body()?.institute?.name.toString()
                 }
                 response.body()?.authTypeList?.let {
-                    list = it
+                    return it
                 }
             } catch (e: AssertionError) {
                 Timber.e(e)
             } catch (e: SSLHandshakeException) {
                 Timber.e(e)
+            } catch (e: UnknownHostException) {
+                Timber.e(e)
             }
 
         }
-        return list
+        return null
     }
 
     fun activateSelectedServer(server: Server) {

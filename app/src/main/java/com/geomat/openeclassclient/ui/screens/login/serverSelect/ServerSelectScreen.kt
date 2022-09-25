@@ -63,6 +63,7 @@ fun ServerSelectScreen(
                     elevation = 12.dp,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(it)
                         .padding(12.dp)
                 )
                 ManualServerCard(
@@ -106,9 +107,11 @@ private fun BuiltInServerCard(
                 onClick = {
                     scope.launch {
                         val types = viewModel.getAuthTypes(schServer)
-                        if (types.isEmpty()) viewModel.setDestination()
-                        if (types.size == 1) viewModel.setDestination(types[0])
-                        if (types.size > 1) authTypes.value = types
+                        if (types != null) {
+                            if (types.isEmpty()) viewModel.setDestination()
+                            if (types.size == 1) viewModel.setDestination(types[0])
+                            if (types.size > 1) authTypes.value = types
+                        }
                     }
                 },
                 Modifier
@@ -167,7 +170,7 @@ private fun ManualServerCard(
                     errored.value = false
                     scope.launch {
                         server.value = Server("", address)
-                        val types: List<AuthType>
+                        val types: List<AuthType>?
                         try {
                             types = viewModel.getAuthTypes(server)
                         } catch (e: UnknownHostException) {
@@ -176,9 +179,11 @@ private fun ManualServerCard(
                             errored.value = true
                             return@launch
                         }
-                        if (types.isEmpty()) viewModel.setDestination()
-                        if (types.size == 1) viewModel.setDestination(types[0])
-                        if (types.size > 1) authTypes.value = types
+                        if (types != null) {
+                            if (types.isEmpty()) viewModel.setDestination()
+                            if (types.size == 1) viewModel.setDestination(types[0])
+                            if (types.size > 1) authTypes.value = types
+                        }
                         loading = false
                     }
                 },
@@ -282,9 +287,11 @@ private fun ServerRow(server: State<Server>, viewModel: ServerSelectViewModel) {
                 loading = true
                 scope.launch {
                     val types = viewModel.getAuthTypes(server)
-                    if (types.isEmpty()) viewModel.setDestination()
-                    if (types.size == 1) viewModel.setDestination(types[0])
-                    if (types.size > 1) authTypes.value = types
+                    if (types != null) {
+                        if (types.isEmpty()) viewModel.setDestination()
+                        if (types.size == 1) viewModel.setDestination(types[0])
+                        if (types.size > 1) authTypes.value = types
+                    }
                     loading = false
                 }
             }
