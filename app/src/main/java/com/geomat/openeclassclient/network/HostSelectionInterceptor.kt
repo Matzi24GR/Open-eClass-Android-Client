@@ -9,18 +9,21 @@ import timber.log.Timber
 class HostSelectionInterceptor: Interceptor {
 
     @Volatile
-    private var host: String = "localhost"
+    private var host: String = ""
 
-    fun setHost(host: String) {
-        Timber.i("New Host To Insert: $host")
-        if (host.isBlank()) {
+    fun setHost(inputHost: String) {
+        Timber.i("New Host To Insert: $inputHost")
+        val newHost = inputHost.replace(Regex("[\r\n\\s]"),"")
+        Timber.i("New Host After cleaning: $newHost")
+        if (newHost.isBlank()) {
             Timber.i("Host is blank. Skipping")
             return
         }
-        if (host == "text") {
-            Timber.i("Host is \"text\", ie sample text. Skipping")
+        if (newHost.startsWith(".")) {
+            Timber.i("Host starts with dot. Skipping")
+            return
         }
-        this.host = host
+        this.host = newHost
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
