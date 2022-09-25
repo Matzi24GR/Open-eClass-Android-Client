@@ -93,7 +93,7 @@ private fun UserInfoCard(userInfo: State<UserInfo?>) {
                 )
                 Column(Modifier.padding(start = 8.dp, top = 4.dp)) {
                     Text(text = userInfo.value?.fullName ?: "John Smith", fontWeight = FontWeight.Bold, fontSize = 18.sp, modifier = Modifier.padding(bottom = 4.dp).placeholder(visible = userInfo.value == null, surfaceColor, shape = RoundedCornerShape(4.dp), highlight = PlaceholderHighlight.shimmer(highlightColor)))
-                    Text(text = userInfo.value?.username ?: "xyz2068", Modifier.placeholder(visible = userInfo.value == null, surfaceColor, shape = RoundedCornerShape(4.dp),  highlight = PlaceholderHighlight.shimmer(highlightColor)))
+                    Text(text = userInfo.value?.username ?: "xyz2068", color = MaterialTheme.colors.primary, modifier = Modifier.placeholder(visible = userInfo.value == null, surfaceColor, shape = RoundedCornerShape(4.dp),  highlight = PlaceholderHighlight.shimmer(highlightColor)))
                 }
             }
             Text(text = userInfo.value?.category?.replace(" » ","\n") ?: "Undergraduate » Comp Sci",

@@ -28,8 +28,8 @@ android {
         applicationId = "com.geomat.openeclassclient"
         minSdk = 21
         targetSdk = 33
-        versionCode = 17
-        versionName = "0.9.4"
+        versionCode = 18
+        versionName = "0.9.5"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         kapt {
             arguments {
@@ -146,7 +146,7 @@ dependencies {
     kapt("androidx.hilt:hilt-compiler:1.0.0")
 
     // Jetpack Compose
-    implementation("androidx.activity:activity-compose:1.5.1")
+    implementation("androidx.activity:activity-compose:1.6.0")
     implementation("androidx.compose.material:material:1.2.1")
     implementation("androidx.compose.animation:animation:1.2.1")
     implementation("androidx.compose.ui:ui-tooling:1.2.1")

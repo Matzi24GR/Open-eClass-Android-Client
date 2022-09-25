@@ -28,8 +28,10 @@ import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.repository.Credentials
 import com.geomat.openeclassclient.repository.CredentialsRepository
 import com.geomat.openeclassclient.ui.screens.NavGraphs
+import com.geomat.openeclassclient.ui.screens.appCurrentDestinationAsState
 import com.geomat.openeclassclient.ui.screens.destinations.*
 import com.geomat.openeclassclient.ui.screens.login.serverSelect.AuthTypeParcel
+import com.geomat.openeclassclient.ui.screens.startAppDestination
 import com.geomat.openeclassclient.ui.theme.OpenEclassClientTheme
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
@@ -47,7 +49,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.io.File
-import java.time.Instant
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 lateinit var clipboardManager: ClipboardManager
@@ -94,7 +95,7 @@ class MainActivity : ComponentActivity() {
         var files = tempDir.listFiles()
         if (files != null) {
             for (file: File in files) {
-                if (file.lastModified() < Instant.now().toEpochMilli() - TimeUnit.MINUTES.toMillis(60) )
+                if (file.lastModified() < System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(60) )
                     file.delete()
             }
         }
@@ -251,8 +252,8 @@ fun TokenExpirationBanner(navigator: DestinationsNavigator, credentials: Credent
 fun BottomNav(
     navController: NavController
 ) {
-    val currentDestination: NavDestination? =
-        navController.currentBackStackEntryAsState().value?.destination
+    val currentDestination: Destination? = navController.appCurrentDestinationAsState().value
+        ?: NavGraphs.root.startAppDestination
 
     BottomNavigation {
         BottomBarDestination.values().forEach { destination ->
