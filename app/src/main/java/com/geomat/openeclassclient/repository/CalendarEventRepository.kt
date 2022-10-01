@@ -75,7 +75,7 @@ class CalendarEventRepository @Inject constructor(private val calendarEventDao: 
                 val tokenStatus = EclassApi.MobileApi.checkTokenStatus(token).await()
                 if (tokenStatus != "EXPIRED") {
                     //Get Events
-                    val calendar = EclassApi.JsonApi.getCalendar("PHPSESSID=$token").await()
+                    val calendar = EclassApi.MobileApi.getCalendar("PHPSESSID=$token").await()
                     val events = calendar.asDatabaseModel()
                     //Insert Events
                     val result = calendarEventDao.insertAll(events)

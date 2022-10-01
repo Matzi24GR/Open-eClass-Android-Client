@@ -60,7 +60,7 @@ class CoursesRepository @Inject constructor(private val coursesDao: CoursesDao, 
         val host = credentialsRepository.credentialsFlow.first().serverUrl
         withContext(Dispatchers.IO) {
             try {
-                val coursePageResponse = CoursePageResponse(EclassApi.HtmlParser.getCoursePage("PHPSESSID=$token", courseId = course.id).await())
+                val coursePageResponse = CoursePageResponse(EclassApi.MobileApi.getCoursePage("PHPSESSID=$token", courseId = course.id).await())
                 val toolsResponse = EclassApi.MobileApi.getTools(token = token, courseId = course.id).await()
                 val tools = toolsResponse.toSingleSeparatedString()
                 val databaseCourse = DatabaseCourse(id = course.id, title = course.title, desc = coursePageResponse.desc+"\n"+coursePageResponse.moreInfo, imageUrl = "https://" + host + coursePageResponse.imageUrl, tools = tools)
@@ -88,7 +88,7 @@ class CoursesRepository @Inject constructor(private val coursesDao: CoursesDao, 
 
     private suspend fun getRssUrlForCourse(token: String, course: Course): String? {
         //Get announcement page
-        val page = EclassApi.HtmlParser.getAnnouncementPage("PHPSESSID=$token", course.id).await()
+        val page = EclassApi.MobileApi.getAnnouncementPage("PHPSESSID=$token", course.id).await()
         val document = Jsoup.parse(page)
         //Parse url
         val url = document.select("a[href*=/modules/announcements/rss]").attr("href")

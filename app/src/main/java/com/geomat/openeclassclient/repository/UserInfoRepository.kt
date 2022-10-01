@@ -33,7 +33,7 @@ class UserInfoRepository @Inject constructor(private val userDao: UserInfoDao, p
                 val host = credentialsRepository.credentialsFlow.first().serverUrl
 
                 //Get UserInfo
-                val response = EclassApi.HtmlParser.getMainPage("PHPSESSID=$token").await()
+                val response = EclassApi.MobileApi.getMainPage("PHPSESSID=$token").await()
                 val userInfo = UserInfoResponse(response).asDatabaseModel()
                 userInfo.imageUrl = "https://" + host + userInfo.imageUrl
                 //Insert UserInfo

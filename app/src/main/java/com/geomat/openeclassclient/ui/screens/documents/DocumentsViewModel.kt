@@ -36,7 +36,7 @@ class DocumentsViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             credentials.collect {
                 try {
-                    val result = EclassApi.HtmlParser.getDocumentsPage("PHPSESSID=${it.token}", course.id, id).await()
+                    val result = EclassApi.MobileApi.getDocumentsPage("PHPSESSID=${it.token}", course.id, id).await()
                     val list = parseDocumentPageResponse(result)
                     uiState.value = DocumentsState(false, list)
                 } catch (e: Exception) {
@@ -55,7 +55,7 @@ class DocumentsViewModel @Inject constructor(
     fun downloadFile(context: Context, url: String, name: String) {
         downloadJob = viewModelScope.launch {
             try {
-                EclassApi.HtmlParser.downloadFile("PHPSESSID=${credentials.first().token}", url)
+                EclassApi.MobileApi.downloadFile("PHPSESSID=${credentials.first().token}", url)
                     .downloadToFileWithProgress(context.filesDir, "temp", name).collect { download ->
                         uiState.value = DocumentsState(list = uiState.value.list, download = download, loading = false)
                     }
