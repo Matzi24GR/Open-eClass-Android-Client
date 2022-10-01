@@ -1,6 +1,7 @@
 package com.geomat.openeclassclient.network
 
 import com.geomat.openeclassclient.network.DataTransferObjects.*
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.tickaroo.tikxml.TikXml
@@ -10,6 +11,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.serialization.ExperimentalSerializationApi
+import nl.adaptivity.xmlutil.serialization.XML
+import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -52,6 +56,14 @@ private val retrofit = Retrofit.Builder()
 
 private  val retrofitJson = Retrofit.Builder()
     .addConverterFactory(MoshiConverterFactory.create(moshi))
+    .baseUrl(BASE_URL)
+    .client(okHttpClient)
+    .build()
+
+@OptIn(ExperimentalSerializationApi::class)
+private  val retrofitXML = Retrofit.Builder()
+    .addConverterFactory(ScalarsConverterFactory.create())
+    .addConverterFactory(XML.asConverterFactory(MediaType.parse("application/xml")!!))
     .baseUrl(BASE_URL)
     .client(okHttpClient)
     .build()
@@ -188,7 +200,7 @@ fun ResponseBody.downloadToFileWithProgress(directory: File, folder: String, fil
 
 object EclassApi {
     val MobileApi: MobileApiService by lazy {
-        retrofit.create(MobileApiService::class.java)
+        retrofitXML.create(MobileApiService::class.java)
     }
     val JsonApi: JsonApiService by lazy {
         retrofitJson.create(JsonApiService::class.java)

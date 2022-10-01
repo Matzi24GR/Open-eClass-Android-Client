@@ -14,6 +14,7 @@ buildscript {
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:$navVersion")
         classpath("com.android.tools.build:gradle:7.3.0")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+        classpath("org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion")
         classpath("com.google.dagger:hilt-android-gradle-plugin:$hiltVersion")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
 

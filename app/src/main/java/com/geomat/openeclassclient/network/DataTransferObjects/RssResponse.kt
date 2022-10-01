@@ -4,76 +4,47 @@ import android.net.Uri
 import androidx.core.text.HtmlCompat
 import androidx.core.text.parseAsHtml
 import com.geomat.openeclassclient.database.DatabaseAnnouncement
-import com.tickaroo.tikxml.annotation.Attribute
-import com.tickaroo.tikxml.annotation.Element
-import com.tickaroo.tikxml.annotation.PropertyElement
-import com.tickaroo.tikxml.annotation.Xml
+import nl.adaptivity.xmlutil.serialization.XmlElement
+import nl.adaptivity.xmlutil.serialization.XmlSerialName
 import java.text.SimpleDateFormat
 import java.util.*
 
-@Xml(name = "rss")
-class RssResponse {
-
-    @Attribute(name="version")
-    var version: String = ""
-
-    @Element(name = "channel")
-    lateinit var channel: Channel
-}
-
-@Xml(name = "channel")
-data class Channel (
-
-    @Element(name = "atom:link")
-    var atomLink: AtomLink,
-
-    @PropertyElement
-    var title: String = "",
-
-    @PropertyElement
-    var link: String = "",
-
-    @PropertyElement
-    var description: String = "",
-
-    @PropertyElement
-    var lastBuildDate: String = "",
-
-    @PropertyElement
-    var language: String = "",
-
-    @Element(name="item")
-    val netWorkAnnouncementList: List<NetWorkAnnouncement>?
+@kotlinx.serialization.Serializable
+@XmlSerialName("rss","","")
+data class RssResponse (
+    val version: String,
+    val channel: Channel
 )
 
-@Xml(name = "atom:link")
-class AtomLink {
-    @Attribute
-    var href: String = ""
+@kotlinx.serialization.Serializable
+@XmlSerialName("channel","","")
+data class Channel (
+    @XmlElement(true) val atomLink: AtomLink,
+    @XmlElement(true) val title: String,
+    @XmlElement(true) val link: String,
+    @XmlElement(true) val description: String,
+    @XmlElement(true) val lastBuildDate: String,
+    @XmlElement(true) val language: String,
+    @XmlElement(true) val netWorkAnnouncementList: List<NetWorkAnnouncement>?
+)
 
-    @Attribute
-    var rel: String = ""
+@kotlinx.serialization.Serializable
+@XmlSerialName("link","http://www.w3.org/2005/Atom","")
+class AtomLink (
+    val href: String,
+    val rel: String,
+    val type: String
+)
 
-    @Attribute
-    var type: String = ""
-}
-
-@Xml(name = "item")
-class NetWorkAnnouncement {
-
-    @PropertyElement
-    var title: String = ""
-
-    @PropertyElement
-    var link: String = ""
-
-    @PropertyElement
-    var description: String = ""
-
-    @PropertyElement
-    var pubDate: String = ""
-
-}
+@kotlinx.serialization.Serializable
+@XmlSerialName("item","","")
+class NetWorkAnnouncement (
+    @XmlElement(true) val title: String,
+    @XmlElement(true) val link: String,
+    @XmlElement(true) val description: String,
+    @XmlElement(true) val pubDate: String,
+    @XmlElement(true) val guid: String,
+)
 
 fun RssResponse.asDatabaseModel(): List<DatabaseAnnouncement> {
     if (channel.netWorkAnnouncementList.isNullOrEmpty()) {

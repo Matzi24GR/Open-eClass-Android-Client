@@ -1,62 +1,39 @@
 package com.geomat.openeclassclient.network.DataTransferObjects
 
-import com.tickaroo.tikxml.annotation.Attribute
-import com.tickaroo.tikxml.annotation.Element
-import com.tickaroo.tikxml.annotation.Xml
+import nl.adaptivity.xmlutil.serialization.XmlSerialName
 
-@Xml(name = "identity")
-class ServerInfoResponse {
+@kotlinx.serialization.Serializable
+@XmlSerialName("identity","","")
+data class ServerInfoResponse (
+    val institute: Institute,
+    val platform: Platform,
+    val administrator: Administrator,
+    val authTypeList: List<AuthType> = mutableListOf()
+)
 
-    @Element(name = "institute")
-    lateinit var institute: Institute
+@kotlinx.serialization.Serializable
+@XmlSerialName("institute","","")
+data class Institute (
+    var name: String,
+    var url: String
+)
 
-    @Element
-    lateinit var platform: Platform
+@kotlinx.serialization.Serializable
+@XmlSerialName("platform","","")
+data class Platform (
+    var name: String,
+    var version: String
+)
 
-    @Element
-    lateinit var administrator: Administrator
+@kotlinx.serialization.Serializable
+@XmlSerialName("administrator","","")
+data class Administrator (
+    val name: String
+)
 
-    @Element(name = "auth")
-    var authTypeList: List<AuthType> = mutableListOf()
-
-}
-
-@Xml(name = "institute")
-class Institute {
-
-
-    @Attribute
-    var name: String = ""
-
-    @Attribute
-    var url: String = ""
-
-}
-
-@Xml(name = "platform")
-class Platform {
-
-    @Attribute
-    var name: String = ""
-
-    @Attribute
-    var version: String = ""
-
-}
-
-@Xml(name = "administrator")
-class Administrator {
-
-    @Attribute
-    var name: String = ""
-}
-
-@Xml(name = "auth")
-class AuthType {
-
-    @Attribute
-    var title: String = ""
-
-    @Attribute
-    var url: String = ""
-}
+@kotlinx.serialization.Serializable
+@XmlSerialName("auth","","")
+data class AuthType (
+    var title: String = "",
+    var url: String= ""
+)

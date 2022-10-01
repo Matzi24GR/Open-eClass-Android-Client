@@ -16,6 +16,7 @@ import com.geomat.openeclassclient.ui.screens.destinations.InternalAuthScreenDes
 import com.geomat.openeclassclient.ui.screens.destinations.ServerSelectScreenDestination
 import com.ramcosta.composedestinations.spec.Direction
 import kotlinx.parcelize.Parcelize
+import nl.adaptivity.xmlutil.serialization.XmlSerialException
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -84,7 +85,7 @@ class ServerSelectViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    fun setDestination(authType: AuthType = AuthType()) {
+    fun setDestination(authType: AuthType = AuthType("","")) {
         if (authType.title.isBlank() && authType.url.isBlank()) currentDirection.value =
             InternalAuthScreenDestination(server = selectedServer.value)
         else if (authType.url.isBlank()) currentDirection.value =
@@ -106,7 +107,7 @@ class ServerSelectViewModel(application: Application) : AndroidViewModel(applica
                 response.body()?.authTypeList?.let {
                     return it
                 }
-            } catch (e: AssertionError) {
+            } catch (e: XmlSerialException) {
                 Timber.e(e)
             } catch (e: SSLHandshakeException) {
                 Timber.e(e)

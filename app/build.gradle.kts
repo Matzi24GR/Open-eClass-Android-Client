@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
+    kotlin("plugin.serialization")
     id("kotlin-parcelize")
     id("dagger.hilt.android.plugin")
     id("com.google.devtools.ksp") version "1.7.10-1.0.6" // Depends on your kotlin version
@@ -64,8 +65,6 @@ android {
 }
 
 dependencies {
-
-    val tikXml = "0.8.13"
     val moshi = "1.14.0"
     val coroutines = "1.6.4"
     val room = "2.4.3"
@@ -75,8 +74,7 @@ dependencies {
     val hilt = "2.44"
     val destinations = "1.6.20-beta"
     val glide = "2.0.0"
-
-//    implementation fileTree(dir: "libs", include: ["*.jar"])
+    val xmlUtil = "0.84.3"
 
     //Timber Logging Library
     implementation("com.jakewharton.timber:timber:5.0.1")
@@ -88,21 +86,16 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:$retrofit")
     implementation("com.squareup.retrofit2:converter-scalars:$retrofit")
     implementation("com.squareup.retrofit2:converter-moshi:$retrofit")
-    //noinspection GradleDependency
-    implementation("com.tickaroo.tikxml:retrofit-converter:$tikXml")
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
 
     // Moshi
     implementation("com.squareup.moshi:moshi:$moshi")
     implementation("com.squareup.moshi:moshi-kotlin:$moshi")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshi")
 
-    //  TikXml
-    implementation("com.tickaroo.tikxml:annotation:$tikXml")
-    //noinspection GradleDependency
-    implementation("com.tickaroo.tikxml:core:$tikXml")
-
-    //noinspection GradleDependency
-    kapt("com.tickaroo.tikxml:processor:$tikXml")
+    // XmlUtil
+    implementation("io.github.pdvrieze.xmlutil:core-android:$xmlUtil")
+    implementation("io.github.pdvrieze.xmlutil:serialization-android:$xmlUtil")
 
     // Glide
     implementation("com.github.skydoves:landscapist-glide:$glide")
