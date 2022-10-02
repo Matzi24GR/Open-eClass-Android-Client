@@ -11,7 +11,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.geomat.openeclassclient.network.EclassApi
 import com.geomat.openeclassclient.repository.Credentials
 import com.geomat.openeclassclient.ui.components.DropDownCard
 import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
@@ -43,7 +42,7 @@ fun DebugScreen(navigator: DestinationsNavigator, viewModel: DebugViewModel = hi
                     scope.launch {
                         withContext(Dispatchers.IO) {
                             try {
-                                EclassApi.MobileApi.logout(credentials.value.token).await()
+                                viewModel.logoutNetworkCall()
                             } catch (e: CertPathValidatorException) {
                                 Timber.i(e)
                             }

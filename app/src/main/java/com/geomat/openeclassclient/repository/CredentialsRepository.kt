@@ -2,8 +2,8 @@ package com.geomat.openeclassclient.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
-import com.geomat.openeclassclient.network.EclassApi
-import com.geomat.openeclassclient.network.interceptor
+import com.geomat.openeclassclient.network.HostSelectionInterceptor
+import com.geomat.openeclassclient.network.OpenEclassService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -28,13 +28,13 @@ data class Credentials (
     var usesExternalAuth: Boolean = selectedAuthUrl.isNotBlank()
 )
 
-class CredentialsRepository @Inject constructor(private val dataStore: DataStore<Preferences>) {
+class CredentialsRepository @Inject constructor(private val dataStore: DataStore<Preferences>, private val openEclassService: OpenEclassService, private val hostSelectionInterceptor: HostSelectionInterceptor) {
 
     suspend fun login(credentials: Credentials) {
        // withContext(Dispatchers.IO) {
             updateFullCredentials(credentials = credentials)
             setInterceptor()
-            val response = EclassApi.MobileApi.getToken(credentials.username, credentials.password).awaitResponse()
+            val response = openEclassService.getToken(credentials.username, credentials.password).awaitResponse()
             if (response.isSuccessful) {
                 Timber.i("response successful")
                 val token = response.body()
@@ -83,7 +83,7 @@ class CredentialsRepository @Inject constructor(private val dataStore: DataStore
         val url = credentialsFlow.first().serverUrl
         if (url.isNotBlank()) {
             Timber.i("Got Url: $url")
-            interceptor.setHost(url)
+            hostSelectionInterceptor.setHost(url)
         }
     }
 
@@ -91,7 +91,7 @@ class CredentialsRepository @Inject constructor(private val dataStore: DataStore
         withContext(Dispatchers.IO) {
             try {
                 credentialsFlow.collect {
-                    val result = EclassApi.MobileApi.checkTokenStatus(it.token).awaitResponse()
+                    val result = openEclassService.checkTokenStatus(it.token).awaitResponse()
                     Timber.i("TokenStatus: ${result.body()}")
                     if (result.body().toString().contains("EXPIRED")) {
                         if (it.usesExternalAuth) {
@@ -119,7 +119,7 @@ class CredentialsRepository @Inject constructor(private val dataStore: DataStore
     suspend fun logout() {
         withContext(Dispatchers.IO) {
             credentialsFlow.collect {
-                EclassApi.MobileApi.logout(it.token)
+                openEclassService.logout(it.token)
                 updateFullCredentials(Credentials())
             }
             checkTokenStatus()

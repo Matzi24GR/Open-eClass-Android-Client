@@ -5,14 +5,14 @@ import androidx.lifecycle.Transformations
 import com.geomat.openeclassclient.database.*
 import com.geomat.openeclassclient.domain.Announcement
 import com.geomat.openeclassclient.network.DataTransferObjects.asDatabaseModel
-import com.geomat.openeclassclient.network.EclassApi
+import com.geomat.openeclassclient.network.OpenEclassService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.await
 import timber.log.Timber
 import javax.inject.Inject
 
-class AnnouncementRepository @Inject constructor(private val courseDao: CoursesDao, private val announcementDao: AnnouncementDao) {
+class AnnouncementRepository @Inject constructor(private val courseDao: CoursesDao, private val announcementDao: AnnouncementDao, private val openEclassService: OpenEclassService) {
 
     val allAnnouncements: LiveData<List<Announcement>> = Transformations.map(announcementDao.getAllAnnouncementsWithCourseNames()){
         it.asDomainModel()
@@ -60,7 +60,7 @@ class AnnouncementRepository @Inject constructor(private val courseDao: CoursesD
         // -- Get Announcements From Feeds --
         val announcements = mutableListOf<DatabaseAnnouncement>()
         feeds.forEach{
-            val announcementsResponse = EclassApi.MobileApi.getRssFeed(it).await()
+            val announcementsResponse = openEclassService.getRssFeed(it).await()
             announcements.addAll(announcementsResponse.asDatabaseModel())
         }
         return announcements

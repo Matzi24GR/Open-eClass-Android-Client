@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.geomat.openeclassclient.domain.Course
 import com.geomat.openeclassclient.network.DataTransferObjects.parseDocumentPageResponse
 import com.geomat.openeclassclient.network.Download
-import com.geomat.openeclassclient.network.EclassApi
+import com.geomat.openeclassclient.network.OpenEclassService
 import com.geomat.openeclassclient.network.downloadToFileWithProgress
 import com.geomat.openeclassclient.repository.Credentials
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +23,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DocumentsViewModel @Inject constructor(
-    private val credentials: Flow<Credentials>
+    private val credentials: Flow<Credentials>,
+    private val openEclassService: OpenEclassService
 ) : ViewModel() {
 
     var uiState: MutableState<DocumentsState> = mutableStateOf(DocumentsState())
@@ -36,7 +37,7 @@ class DocumentsViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             credentials.collect {
                 try {
-                    val result = EclassApi.MobileApi.getDocumentsPage("PHPSESSID=${it.token}", course.id, id).await()
+                    val result = openEclassService.getDocumentsPage("PHPSESSID=${it.token}", course.id, id).await()
                     val list = parseDocumentPageResponse(result)
                     uiState.value = DocumentsState(false, list)
                 } catch (e: Exception) {
@@ -55,7 +56,7 @@ class DocumentsViewModel @Inject constructor(
     fun downloadFile(context: Context, url: String, name: String) {
         downloadJob = viewModelScope.launch {
             try {
-                EclassApi.MobileApi.downloadFile("PHPSESSID=${credentials.first().token}", url)
+                openEclassService.downloadFile("PHPSESSID=${credentials.first().token}", url)
                     .downloadToFileWithProgress(context.filesDir, "temp", name).collect { download ->
                         uiState.value = DocumentsState(list = uiState.value.list, download = download, loading = false)
                     }

@@ -7,7 +7,7 @@ import com.geomat.openeclassclient.database.asDomainModel
 import com.geomat.openeclassclient.domain.UserInfo
 import com.geomat.openeclassclient.network.DataTransferObjects.UserInfoResponse
 import com.geomat.openeclassclient.network.DataTransferObjects.asDatabaseModel
-import com.geomat.openeclassclient.network.EclassApi
+import com.geomat.openeclassclient.network.OpenEclassService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -15,7 +15,7 @@ import retrofit2.await
 import timber.log.Timber
 import javax.inject.Inject
 
-class UserInfoRepository @Inject constructor(private val userDao: UserInfoDao, private val credentialsRepository: CredentialsRepository) {
+class UserInfoRepository @Inject constructor(private val userDao: UserInfoDao, private val credentialsRepository: CredentialsRepository, private val openEclassService: OpenEclassService) {
 
     fun getUserWithUsername(username: String) :LiveData<UserInfo> {
         return Transformations.map(userDao.getUserWithUsername(username)) {
@@ -33,7 +33,7 @@ class UserInfoRepository @Inject constructor(private val userDao: UserInfoDao, p
                 val host = credentialsRepository.credentialsFlow.first().serverUrl
 
                 //Get UserInfo
-                val response = EclassApi.MobileApi.getMainPage("PHPSESSID=$token").await()
+                val response = openEclassService.getMainPage("PHPSESSID=$token").await()
                 val userInfo = UserInfoResponse(response).asDatabaseModel()
                 userInfo.imageUrl = "https://" + host + userInfo.imageUrl
                 //Insert UserInfo

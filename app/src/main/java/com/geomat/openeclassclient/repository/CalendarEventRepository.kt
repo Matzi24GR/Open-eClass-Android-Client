@@ -8,14 +8,14 @@ import com.geomat.openeclassclient.database.DatabaseCalendarSyncId
 import com.geomat.openeclassclient.database.asDomainModel
 import com.geomat.openeclassclient.domain.CalendarEvent
 import com.geomat.openeclassclient.network.DataTransferObjects.asDatabaseModel
-import com.geomat.openeclassclient.network.EclassApi
+import com.geomat.openeclassclient.network.OpenEclassService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.await
 import timber.log.Timber
 import javax.inject.Inject
 
-class CalendarEventRepository @Inject constructor(private val calendarEventDao: CalendarEventDao) {
+class CalendarEventRepository @Inject constructor(private val calendarEventDao: CalendarEventDao, private val openEclassService: OpenEclassService) {
 
     val allEvents: LiveData<List<CalendarEvent>> = Transformations.map(calendarEventDao.getAllEvents()){
         it.asDomainModel()
@@ -72,10 +72,10 @@ class CalendarEventRepository @Inject constructor(private val calendarEventDao: 
     suspend fun refreshData(token: String) {
         withContext(Dispatchers.IO) {
             try {
-                val tokenStatus = EclassApi.MobileApi.checkTokenStatus(token).await()
+                val tokenStatus = openEclassService.checkTokenStatus(token).await()
                 if (tokenStatus != "EXPIRED") {
                     //Get Events
-                    val calendar = EclassApi.MobileApi.getCalendar("PHPSESSID=$token").await()
+                    val calendar = openEclassService.getCalendar("PHPSESSID=$token").await()
                     val events = calendar.asDatabaseModel()
                     //Insert Events
                     val result = calendarEventDao.insertAll(events)

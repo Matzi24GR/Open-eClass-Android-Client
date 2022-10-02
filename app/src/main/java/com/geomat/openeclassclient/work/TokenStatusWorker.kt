@@ -6,11 +6,12 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.geomat.openeclassclient.R
-import com.geomat.openeclassclient.network.EclassApi
+import com.geomat.openeclassclient.network.OpenEclassService
 import retrofit2.awaitResponse
 import timber.log.Timber
+import javax.inject.Inject
 
-class TokenStatusWorker(appContext: Context, params: WorkerParameters): CoroutineWorker(appContext, params) {
+class TokenStatusWorker @Inject constructor(appContext: Context, params: WorkerParameters, private val openEclassService: OpenEclassService): CoroutineWorker(appContext, params) {
 
     companion object {
         const val WORK_NAME = "TokenStatusWorker"
@@ -21,7 +22,7 @@ class TokenStatusWorker(appContext: Context, params: WorkerParameters): Coroutin
         val token = applicationContext.getSharedPreferences("login", Context.MODE_PRIVATE).getString("token", null)
 
         try {
-            val result = EclassApi.MobileApi.checkTokenStatus(token!!).awaitResponse()
+            val result = openEclassService.checkTokenStatus(token!!).awaitResponse()
 
             return if (result.isSuccessful) {
                 val builder = NotificationCompat.Builder(applicationContext, "status_channel")
