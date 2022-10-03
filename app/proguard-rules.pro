@@ -101,3 +101,7 @@
 #-keepnames class <1>$$serializer { # -keepnames suffices; class is kept when serializer() is kept.
 #    static <1>$$serializer INSTANCE;
 #}
+
+# Fix XmlUtil gradle issue
+# https://github.com/pdvrieze/xmlutil/issues/87
+-keep public enum nl.adaptivity.xmlutil.EventType {*;}
