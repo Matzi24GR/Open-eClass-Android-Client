@@ -19,10 +19,8 @@ class TokenStatusWorker @Inject constructor(appContext: Context, params: WorkerP
 
     override suspend fun doWork(): Result {
 
-        val token = applicationContext.getSharedPreferences("login", Context.MODE_PRIVATE).getString("token", null)
-
         try {
-            val result = openEclassService.checkTokenStatus(token!!).awaitResponse()
+            val result = openEclassService.checkTokenStatus().awaitResponse()
 
             return if (result.isSuccessful) {
                 val builder = NotificationCompat.Builder(applicationContext, "status_channel")

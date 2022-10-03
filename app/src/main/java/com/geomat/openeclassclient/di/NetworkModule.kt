@@ -1,7 +1,7 @@
 package com.geomat.openeclassclient.di
 
+import com.geomat.openeclassclient.network.AuthInterceptor
 import com.geomat.openeclassclient.network.ConverterFactorySelector
-import com.geomat.openeclassclient.network.HostSelectionInterceptor
 import com.geomat.openeclassclient.network.OpenEclassService
 import dagger.Module
 import dagger.Provides
@@ -21,12 +21,12 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideHostSelectionInterceptor(): HostSelectionInterceptor = HostSelectionInterceptor()
+    fun provideAuthInterceptor(): AuthInterceptor = AuthInterceptor()
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(hostSelectionInterceptor: HostSelectionInterceptor): OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(hostSelectionInterceptor)
+    fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(authInterceptor)
         .writeTimeout(0, TimeUnit.SECONDS)
         .build()
 

@@ -69,28 +69,25 @@ class CalendarEventRepository @Inject constructor(private val calendarEventDao: 
         }
     }
 
-    suspend fun refreshData(token: String) {
+    suspend fun refreshData() {
         withContext(Dispatchers.IO) {
             try {
-                val tokenStatus = openEclassService.checkTokenStatus(token).await()
-                if (tokenStatus != "EXPIRED") {
-                    //Get Events
-                    val calendar = openEclassService.getCalendar("PHPSESSID=$token").await()
-                    val events = calendar.asDatabaseModel()
-                    //Insert Events
-                    val result = calendarEventDao.insertAll(events)
-                    //Update events that failed to insert
-                    val toUpdate = mutableListOf<DatabaseCalendarEvent>()
-                    for (i in result.indices) {
-                        if (result[i] == -1L) {
-                            toUpdate.add(events[i])
-                        }
+                //Get Events
+                val calendar = openEclassService.getCalendar().await()
+                val events = calendar.asDatabaseModel()
+                //Insert Events
+                val result = calendarEventDao.insertAll(events)
+                //Update events that failed to insert
+                val toUpdate = mutableListOf<DatabaseCalendarEvent>()
+                for (i in result.indices) {
+                    if (result[i] == -1L) {
+                        toUpdate.add(events[i])
                     }
-                    calendarEventDao.updateAll(toUpdate)
-                    //Remove Deleted Events
-                    val toRetain = events.map {it.id}
-                    calendarEventDao.clearNotInList(toRetain)
                 }
+                calendarEventDao.updateAll(toUpdate)
+                //Remove Deleted Events
+                val toRetain = events.map {it.id}
+                calendarEventDao.clearNotInList(toRetain)
             } catch (e: Exception) {
                 Timber.i(e)
             }

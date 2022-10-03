@@ -2,7 +2,7 @@ package com.geomat.openeclassclient.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
-import com.geomat.openeclassclient.network.HostSelectionInterceptor
+import com.geomat.openeclassclient.network.AuthInterceptor
 import com.geomat.openeclassclient.network.OpenEclassService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -28,7 +28,7 @@ data class Credentials (
     var usesExternalAuth: Boolean = selectedAuthUrl.isNotBlank()
 )
 
-class CredentialsRepository @Inject constructor(private val dataStore: DataStore<Preferences>, private val openEclassService: OpenEclassService, private val hostSelectionInterceptor: HostSelectionInterceptor) {
+class CredentialsRepository @Inject constructor(private val dataStore: DataStore<Preferences>, private val openEclassService: OpenEclassService, private val authInterceptor: AuthInterceptor) {
 
     suspend fun login(credentials: Credentials) {
        // withContext(Dispatchers.IO) {
@@ -83,7 +83,12 @@ class CredentialsRepository @Inject constructor(private val dataStore: DataStore
         val url = credentialsFlow.first().serverUrl
         if (url.isNotBlank()) {
             Timber.i("Got Url: $url")
-            hostSelectionInterceptor.setHost(url)
+            authInterceptor.setHost(url)
+        }
+        val token = credentialsFlow.first().token
+        if (token.isNotBlank()) {
+            Timber.v("Got Token: $token")
+            authInterceptor.setToken(token)
         }
     }
 
@@ -91,7 +96,7 @@ class CredentialsRepository @Inject constructor(private val dataStore: DataStore
         withContext(Dispatchers.IO) {
             try {
                 credentialsFlow.collect {
-                    val result = openEclassService.checkTokenStatus(it.token).awaitResponse()
+                    val result = openEclassService.checkTokenStatus().awaitResponse()
                     Timber.i("TokenStatus: ${result.body()}")
                     if (result.body().toString().contains("EXPIRED")) {
                         if (it.usesExternalAuth) {

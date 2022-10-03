@@ -15,18 +15,18 @@ interface OpenEclassService {
     @FormUrlEncoded
     @Xml
     @POST("/modules/mobile/mcourses.php")
-    fun getCourses(@Field("token")token: String):
+    fun getCourses(@Field("token")token: String = EMPTY_TOKEN_PLACEHOLDER):
             Call<CourseResponse>
 
     @FormUrlEncoded
     @Xml
     @POST("modules/mobile/mtools.php")
-    fun getTools(@Field("token")token: String, @Query("course")courseId: String):
+    fun getTools(@Field("token")token: String = EMPTY_TOKEN_PLACEHOLDER, @Query("course")courseId: String):
             Call<ToolsResponse>
 
     @FormUrlEncoded
     @POST("/modules/mobile/mlogin.php")
-    fun checkTokenStatus(@Field("token")token: String):
+    fun checkTokenStatus(@Field("token")token: String = EMPTY_TOKEN_PLACEHOLDER):
             Call<String>
 
     @FormUrlEncoded
@@ -54,7 +54,7 @@ interface OpenEclassService {
 
     @FormUrlEncoded
     @POST("/modules/mobile/mlogin.php?logout")
-    fun logout(@Field("token")token: String):
+    fun logout(@Field("token")token: String = EMPTY_TOKEN_PLACEHOLDER):
             Call<String>
 
     /*
@@ -64,13 +64,13 @@ interface OpenEclassService {
     @Json
     @Headers("X-Requested-With: xmlhttprequest")
     @GET("/modules/announcements/myannouncements.php")
-    fun getAnnouncements(@Header("Cookie")token: String):
+    fun getAnnouncements(@Header("Cookie")token: String = EMPTY_TOKEN_PLACEHOLDER):
             Call<MyAnnouncementResponse>
 
     @Json
     @Headers("X-Requested-With: xmlhttprequest")
     @GET("/main/calendar_data.php?from=0&to=1683013600000")
-    fun getCalendar(@Header("Cookie")token: String):
+    fun getCalendar(@Header("Cookie")token: String = EMPTY_TOKEN_PLACEHOLDER):
             Call<CalendarResponse>
 
     /*
@@ -78,24 +78,24 @@ interface OpenEclassService {
     */
 
     @GET("/main/portfolio.php")
-    fun getMainPage(@Header("Cookie")token: String): Call<String>
+    fun getMainPage(@Header("Cookie")token: String = EMPTY_TOKEN_PLACEHOLDER): Call<String>
 
     @GET("/modules/announcements/")
-    fun getAnnouncementPage(@Header("Cookie")token: String,
-                            @Query("course")courseId: String
+    fun getAnnouncementPage(@Query("course")courseId: String,
+                            @Header("Cookie")token: String = EMPTY_TOKEN_PLACEHOLDER
     ): Call<String>
 
     @GET("/courses/{id}/")
-    fun getCoursePage(@Header("Cookie")token: String, @Path("id") courseId: String): Call<String>
+    fun getCoursePage(@Path("id") courseId: String, @Header("Cookie")token: String = EMPTY_TOKEN_PLACEHOLDER): Call<String>
 
     @GET("/modules/document/")
     fun getDocumentsPage(
-        @Header("Cookie")token: String,
         @Query("course")courseId:String,
-        @Query("openDir")openDir:String?
+        @Query("openDir")openDir:String?,
+        @Header("Cookie")token: String = EMPTY_TOKEN_PLACEHOLDER
     ): Call<String>
 
     @Streaming
     @GET
-    suspend fun downloadFile(@Header("Cookie")token: String, @Url fileUrl: String?): ResponseBody
+    suspend fun downloadFile(@Url fileUrl: String?, @Header("Cookie")token: String = EMPTY_TOKEN_PLACEHOLDER): ResponseBody
 }

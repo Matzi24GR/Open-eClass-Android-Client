@@ -15,7 +15,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import retrofit2.await
 import timber.log.Timber
@@ -37,7 +36,7 @@ class DocumentsViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             credentials.collect {
                 try {
-                    val result = openEclassService.getDocumentsPage("PHPSESSID=${it.token}", course.id, id).await()
+                    val result = openEclassService.getDocumentsPage(course.id, id).await()
                     val list = parseDocumentPageResponse(result)
                     uiState.value = DocumentsState(false, list)
                 } catch (e: Exception) {
@@ -56,7 +55,7 @@ class DocumentsViewModel @Inject constructor(
     fun downloadFile(context: Context, url: String, name: String) {
         downloadJob = viewModelScope.launch {
             try {
-                openEclassService.downloadFile("PHPSESSID=${credentials.first().token}", url)
+                openEclassService.downloadFile(url)
                     .downloadToFileWithProgress(context.filesDir, "temp", name).collect { download ->
                         uiState.value = DocumentsState(list = uiState.value.list, download = download, loading = false)
                     }

@@ -33,11 +33,11 @@ class CoursesRepository @Inject constructor(private val coursesDao: CoursesDao, 
         }
     }
 
-    suspend fun refreshData(token: String) {
+    suspend fun refreshData() {
         withContext(Dispatchers.IO) {
             try {
                 //Get Courses
-                val coursesResponse = openEclassService.getCourses(token).await()
+                val coursesResponse = openEclassService.getCourses().await()
                 val courses = coursesResponse.asDatabaseModel()
                 //Insert Courses
                 val result = coursesDao.insertAll(courses)
@@ -45,7 +45,7 @@ class CoursesRepository @Inject constructor(private val coursesDao: CoursesDao, 
                 val toRetain = courses.map {it.id}
                 coursesDao.clearNotInList(toRetain)
                 //Set Announcement Rss Feed Urls
-                setFeedUrls(token)
+                setFeedUrls()
             } catch (e: Exception) {
                 Timber.i(e)
             }
@@ -56,12 +56,12 @@ class CoursesRepository @Inject constructor(private val coursesDao: CoursesDao, 
         return coursesDao.getCourseWithId(courseId = course.id).map { it?.asDomainModel() }
     }
 
-    suspend fun updateCourseDetails(token: String, course: Course) {
+    suspend fun updateCourseDetails(course: Course) {
         val host = credentialsRepository.credentialsFlow.first().serverUrl
         withContext(Dispatchers.IO) {
             try {
-                val coursePageResponse = CoursePageResponse(openEclassService.getCoursePage("PHPSESSID=$token", courseId = course.id).await())
-                val toolsResponse = openEclassService.getTools(token = token, courseId = course.id).await()
+                val coursePageResponse = CoursePageResponse(openEclassService.getCoursePage(course.id).await())
+                val toolsResponse = openEclassService.getTools(courseId = course.id).await()
                 val tools = toolsResponse.toSingleSeparatedString()
                 val databaseCourse = DatabaseCourse(id = course.id, title = course.title, desc = coursePageResponse.desc+"\n"+coursePageResponse.moreInfo, imageUrl = "https://" + host + coursePageResponse.imageUrl, tools = tools)
                 coursesDao.update(databaseCourse)
@@ -71,24 +71,24 @@ class CoursesRepository @Inject constructor(private val coursesDao: CoursesDao, 
         }
     }
 
-    private suspend fun setFeedUrls(token: String) {
+    private suspend fun setFeedUrls() {
         //Refresh Courses if none exist
         if (coursesDao.getNumberOfCourses() == 0) {
-            refreshData(token)
+            refreshData()
         }
         //Set feed for each one
         val coursesWithNoFeedUrl = coursesDao.getCoursesWithNoFeedUrl()
         coursesWithNoFeedUrl.forEach {
-            val url = getRssUrlForCourse(token, it.asDomainModel())
+            val url = getRssUrlForCourse(it.asDomainModel())
             if (url != null) {
                 coursesDao.insertFeedUrl(DatabaseFeedUrl(url, it.id))
             }
         }
     }
 
-    private suspend fun getRssUrlForCourse(token: String, course: Course): String? {
+    private suspend fun getRssUrlForCourse(course: Course): String? {
         //Get announcement page
-        val page = openEclassService.getAnnouncementPage("PHPSESSID=$token", course.id).await()
+        val page = openEclassService.getAnnouncementPage(course.id).await()
         val document = Jsoup.parse(page)
         //Parse url
         val url = document.select("a[href*=/modules/announcements/rss]").attr("href")

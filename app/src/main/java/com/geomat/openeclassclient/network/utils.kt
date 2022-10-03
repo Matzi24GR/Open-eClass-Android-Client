@@ -12,6 +12,11 @@ import java.io.File
 annotation class Json
 annotation class Xml
 
+const val EMPTY_TOKEN_PLACEHOLDER = "@#@default@#@"
+const val EMPTY_TOKEN_PLACEHOLDER_URLENCODED = "%40%23%40default%40%23%40"
+const val COOKIE_HEADER = "Cookie"
+const val TOKEN_IN_COOKIE_PREFIX = "PHPSESSID="
+
 sealed class Download {
     data class Progress(val percent: Int) : Download()
     data class Finished(val file: File) : Download()

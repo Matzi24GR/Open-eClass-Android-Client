@@ -26,14 +26,14 @@ class UserInfoRepository @Inject constructor(private val userDao: UserInfoDao, p
         }
     }
 
-    suspend fun refreshData(token: String) {
+    suspend fun refreshData() {
         withContext(Dispatchers.IO) {
             try {
 
                 val host = credentialsRepository.credentialsFlow.first().serverUrl
 
                 //Get UserInfo
-                val response = openEclassService.getMainPage("PHPSESSID=$token").await()
+                val response = openEclassService.getMainPage().await()
                 val userInfo = UserInfoResponse(response).asDatabaseModel()
                 userInfo.imageUrl = "https://" + host + userInfo.imageUrl
                 //Insert UserInfo

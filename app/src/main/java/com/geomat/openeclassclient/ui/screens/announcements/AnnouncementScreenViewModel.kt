@@ -8,7 +8,6 @@ import com.geomat.openeclassclient.repository.CoursesRepository
 import com.geomat.openeclassclient.repository.CredentialsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -29,7 +28,7 @@ class AnnouncementScreenViewModel @Inject constructor(
     fun refresh() {
         viewModelScope.launch {
             try {
-                coursesRepository.refreshData(credentials.first().token)
+                coursesRepository.refreshData()
                 repo.refreshData()
             } catch (e: AssertionError) {
                 Timber.e(e)

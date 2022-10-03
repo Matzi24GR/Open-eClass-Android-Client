@@ -80,8 +80,8 @@ class MainActivity : ComponentActivity() {
 
         val scope = CoroutineScope(Job() + Dispatchers.IO)
         scope.launch {
-            credentialsRepository.setInterceptor()
             credentialsRepository.credentialsFlow.collect {
+                credentialsRepository.setInterceptor()
                 runOnUiThread {
                     setContent { OpenEclassClientTheme { OpenEclassApp(it.isLoggedIn) } }
                 }

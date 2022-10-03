@@ -9,7 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.network.DataTransferObjects.AuthType
-import com.geomat.openeclassclient.network.HostSelectionInterceptor
+import com.geomat.openeclassclient.network.AuthInterceptor
 import com.geomat.openeclassclient.network.OpenEclassService
 import com.geomat.openeclassclient.ui.screens.destinations.ExternalAuthScreenDestination
 import com.geomat.openeclassclient.ui.screens.destinations.InternalAuthScreenDestination
@@ -37,7 +37,7 @@ enum class ServerStatus {
 data class AuthTypeParcel(val name: String, val url: String) : Parcelable
 
 @HiltViewModel
-class ServerSelectViewModel @Inject constructor(application: Application, private val openEclassService: OpenEclassService, private val hostSelectionInterceptor: HostSelectionInterceptor) : AndroidViewModel(application) {
+class ServerSelectViewModel @Inject constructor(application: Application, private val openEclassService: OpenEclassService, private val authInterceptor: AuthInterceptor) : AndroidViewModel(application) {
 
     //TODO possible split with a server repository
     // TODO fix context leak
@@ -123,7 +123,7 @@ class ServerSelectViewModel @Inject constructor(application: Application, privat
     }
 
     fun activateSelectedServer(server: Server) {
-        hostSelectionInterceptor.setHost(server.url)
+        authInterceptor.setHost(server.url)
         selectedServer.value = server
         Timber.i("Set Url: ${server.url}")
         context.getSharedPreferences("login", Context.MODE_PRIVATE).edit()

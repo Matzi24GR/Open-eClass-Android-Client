@@ -28,9 +28,7 @@ class HomeViewModel @Inject constructor(
 
     fun refresh() {
         viewModelScope.launch {
-            credentials.collect {
-                viewModelScope.launch { repo.refreshData(it.token) }
-            }
+            viewModelScope.launch { repo.refreshData() }
         }
     }
 
