@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.geomat.openeclassclient.domain.Course
 import com.geomat.openeclassclient.domain.Tool
@@ -31,6 +32,7 @@ import com.geomat.openeclassclient.ui.components.HtmlText
 import com.geomat.openeclassclient.ui.screens.destinations.DocumentScreenDestination
 import com.geomat.openeclassclient.ui.screens.destinations.WebViewScreenDestination
 import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
+import com.geomat.openeclassclient.ui.theme.FontAwesome
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.skydoves.landscapist.ImageOptions
@@ -149,17 +151,17 @@ private fun ToolRow(name: String, onClick: () -> Unit = {}) {
             .padding(4.dp, 2.dp)
             .clip(RoundedCornerShape(4.dp))
             .width(180.dp)
-            .height(64.dp)
+            .defaultMinSize(minHeight = 64.dp)
             .clickable { onClick() }
 
     ) {
         Row(
             modifier = Modifier
                 .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(if (tool==null) name else stringResource(tool.stringResource), fontWeight = FontWeight.Bold, modifier = Modifier.width(400.dp))
+            Text(text = tool?.icon?.padEnd(3,' ') ?: "", fontFamily = FontAwesome, fontSize = 22.sp)
+            Text(if (tool==null) name else stringResource(tool.stringResource), fontWeight = FontWeight.Bold)
         }
     }
 }
