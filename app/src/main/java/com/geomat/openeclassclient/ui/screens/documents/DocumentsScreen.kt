@@ -53,7 +53,7 @@ fun DocumentScreen(
                 navigateBack = true
             )
         }
-    ) {
+    ) { paddingValues ->
         val context = LocalContext.current
         viewModel.refresh(course, id)
         DocumentsScreenContent(
@@ -66,13 +66,14 @@ fun DocumentScreen(
                 }}, 
             onCancel = {
                 viewModel.cancelDownload()
-            }
+            },
+            Modifier.padding(paddingValues)
         )
     }
 
 }
 @Composable
-fun DocumentsScreenContent(uiState: MutableState<DocumentsState>, onClick: (document: Document) -> Unit = {}, onCancel: () -> Unit = {}) {
+fun DocumentsScreenContent(uiState: MutableState<DocumentsState>, onClick: (document: Document) -> Unit = {}, onCancel: () -> Unit = {}, modifier: Modifier) {
     val context = LocalContext.current
     if (uiState.value.loading) LinearProgressIndicator(Modifier.fillMaxWidth())
     uiState.value.download.let {
@@ -89,7 +90,7 @@ fun DocumentsScreenContent(uiState: MutableState<DocumentsState>, onClick: (docu
         }
     }
     uiState.value.list.let { 
-        LazyColumn(modifier = Modifier
+        LazyColumn(modifier = modifier
             .fillMaxSize()
             .animateContentSize()) {
             items(it) {

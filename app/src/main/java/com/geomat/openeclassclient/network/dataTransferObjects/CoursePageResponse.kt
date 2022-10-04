@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.network.DataTransferObjects
+package com.geomat.openeclassclient.network.dataTransferObjects
 
 import org.jsoup.Jsoup
 import timber.log.Timber

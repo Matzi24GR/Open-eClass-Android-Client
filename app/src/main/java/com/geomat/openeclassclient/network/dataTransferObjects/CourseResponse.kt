@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.network.DataTransferObjects
+package com.geomat.openeclassclient.network.dataTransferObjects
 
 import com.geomat.openeclassclient.database.DatabaseCourse
 import nl.adaptivity.xmlutil.serialization.XmlSerialName

@@ -20,7 +20,7 @@ class InternalAuthViewModel @Inject constructor(private val repo: CredentialsRep
     private val _selectedServer = MutableLiveData(
         Server("", "")
     )
-    val selectedServer: LiveData<Server>
+    private val selectedServer: LiveData<Server>
         get() = _selectedServer
 
     val success = mutableStateOf(false)

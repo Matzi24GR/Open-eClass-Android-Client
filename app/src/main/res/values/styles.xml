@@ -8,8 +8,4 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:navigationBarColor">@color/navigationBarColor</item>
     </style>
-
-    <style name="AppTheme.Launcher" >
-        <item name="android:windowBackground">@drawable/launch_screen</item>
-    </style>
 </resources>

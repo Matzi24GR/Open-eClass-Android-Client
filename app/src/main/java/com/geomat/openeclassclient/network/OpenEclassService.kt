@@ -1,6 +1,6 @@
 package com.geomat.openeclassclient.network
 
-import com.geomat.openeclassclient.network.DataTransferObjects.*
+import com.geomat.openeclassclient.network.dataTransferObjects.*
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*

@@ -21,7 +21,7 @@ import timber.log.Timber
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun CustomWebView(url: String, viewModel: ExternalAuthViewModel = hiltViewModel(), navigator: DestinationsNavigator) {
+fun CustomWebView(url: String, viewModel: ExternalAuthViewModel = hiltViewModel(), navigator: DestinationsNavigator, modifier: Modifier) {
     AndroidView(factory = { context ->
         WebView(context).apply {
             settings.javaScriptEnabled = true
@@ -38,7 +38,7 @@ fun CustomWebView(url: String, viewModel: ExternalAuthViewModel = hiltViewModel(
             })
             loadUrl(url)
         }
-    }, modifier = Modifier.fillMaxSize())
+    }, modifier = modifier.fillMaxSize())
 }
 
 class TokenInterceptorWebViewClient(val onSuccess: (url: String) -> Unit): WebViewClient() {

@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.network.DataTransferObjects
+package com.geomat.openeclassclient.network.dataTransferObjects
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

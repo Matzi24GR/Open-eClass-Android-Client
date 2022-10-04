@@ -20,7 +20,6 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.await
 import timber.log.Timber
 import java.security.cert.CertPathValidatorException
 
@@ -31,7 +30,7 @@ fun DebugScreen(navigator: DestinationsNavigator, viewModel: DebugViewModel = hi
     val scope = rememberCoroutineScope()
 
     Scaffold(topBar = { OpenEclassTopBar(title = "DEBUG", navigator = navigator) }) {
-        Column {
+        Column(Modifier.padding(it)) {
             DropDownCard(text = "Credentials") {
                 Button(onClick = {
                     viewModel.logout()

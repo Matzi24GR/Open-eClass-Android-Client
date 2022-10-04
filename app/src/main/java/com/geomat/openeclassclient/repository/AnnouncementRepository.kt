@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.geomat.openeclassclient.database.*
 import com.geomat.openeclassclient.domain.Announcement
-import com.geomat.openeclassclient.network.DataTransferObjects.asDatabaseModel
 import com.geomat.openeclassclient.network.OpenEclassService
+import com.geomat.openeclassclient.network.dataTransferObjects.asDatabaseModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.await

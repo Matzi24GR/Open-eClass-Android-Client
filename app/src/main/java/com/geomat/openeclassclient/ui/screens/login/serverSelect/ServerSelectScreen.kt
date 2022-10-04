@@ -16,6 +16,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -24,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.geomat.openeclassclient.R
-import com.geomat.openeclassclient.network.DataTransferObjects.AuthType
+import com.geomat.openeclassclient.network.dataTransferObjects.AuthType
 import com.geomat.openeclassclient.ui.screens.destinations.ServerSelectScreenDestination
 import com.geomat.openeclassclient.ui.screens.main.LoginNavGraph
 import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
@@ -35,13 +36,14 @@ import timber.log.Timber
 import java.net.UnknownHostException
 
 @OptIn(ExperimentalMaterialApi::class)
-@Destination()
+@Destination
 @LoginNavGraph(start = true)
 @Composable
 fun ServerSelectScreen(
     navigator: DestinationsNavigator,
     viewModel: ServerSelectViewModel = hiltViewModel()
 ) {
+    viewModel.setData(stringArrayResource(id = R.array.server_list))
     navigator.clearBackStack(ServerSelectScreenDestination)
     val modalBottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)

@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.network.DataTransferObjects
+package com.geomat.openeclassclient.network.dataTransferObjects
 
 import com.geomat.openeclassclient.ui.screens.documents.Document
 import org.jsoup.Jsoup

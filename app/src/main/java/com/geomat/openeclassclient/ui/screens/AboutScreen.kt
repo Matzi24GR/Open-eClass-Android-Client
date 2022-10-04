@@ -27,16 +27,16 @@ fun AboutScreen(navigator: DestinationsNavigator) {
             navigator = navigator
         )
     }) {
-        AboutScreenContent()
+        AboutScreenContent(Modifier.padding(it))
     }
 }
 
 @Composable
-fun AboutScreenContent() {
+fun AboutScreenContent(modifier: Modifier) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly,
-        modifier = Modifier.padding(16.dp)
+        modifier = modifier.padding(16.dp)
     ) {
         Text(text = "Links")
         Text(text = "Github")

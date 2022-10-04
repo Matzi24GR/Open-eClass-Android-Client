@@ -14,8 +14,8 @@ import java.lang.reflect.Type
 @OptIn(ExperimentalSerializationApi::class)
 class ConverterFactorySelector : Converter.Factory() {
 
-    val xml: Converter.Factory = XML.asConverterFactory(MediaType.get("application/xml"))
-    val json: Converter.Factory = MoshiConverterFactory.create(Moshi.Builder().build())
+    private val xml: Converter.Factory = XML.asConverterFactory(MediaType.get("application/xml"))
+    private val json: Converter.Factory = MoshiConverterFactory.create(Moshi.Builder().build())
 
     override fun responseBodyConverter(type: Type, annotations: Array<out Annotation>, retrofit: Retrofit): Converter<ResponseBody, *>? {
         for (annotation in annotations) {

@@ -257,13 +257,12 @@ fun TokenExpirationBanner(navigator: DestinationsNavigator, credentials: Credent
 
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun BottomNav(
     navController: NavController,
     viewModel: MainViewModel = hiltViewModel()
 ) {
-    val currentDestination: Destination? = navController.appCurrentDestinationAsState().value
+    val currentDestination: Destination = navController.appCurrentDestinationAsState().value
         ?: NavGraphs.root.startAppDestination
 
     BottomNavigation {
@@ -288,7 +287,7 @@ fun BottomNav(
                                 Icon(destination.icon, stringResource(id = destination.label))
                             }
                        },
-                label = { Text(stringResource(id = destination.label,), maxLines = 1, overflow = TextOverflow.Ellipsis) }
+                label = { Text(stringResource(id = destination.label), maxLines = 1, overflow = TextOverflow.Ellipsis) }
             )
         }
     }

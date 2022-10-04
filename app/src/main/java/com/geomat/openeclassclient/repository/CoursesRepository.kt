@@ -7,10 +7,10 @@ import com.geomat.openeclassclient.database.DatabaseCourse
 import com.geomat.openeclassclient.database.DatabaseFeedUrl
 import com.geomat.openeclassclient.database.asDomainModel
 import com.geomat.openeclassclient.domain.Course
-import com.geomat.openeclassclient.network.DataTransferObjects.CoursePageResponse
-import com.geomat.openeclassclient.network.DataTransferObjects.asDatabaseModel
-import com.geomat.openeclassclient.network.DataTransferObjects.toSingleSeparatedString
 import com.geomat.openeclassclient.network.OpenEclassService
+import com.geomat.openeclassclient.network.dataTransferObjects.CoursePageResponse
+import com.geomat.openeclassclient.network.dataTransferObjects.asDatabaseModel
+import com.geomat.openeclassclient.network.dataTransferObjects.toSingleSeparatedString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -40,7 +40,7 @@ class CoursesRepository @Inject constructor(private val coursesDao: CoursesDao, 
                 val coursesResponse = openEclassService.getCourses().await()
                 val courses = coursesResponse.asDatabaseModel()
                 //Insert Courses
-                val result = coursesDao.insertAll(courses)
+                coursesDao.insertAll(courses)
                 //Remove Deleted Courses
                 val toRetain = courses.map {it.id}
                 coursesDao.clearNotInList(toRetain)

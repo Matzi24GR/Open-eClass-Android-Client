@@ -3,6 +3,5 @@
     <color name="colorPrimary">#FF002f67</color>
     <color name="colorPrimaryDark">#FF1a1b1f</color>
     <color name="colorAccent">#297202</color>
-    <color name="backgroundColor">#FFE6EEFB</color>
     <color name="navigationBarColor">#FF1a1b1f</color>
 </resources>

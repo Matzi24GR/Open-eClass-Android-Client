@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.network.DataTransferObjects
+package com.geomat.openeclassclient.network.dataTransferObjects
 
 import androidx.core.text.HtmlCompat
 import com.geomat.openeclassclient.database.DatabaseCalendarEvent
@@ -43,7 +43,7 @@ fun CalendarResponse.asDatabaseModel(): List<DatabaseCalendarEvent> {
             event_group = it.event_group,
             Class = it.Class,
             event_type = it.event_type,
-            courseCode = if (it.course.isNotBlank()) it.course else null,
+            courseCode = it.course.ifBlank { null },
             url = it.url
         )
     }

@@ -58,10 +58,10 @@ fun CourseListScreen(
                 Icon(Icons.Filled.Edit, "edit courses")
             }
     }
-    ) {
+    ) { paddingValues ->
         val data = viewModel.courses.observeAsState()
         data.value?.let {
-            LazyColumn {
+            LazyColumn(Modifier.padding(paddingValues)) {
                 items(it) { course -> CourseRow(course = course) {
                     navigator.navigate(CourseDetailsScreenDestination(course))
                 } }
@@ -139,9 +139,9 @@ private fun Preview() {
             icon = {
                 Icon(Icons.Filled.Edit, "add")
             })
-    }) {
+    }) { paddingValues ->
         data.value.let {
-            LazyColumn {
+            LazyColumn(Modifier.padding(paddingValues)) {
                 items(it) { course -> CourseRow(course = course) }
             }
             if (it.isEmpty()) {

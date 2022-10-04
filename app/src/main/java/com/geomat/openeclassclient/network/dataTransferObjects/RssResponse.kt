@@ -1,4 +1,4 @@
-package com.geomat.openeclassclient.network.DataTransferObjects
+package com.geomat.openeclassclient.network.dataTransferObjects
 
 import android.net.Uri
 import androidx.core.text.HtmlCompat
@@ -50,7 +50,7 @@ fun RssResponse.asDatabaseModel(): List<DatabaseAnnouncement> {
     if (channel.netWorkAnnouncementList.isNullOrEmpty()) {
         return emptyList()
     }
-    return channel.netWorkAnnouncementList!!.map {
+    return channel.netWorkAnnouncementList.map {
         val announcement = DatabaseAnnouncement("","","","","",0)
         val uri = Uri.parse(it.link.parseAsHtml().toString())
         val id = uri.getQueryParameter("aid")

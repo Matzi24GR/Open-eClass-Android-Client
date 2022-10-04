@@ -32,8 +32,7 @@ import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import com.ramcosta.composedestinations.navigation.popUpTo
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalComposeUiApi::class)
-@Destination()
+@Destination
 @LoginNavGraph
 @Composable
 fun InternalAuthScreen(
@@ -59,6 +58,7 @@ fun InternalAuthScreen(
         Column(
             Modifier
                 .fillMaxSize()
+                .padding(it)
                 .padding(top = 200.dp), horizontalAlignment = Alignment.CenterHorizontally
         ) {
 

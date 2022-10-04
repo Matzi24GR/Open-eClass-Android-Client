@@ -41,19 +41,19 @@ fun CalendarScreen(navigator: DestinationsNavigator, viewModel: CalendarViewMode
             navigateBack = false
         )
     }) {
-        ScreenContent(data = viewModel.calendarEvents.observeAsState())
+        ScreenContent(data = viewModel.calendarEvents.observeAsState(), Modifier.padding(it))
     }
 }
 
 @Composable
-private fun ScreenContent(data: State<List<CalendarEvent>?>) {
+private fun ScreenContent(data: State<List<CalendarEvent>?>, modifier: Modifier) {
     val listState = rememberLazyListState()
     val nextEvent = remember { mutableStateOf(-1) }
     val scope = rememberCoroutineScope()
 
     // Event List
     data.value?.let {
-        LazyColumn(Modifier.animateContentSize(), state = listState) {
+        LazyColumn(modifier.animateContentSize(), state = listState) {
             itemsIndexed(it) { index, item ->
                 if (index == nextEvent.value) {
                     Row(Modifier.fillMaxWidth()) {
@@ -180,5 +180,5 @@ private fun Preview() {
     val data = remember {
         mutableStateOf(list)
     }
-    ScreenContent(data = data)
+    ScreenContent(data = data, Modifier)
 }

@@ -49,7 +49,7 @@ fun DropDownCard(text: String, body: @Composable () -> Unit) {
                 )
             }
             AnimatedVisibility(visible = expanded.value) {
-                Column() {
+                Column {
                     body()
                 }
             }

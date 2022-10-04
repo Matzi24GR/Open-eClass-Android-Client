@@ -12,6 +12,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
@@ -41,7 +42,7 @@ fun WebViewScreen(viewModel: WebViewModel = hiltViewModel(), navigator: Destinat
     ) {
         val url = "https://${credentials.value.serverUrl}/modules/${tool?.path ?: toolName}/?course=${course.id}"
         Timber.i("Web Url: $url")
-        WebViewScreenContent(url, credentials.value)
+        WebViewScreenContent(url, credentials.value, Modifier.padding(it))
     }
 }
 
@@ -54,14 +55,14 @@ fun BareWebViewScreen(viewModel: WebViewModel = hiltViewModel(), navigator: Dest
     ) {
         val url = "https://${credentials.value.serverUrl}/modules/${path}"
         Timber.i("Web Url: $url")
-        WebViewScreenContent(url, credentials.value)
+        WebViewScreenContent(url, credentials.value, Modifier.padding(it))
     }
 }
 
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-fun WebViewScreenContent(url: String, credentials: Credentials) {
+fun WebViewScreenContent(url: String, credentials: Credentials, modifier: Modifier) {
     var webView: WebView? = remember {null}
     val backHandlerEnabled = remember { mutableStateOf(false) }
     Column {

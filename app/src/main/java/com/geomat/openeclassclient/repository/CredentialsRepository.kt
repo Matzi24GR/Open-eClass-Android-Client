@@ -37,8 +37,7 @@ class CredentialsRepository @Inject constructor(private val dataStore: DataStore
             val response = openEclassService.getToken(credentials.username, credentials.password).awaitResponse()
             if (response.isSuccessful) {
                 Timber.i("response successful")
-                val token = response.body()
-                when (token) {
+                when (val token = response.body()) {
                     "FAILED" -> throw Exception("FAILED")
                     "NOTENABLED" -> throw Exception("NOTENABLED")
                     else -> {
@@ -115,7 +114,7 @@ class CredentialsRepository @Inject constructor(private val dataStore: DataStore
         }
     }
 
-    suspend fun setTokenExpired() {
+    private suspend fun setTokenExpired() {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.TOKEN_EXPIRED] = true
         }

@@ -1,16 +1,13 @@
 package com.geomat.openeclassclient.ui.screens.login.serverSelect
 
-import android.app.Application
-import android.content.Context
 import android.os.Parcelable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.AndroidViewModel
-import com.geomat.openeclassclient.R
-import com.geomat.openeclassclient.network.DataTransferObjects.AuthType
+import androidx.lifecycle.ViewModel
 import com.geomat.openeclassclient.network.AuthInterceptor
 import com.geomat.openeclassclient.network.OpenEclassService
+import com.geomat.openeclassclient.network.dataTransferObjects.AuthType
 import com.geomat.openeclassclient.ui.screens.destinations.ExternalAuthScreenDestination
 import com.geomat.openeclassclient.ui.screens.destinations.InternalAuthScreenDestination
 import com.geomat.openeclassclient.ui.screens.destinations.ServerSelectScreenDestination
@@ -37,27 +34,23 @@ enum class ServerStatus {
 data class AuthTypeParcel(val name: String, val url: String) : Parcelable
 
 @HiltViewModel
-class ServerSelectViewModel @Inject constructor(application: Application, private val openEclassService: OpenEclassService, private val authInterceptor: AuthInterceptor) : AndroidViewModel(application) {
+class ServerSelectViewModel @Inject constructor(private val openEclassService: OpenEclassService, private val authInterceptor: AuthInterceptor) : ViewModel() {
 
     //TODO possible split with a server repository
-    // TODO fix context leak
-    private val context = application.applicationContext
-    private var data: Array<String> = context.resources.getStringArray(R.array.server_list)
-
-    val serverList: List<State<Server>>
+    private var serverList: List<State<Server>>? = null
 
     val currentDirection: MutableState<Direction> = mutableStateOf(ServerSelectScreenDestination())
 
     // Selected Server
-    val selectedServer = mutableStateOf(Server("", ""))
+    private val selectedServer = mutableStateOf(Server("", ""))
 
     val serverStatusMap = hashMapOf<Server, MutableState<ServerStatus>>()
 
-    fun resetSelectedServer() {
+    private fun resetSelectedServer() {
         selectedServer.value = Server("", "")
     }
 
-    init {
+    fun setData(data: Array<String>) {
         resetSelectedServer()
         val arrayList = arrayListOf<State<Server>>()
         data.forEach {
@@ -65,7 +58,7 @@ class ServerSelectViewModel @Inject constructor(application: Application, privat
             arrayList.add(server)
         }
         serverList = arrayList.toList()
-        serverList.forEach {
+        serverList?.forEach {
             serverStatusMap[it.value] = mutableStateOf(ServerStatus.UNKNOWN)
         }
     }
@@ -122,12 +115,10 @@ class ServerSelectViewModel @Inject constructor(application: Application, privat
         return null
     }
 
-    fun activateSelectedServer(server: Server) {
+    private fun activateSelectedServer(server: Server) {
         authInterceptor.setHost(server.url)
         selectedServer.value = server
         Timber.i("Set Url: ${server.url}")
-        context.getSharedPreferences("login", Context.MODE_PRIVATE).edit()
-            .putString("url", server.url).apply()
     }
 
     fun splitServerString(string: String): Server {
@@ -136,8 +127,8 @@ class ServerSelectViewModel @Inject constructor(application: Application, privat
     }
 
     fun getFilteredServerList(searchText: String): List<State<Server>> {
-        if (searchText.isBlank()) return serverList
-        val result = serverList.filter {
+        if (searchText.isBlank()) return serverList!!
+        val result = serverList!!.filter {
             it.value.name.lowercase().contains(searchText.lowercase()) || it.value.url.lowercase()
                 .contains(searchText.lowercase())
         }

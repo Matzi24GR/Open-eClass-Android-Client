@@ -6,9 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.geomat.openeclassclient.domain.Course
-import com.geomat.openeclassclient.network.DataTransferObjects.parseDocumentPageResponse
 import com.geomat.openeclassclient.network.Download
 import com.geomat.openeclassclient.network.OpenEclassService
+import com.geomat.openeclassclient.network.dataTransferObjects.parseDocumentPageResponse
 import com.geomat.openeclassclient.network.downloadToFileWithProgress
 import com.geomat.openeclassclient.repository.Credentials
 import dagger.hilt.android.lifecycle.HiltViewModel
