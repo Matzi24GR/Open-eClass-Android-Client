@@ -1,7 +1,10 @@
 package com.geomat.openeclassclient.ui.screens.documents
 
+import android.app.DownloadManager
 import android.content.Context
+import android.content.Context.DOWNLOAD_SERVICE
 import android.content.Intent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,12 +14,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.InsertDriveFile
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -55,6 +60,7 @@ fun DocumentScreen(
         }
     ) { paddingValues ->
         val context = LocalContext.current
+        val downloadManager= context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         viewModel.refresh(course, id)
         DocumentsScreenContent(
             viewModel.uiState, 
@@ -67,13 +73,16 @@ fun DocumentScreen(
             onCancel = {
                 viewModel.cancelDownload()
             },
-            Modifier.padding(paddingValues)
+            onDownload = {
+                viewModel.downloadFileWithDownloadManager(downloadManager, it)
+            },
+            modifier = Modifier.padding(paddingValues)
         )
     }
 
 }
 @Composable
-fun DocumentsScreenContent(uiState: MutableState<DocumentsState>, onClick: (document: Document) -> Unit = {}, onCancel: () -> Unit = {}, modifier: Modifier) {
+fun DocumentsScreenContent(uiState: MutableState<DocumentsState>, onClick: (document: Document) -> Unit = {}, onDownload: (document: Document) -> Unit = {}, onCancel: () -> Unit = {}, modifier: Modifier) {
     val context = LocalContext.current
     if (uiState.value.loading) LinearProgressIndicator(Modifier.fillMaxWidth())
     uiState.value.download.let {
@@ -94,7 +103,9 @@ fun DocumentsScreenContent(uiState: MutableState<DocumentsState>, onClick: (docu
             .fillMaxSize()
             .animateContentSize()) {
             items(it) {
-                DocumentItem(document = it, modifier = Modifier
+                DocumentItem(document = it, onDownload = {
+                    onDownload(it)
+                }, modifier = Modifier
                     .clickable { onClick(it) }
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp, vertical = 16.dp))
@@ -108,11 +119,17 @@ fun DocumentsScreenContent(uiState: MutableState<DocumentsState>, onClick: (docu
 }
 
 @Composable
-fun DocumentItem(document: Document, modifier: Modifier) {
-    Row(modifier = modifier
+fun DocumentItem(document: Document, modifier: Modifier, onDownload: (document: Document) ->Unit = {}) {
+    Row(modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(imageVector = if (document.isDirectory) Icons.Default.FolderOpen else Icons.Default.InsertDriveFile, contentDescription = "", modifier = Modifier.padding(horizontal = 8.dp))
-        Text(text = document.name, style = TextStyle(fontSize = 18.sp))
+        Icon(imageVector = if (document.isDirectory) Icons.Default.FolderOpen else Icons.Default.InsertDriveFile, contentDescription = "", modifier = Modifier.padding(horizontal = 8.dp), tint = if (document.isDirectory) Color(0xFFcf9c11) else MaterialTheme.colors.primary)
+        Text(text = document.name, style = TextStyle(fontSize = 18.sp), modifier = Modifier.weight(1f))
+        AnimatedVisibility(visible = !document.isDirectory) {
+            IconButton(onClick = {onDownload(document)}, Modifier.size(28.dp) ) {
+                Icon(imageVector = Icons.Default.Download, contentDescription = "Download", tint = MaterialTheme.colors.onBackground)
+            }
+        }
     }
 }
 

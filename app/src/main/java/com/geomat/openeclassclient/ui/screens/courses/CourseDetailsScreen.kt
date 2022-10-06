@@ -160,7 +160,7 @@ private fun ToolRow(name: String, onClick: () -> Unit = {}) {
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = tool?.icon?.padEnd(3,' ') ?: "", fontFamily = FontAwesome, fontSize = 22.sp)
+            Text(text = tool?.icon?.padEnd(3,' ') ?: "", fontFamily = FontAwesome, fontSize = 22.sp, color = MaterialTheme.colors.primary)
             Text(if (tool==null) name else stringResource(tool.stringResource), fontWeight = FontWeight.Bold)
         }
     }

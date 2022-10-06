@@ -26,7 +26,7 @@ sealed class Download {
 fun ResponseBody.downloadToFileWithProgress(directory: File, folder: String, filename: String): Flow<Download> = flow {
     emit(Download.Progress(0))
 
-    val file = File(directory, "/$folder/${filename}.${contentType()?.subtype()}")
+    val file = File(directory, "/$folder/${filename}")
 
     Timber.i("Cached File: ${file.length()}, ToDownloadFile: ${contentLength()}")
 
