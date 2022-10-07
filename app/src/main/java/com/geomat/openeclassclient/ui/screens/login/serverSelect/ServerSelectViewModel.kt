@@ -14,15 +14,12 @@ import com.geomat.openeclassclient.ui.screens.destinations.ServerSelectScreenDes
 import com.ramcosta.composedestinations.spec.Direction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.parcelize.Parcelize
-import nl.adaptivity.xmlutil.serialization.XmlSerialException
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.awaitResponse
 import timber.log.Timber
-import java.net.UnknownHostException
 import javax.inject.Inject
-import javax.net.ssl.SSLHandshakeException
 
 @Parcelize
 data class Server(var name: String = "", var url: String) : Parcelable
@@ -103,11 +100,7 @@ class ServerSelectViewModel @Inject constructor(private val openEclassService: O
                 response.body()?.authTypeList?.let {
                     return it
                 }
-            } catch (e: XmlSerialException) {
-                Timber.e(e)
-            } catch (e: SSLHandshakeException) {
-                Timber.e(e)
-            } catch (e: UnknownHostException) {
+            } catch (e: Exception) {
                 Timber.e(e)
             }
 
