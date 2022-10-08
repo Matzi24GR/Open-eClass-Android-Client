@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.geomat.openeclassclient.repository.Credentials
 import com.geomat.openeclassclient.ui.components.DropDownCard
-import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
+import com.geomat.openeclassclient.ui.components.OpenEclassTopBar
 import com.geomat.openeclassclient.ui.screens.main.clipboardManager
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator

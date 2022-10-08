@@ -32,7 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.domain.Announcement
 import com.geomat.openeclassclient.ui.components.HtmlText
-import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
+import com.geomat.openeclassclient.ui.components.OpenEclassTopBar
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch

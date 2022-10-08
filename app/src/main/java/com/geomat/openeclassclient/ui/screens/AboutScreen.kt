@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.ui.components.HtmlText
-import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
+import com.geomat.openeclassclient.ui.components.OpenEclassTopBar
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 

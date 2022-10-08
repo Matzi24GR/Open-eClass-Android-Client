@@ -24,9 +24,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.domain.UserInfo
 import com.geomat.openeclassclient.repository.Credentials
+import com.geomat.openeclassclient.ui.components.OpenEclassTopBar
+import com.geomat.openeclassclient.ui.components.TokenExpirationBanner
 import com.geomat.openeclassclient.ui.screens.main.MainNavGraph
-import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
-import com.geomat.openeclassclient.ui.screens.main.TokenExpirationBanner
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer

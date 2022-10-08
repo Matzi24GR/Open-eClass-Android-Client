@@ -27,7 +27,7 @@ import com.geomat.openeclassclient.domain.Course
 import com.geomat.openeclassclient.domain.Tools
 import com.geomat.openeclassclient.network.TOKEN_IN_COOKIE_PREFIX
 import com.geomat.openeclassclient.repository.Credentials
-import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
+import com.geomat.openeclassclient.ui.components.OpenEclassTopBar
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import timber.log.Timber

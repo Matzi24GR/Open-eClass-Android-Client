@@ -26,9 +26,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.geomat.openeclassclient.R
 import com.geomat.openeclassclient.network.dataTransferObjects.AuthType
+import com.geomat.openeclassclient.ui.components.OpenEclassTopBar
 import com.geomat.openeclassclient.ui.screens.destinations.ServerSelectScreenDestination
 import com.geomat.openeclassclient.ui.screens.main.LoginNavGraph
-import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch

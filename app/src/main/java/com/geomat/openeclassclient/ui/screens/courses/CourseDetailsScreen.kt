@@ -29,9 +29,9 @@ import com.geomat.openeclassclient.domain.Course
 import com.geomat.openeclassclient.domain.Tool
 import com.geomat.openeclassclient.domain.Tools
 import com.geomat.openeclassclient.ui.components.HtmlText
+import com.geomat.openeclassclient.ui.components.OpenEclassTopBar
 import com.geomat.openeclassclient.ui.screens.destinations.DocumentScreenDestination
 import com.geomat.openeclassclient.ui.screens.destinations.WebViewScreenDestination
-import com.geomat.openeclassclient.ui.screens.main.OpenEclassTopBar
 import com.geomat.openeclassclient.ui.theme.FontAwesome
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
