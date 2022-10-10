@@ -29,8 +29,8 @@ android {
         applicationId = "com.geomat.openeclassclient"
         minSdk = 21
         targetSdk = 33
-        versionCode = 22
-        versionName = "0.9.9"
+        versionCode = 23
+        versionName = "0.9.10"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         kapt {
             arguments {

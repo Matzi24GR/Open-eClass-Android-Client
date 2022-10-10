@@ -50,7 +50,8 @@
 
 -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
 
-# Koltinx serialization
+# #!# Koltinx serialization | start #!#
+
 # Keep `Companion` object fields of serializable classes.
 # This avoids serializer lookup through `getDeclaredClasses` as done for named companion objects.
 -if @kotlinx.serialization.Serializable class **
@@ -62,7 +63,7 @@
 -if @kotlinx.serialization.Serializable class ** {
     static **$* *;
 }
--keepclassmembers class <2>$<3> {
+-keepclassmembers class <1>$<3> {
     kotlinx.serialization.KSerializer serializer(...);
 }
 
@@ -78,19 +79,11 @@
 # @Serializable and @Polymorphic are used at runtime for polymorphic serialization.
 -keepattributes RuntimeVisibleAnnotations,AnnotationDefault
 
-# Serializer for classes with named companion objects are retrieved using `getDeclaredClasses`.
-# If you have any, uncomment and replace classes with those containing named companion objects.
-#-keepattributes InnerClasses # Needed for `getDeclaredClasses`.
-#-if @kotlinx.serialization.Serializable class
-#com.example.myapplication.HasNamedCompanion, # <-- List serializable classes with named companions.
-#com.example.myapplication.HasNamedCompanion2
-#{
-#    static **$* *;
-#}
-#-keepnames class <1>$$serializer { # -keepnames suffices; class is kept when serializer() is kept.
-#    static <1>$$serializer INSTANCE;
-#}
+# #!# Koltinx serialization | end #!#
 
-# Fix XmlUtil gradle issue
+# #!# XmlUtil | start #!#
 # https://github.com/pdvrieze/xmlutil/issues/87
 -keep public enum nl.adaptivity.xmlutil.EventType {*;}
+# #!# XmlUtil | end #!#
+
+-dontobfuscate
