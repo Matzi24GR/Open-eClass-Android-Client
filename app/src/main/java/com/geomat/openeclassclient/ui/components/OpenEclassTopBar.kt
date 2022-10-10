@@ -12,7 +12,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.PopUpToBuilder
 import com.geomat.openeclassclient.BuildConfig
 import com.geomat.openeclassclient.R
@@ -36,14 +35,6 @@ class TopBarViewModel @Inject constructor(
     private val calendarEventRepository: CalendarEventRepository,
     private val credentialsRepository: CredentialsRepository
 ) : ViewModel() {
-
-    init {
-        viewModelScope.launch(Dispatchers.IO) {
-            credentialsRepository.credentialsFlow.collect {
-                credentialsRepository.checkTokenStatus()
-            }
-        }
-    }
 
     suspend fun logout() {
         withContext(Dispatchers.IO) {

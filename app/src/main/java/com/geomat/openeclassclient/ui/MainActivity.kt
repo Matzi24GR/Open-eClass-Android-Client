@@ -34,10 +34,16 @@ class MainActivity : ComponentActivity() {
                     setContent { OpenEclassClientTheme { OpenEclassApp(it.isLoggedIn) } }
                 }
             }
-            credentialsRepository.checkTokenStatus()
         }
         clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        CoroutineScope(Job() + Dispatchers.IO).launch {
+            credentialsRepository.checkTokenStatus()
+        }
     }
 
     override fun onStart() {

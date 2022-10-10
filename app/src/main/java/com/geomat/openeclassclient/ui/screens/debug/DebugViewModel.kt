@@ -7,6 +7,7 @@ import com.geomat.openeclassclient.repository.CredentialsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import retrofit2.await
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,7 +23,7 @@ class DebugViewModel @Inject constructor(val repository: CredentialsRepository, 
 
     fun logoutNetworkCall() {
         viewModelScope.launch {
-            openEclassService.logout(credentials.first().token)
+            openEclassService.logout().await()
         }
     }
 
