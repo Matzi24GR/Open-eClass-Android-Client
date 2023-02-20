@@ -64,7 +64,7 @@ private fun deleteFiles(context: Context) {
     var files = tempDir.listFiles()
     if (files != null) {
         for (file: File in files) {
-            if (file.lastModified() < System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(60) )
+            if (file.lastModified() < System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(60))
                 file.delete()
         }
     }

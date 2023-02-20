@@ -1,6 +1,7 @@
 package com.geomat.openeclassclient.network
 
 
+import com.google.common.util.concurrent.RateLimiter
 import okhttp3.Interceptor
 import okhttp3.RequestBody
 import okhttp3.Response
@@ -8,6 +9,8 @@ import timber.log.Timber
 
 
 class AuthInterceptor: Interceptor {
+
+    private val limiter = RateLimiter.create(1.0)
 
     @Volatile
     private var host: String = ""
@@ -65,6 +68,7 @@ class AuthInterceptor: Interceptor {
                 .build()
         }
 
+        if(token.isNotBlank()) limiter.acquire()
         return chain.proceed(request)
     }
 }

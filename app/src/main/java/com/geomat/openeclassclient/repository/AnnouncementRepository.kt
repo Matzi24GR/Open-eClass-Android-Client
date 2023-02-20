@@ -2,7 +2,11 @@ package com.geomat.openeclassclient.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import com.geomat.openeclassclient.database.*
+import com.geomat.openeclassclient.database.AnnouncementDao
+import com.geomat.openeclassclient.database.CoursesDao
+import com.geomat.openeclassclient.database.DatabaseAnnouncement
+import com.geomat.openeclassclient.database.DatabaseAnnouncementReadStatus
+import com.geomat.openeclassclient.database.asDomainModel
 import com.geomat.openeclassclient.domain.Announcement
 import com.geomat.openeclassclient.network.OpenEclassService
 import com.geomat.openeclassclient.network.dataTransferObjects.asDatabaseModel

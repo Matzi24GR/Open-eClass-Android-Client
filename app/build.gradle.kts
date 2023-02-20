@@ -75,6 +75,7 @@ dependencies {
     val moshi           = "1.14.0"
     val retrofit        = "2.9.0"
     val xmlUtil         = "0.84.3"
+    val guava           = "31.1-jre"
 
     // Logic
     val coroutines      = "1.6.4"
@@ -140,6 +141,9 @@ dependencies {
 
     // JSoup
     implementation("org.jsoup:jsoup:$jsoup")
+
+    // Guava
+    implementation("com.google.guava:guava:$guava")
 
 
 
